@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { sendPasswordReset } from "../../lib/auth";
 
 export default function ForgotPasswordForm({
@@ -57,10 +58,19 @@ export default function ForgotPasswordForm({
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-2 rounded bg-purple-500 hover:bg-purple-600 text-white font-bold tracking-widest transition"
+        className="w-full py-2 rounded bg-purple-500 hover:bg-purple-600 text-white font-bold tracking-widest transition-colors disabled:opacity-50"
       >
         {loading ? "Sending..." : "Send Reset Email"}
       </button>
+
+      <div className="mt-4 text-center">
+        <Link
+          href="/login"
+          className="text-purple-400 hover:text-purple-300 text-sm transition-colors"
+        >
+          Back to Login
+        </Link>
+      </div>
     </form>
   );
 }

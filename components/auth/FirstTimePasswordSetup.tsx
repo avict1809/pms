@@ -64,7 +64,7 @@ export default function FirstTimePasswordSetup({
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-2 rounded bg-cyan-500 hover:bg-cyan-600 text-white font-bold tracking-widest transition"
+        className="w-full py-2 rounded bg-cyan-500 hover:bg-cyan-600 text-white font-bold tracking-widest transition-colors disabled:opacity-50"
       >
         {loading ? "Setting..." : "Set Password"}
       </button>
