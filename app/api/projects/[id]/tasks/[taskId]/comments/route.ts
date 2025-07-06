@@ -3,7 +3,7 @@ import { supabase } from "@/supabase/client";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string; taskId: string } }
 ) {
   try {
     // Get current user
@@ -27,30 +27,31 @@ export async function GET(
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    // Get tasks for the project
-    const { data: tasks, error: tasksError } = await supabase
-      .from("tasks")
+    // Get comments for the task
+    const { data: comments, error: commentsError } = await supabase
+      .from("task_comments")
       .select(
         `
         *,
-        created_by:users!tasks_created_by_fkey(display_name, email),
-        assigned_to:users!tasks_assigned_to_fkey(display_name, email)
+        user:users!task_comments_user_id_fkey(display_name, email)
       `
       )
-      .eq("project_id", params.id)
-      .order("created_at", { ascending: false });
+      .eq("task_id", params.taskId)
+      .order("created_at", { ascending: true });
 
-    if (tasksError) {
-      console.error("Error fetching tasks:", tasksError);
+    if (commentsError) {
       return NextResponse.json(
-        { error: "Failed to fetch tasks" },
+        { error: "Failed to fetch comments" },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ data: tasks });
+    return NextResponse.json({ data: comments });
   } catch (error) {
-    console.error("Error in GET /api/projects/[id]/tasks:", error);
+    console.error(
+      "Error in GET /api/projects/[id]/tasks/[taskId]/comments:",
+      error
+    );
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -60,7 +61,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string; taskId: string } }
 ) {
   try {
     // Get current user
@@ -85,45 +86,44 @@ export async function POST(
     }
 
     const body = await request.json();
-    const { title, description, priority, assigned_to, due_date } = body;
+    const { content } = body;
 
-    if (!title) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    if (!content || !content.trim()) {
+      return NextResponse.json(
+        { error: "Comment content is required" },
+        { status: 400 }
+      );
     }
 
-    // Create new task
-    const { data: task, error: createError } = await supabase
-      .from("tasks")
+    // Create new comment
+    const { data: comment, error: createError } = await supabase
+      .from("task_comments")
       .insert({
-        project_id: params.id,
-        title: title,
-        description: description || null,
-        priority: priority || "medium",
-        status: "pending",
-        assigned_to: assigned_to || null,
-        due_date: due_date || null,
-        created_by: user.id,
+        task_id: params.taskId,
+        content: content.trim(),
+        user_id: user.id,
       })
       .select(
         `
         *,
-        created_by:users!tasks_created_by_fkey(display_name, email),
-        assigned_to:users!tasks_assigned_to_fkey(display_name, email)
+        user:users!task_comments_user_id_fkey(display_name, email)
       `
       )
       .single();
 
     if (createError) {
-      console.error("Error creating task:", createError);
       return NextResponse.json(
-        { error: "Failed to create task" },
+        { error: "Failed to create comment" },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ data: task }, { status: 201 });
+    return NextResponse.json({ data: comment });
   } catch (error) {
-    console.error("Error in POST /api/projects/[id]/tasks:", error);
+    console.error(
+      "Error in POST /api/projects/[id]/tasks/[taskId]/comments:",
+      error
+    );
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -27,10 +27,11 @@ interface Comment {
 }
 
 interface TaskCommentsProps {
+  projectId: string;
   taskId: string;
 }
 
-export default function TaskComments({ taskId }: TaskCommentsProps) {
+export default function TaskComments({ projectId, taskId }: TaskCommentsProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
@@ -41,11 +42,13 @@ export default function TaskComments({ taskId }: TaskCommentsProps) {
 
   useEffect(() => {
     fetchComments();
-  }, [taskId]);
+  }, [projectId, taskId]);
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`/api/tasks/${taskId}/comments`);
+      const response = await fetch(
+        `/api/projects/${projectId}/tasks/${taskId}/comments`
+      );
       const data = await response.json();
 
       if (data.error) {
@@ -66,13 +69,16 @@ export default function TaskComments({ taskId }: TaskCommentsProps) {
 
     setSubmitting(true);
     try {
-      const response = await fetch(`/api/tasks/${taskId}/comments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content: newComment }),
-      });
+      const response = await fetch(
+        `/api/projects/${projectId}/tasks/${taskId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: newComment }),
+        }
+      );
 
       if (response.ok) {
         setNewComment("");
@@ -91,13 +97,16 @@ export default function TaskComments({ taskId }: TaskCommentsProps) {
     if (!editContent.trim()) return;
 
     try {
-      const response = await fetch(`/api/tasks/${taskId}/comments/${commentId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content: editContent }),
-      });
+      const response = await fetch(
+        `/api/projects/${projectId}/tasks/${taskId}/comments/${commentId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: editContent }),
+        }
+      );
 
       if (response.ok) {
         setEditingComment(null);
@@ -115,9 +124,12 @@ export default function TaskComments({ taskId }: TaskCommentsProps) {
     if (!confirm("Are you sure you want to delete this comment?")) return;
 
     try {
-      const response = await fetch(`/api/tasks/${taskId}/comments/${commentId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/projects/${projectId}/tasks/${taskId}/comments/${commentId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         fetchComments();
@@ -198,8 +210,12 @@ export default function TaskComments({ taskId }: TaskCommentsProps) {
           {comments.length === 0 ? (
             <div className="text-center py-8">
               <MessageSquare className="w-12 h-12 mx-auto mb-4 text-neutral-400" />
-              <h3 className="text-lg font-medium text-white mb-2">No Comments Yet</h3>
-              <p className="text-neutral-400">Be the first to add a comment to this task.</p>
+              <h3 className="text-lg font-medium text-white mb-2">
+                No Comments Yet
+              </h3>
+              <p className="text-neutral-400">
+                Be the first to add a comment to this task.
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -232,7 +248,7 @@ export default function TaskComments({ taskId }: TaskCommentsProps) {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Comment Actions */}
                     <div className="flex items-center gap-1">
                       <Button
@@ -288,7 +304,9 @@ export default function TaskComments({ taskId }: TaskCommentsProps) {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-white leading-relaxed">{comment.content}</p>
+                    <p className="text-white leading-relaxed">
+                      {comment.content}
+                    </p>
                   )}
                 </div>
               ))}
@@ -298,4 +316,4 @@ export default function TaskComments({ taskId }: TaskCommentsProps) {
       </Card>
     </div>
   );
-} 
+}

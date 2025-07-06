@@ -555,17 +555,41 @@ export default function ProjectDashboardPage() {
           )}
 
           {activeTab === "finance" && (
-            <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-              <CardContent className="p-8 text-center">
-                <TrendingUp className="w-12 h-12 mx-auto mb-4 text-neutral-400" />
-                <h3 className="text-lg font-medium text-white mb-2">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-medium text-white">
                   Financial Management
                 </h3>
-                <p className="text-neutral-400">
-                  Financial tracking system coming soon...
-                </p>
-              </CardContent>
-            </Card>
+                <Button
+                  onClick={() => router.push(`/projects/${projectId}/finance`)}
+                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  View Detailed Finance
+                </Button>
+              </div>
+
+              <Card className="bg-[#23232a] border-orange-500 shadow-lg">
+                <CardContent className="p-8 text-center">
+                  <TrendingUp className="w-12 h-12 mx-auto mb-4 text-neutral-400" />
+                  <h3 className="text-lg font-medium text-white mb-2">
+                    Financial Dashboard
+                  </h3>
+                  <p className="text-neutral-400 mb-4">
+                    Track income, expenses, and financial trends for this
+                    project.
+                  </p>
+                  <Button
+                    onClick={() =>
+                      router.push(`/projects/${projectId}/finance`)
+                    }
+                    className="bg-orange-500 hover:bg-orange-600 text-white"
+                  >
+                    Open Finance Dashboard
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {activeTab === "requests" && (

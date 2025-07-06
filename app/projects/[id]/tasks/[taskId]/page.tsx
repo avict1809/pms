@@ -264,7 +264,9 @@ export default function TaskDetailPage() {
             <TaskDetails task={task} onTaskUpdated={fetchTask} />
           )}
 
-          {activeTab === "comments" && <TaskComments taskId={task.id} />}
+          {activeTab === "comments" && (
+            <TaskComments projectId={params.id as string} taskId={task.id} />
+          )}
 
           {activeTab === "actions" && (
             <TaskActions task={task} onTaskUpdated={fetchTask} />

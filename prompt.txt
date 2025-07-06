@@ -1,1 +1,1 @@
-now continue following the @DEVELOPMENT_PLAN.md while barinf in mind the @FOLDER_STRUCTURE.md continue with the next tasks while keeping the design inspiration as well
+now continue following the @DEVELOPMENT_PLAN.md while bairing in mind the @FOLDER_STRUCTURE.md continue with the next tasks while keeping the design inspiration as well

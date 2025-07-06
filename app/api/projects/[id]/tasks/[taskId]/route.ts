@@ -3,7 +3,7 @@ import { supabase } from "@/supabase/client";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string; taskId: string } }
 ) {
   try {
     // Get current user
@@ -15,43 +15,39 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get task with project and user details
+    // Check if user has access to this project
+    const { data: projectAccess, error: accessError } = await supabase
+      .from("project_members")
+      .select("role")
+      .eq("project_id", params.id)
+      .eq("user_id", user.id)
+      .single();
+
+    if (accessError && !projectAccess) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Get task details
     const { data: task, error: taskError } = await supabase
       .from("tasks")
       .select(
         `
         *,
-        project:projects!tasks_project_id_fkey(
-          id,
-          title,
-          project_members!project_members_project_id_fkey(
-            user_id,
-            role
-          )
-        ),
         created_by:users!tasks_created_by_fkey(display_name, email),
         assigned_to:users!tasks_assigned_to_fkey(display_name, email)
       `
       )
-      .eq("id", params.id)
+      .eq("id", params.taskId)
+      .eq("project_id", params.id)
       .single();
 
     if (taskError) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
 
-    // Check if user has access to the project
-    const hasAccess = task.project.project_members.some(
-      (member: any) => member.user_id === user.id
-    );
-
-    if (!hasAccess) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
-
     return NextResponse.json({ data: task });
   } catch (error) {
-    console.error("Error in GET /api/tasks/[id]:", error);
+    console.error("Error in GET /api/projects/[id]/tasks/[taskId]:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -61,7 +57,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string; taskId: string } }
 ) {
   try {
     // Get current user
@@ -71,6 +67,18 @@ export async function PUT(
     } = await supabase.auth.getUser();
     if (userError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check if user has access to this project
+    const { data: projectAccess, error: accessError } = await supabase
+      .from("project_members")
+      .select("role")
+      .eq("project_id", params.id)
+      .eq("user_id", user.id)
+      .single();
+
+    if (accessError && !projectAccess) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     const body = await request.json();
@@ -89,7 +97,8 @@ export async function PUT(
         due_date: due_date,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", params.id)
+      .eq("id", params.taskId)
+      .eq("project_id", params.id)
       .select(
         `
         *,
@@ -108,7 +117,7 @@ export async function PUT(
 
     return NextResponse.json({ data: task });
   } catch (error) {
-    console.error("Error in PUT /api/tasks/[id]:", error);
+    console.error("Error in PUT /api/projects/[id]/tasks/[taskId]:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -118,7 +127,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string; taskId: string } }
 ) {
   try {
     // Get current user
@@ -130,11 +139,24 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Check if user has access to this project
+    const { data: projectAccess, error: accessError } = await supabase
+      .from("project_members")
+      .select("role")
+      .eq("project_id", params.id)
+      .eq("user_id", user.id)
+      .single();
+
+    if (accessError && !projectAccess) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
     // Delete task
     const { error: deleteError } = await supabase
       .from("tasks")
       .delete()
-      .eq("id", params.id);
+      .eq("id", params.taskId)
+      .eq("project_id", params.id);
 
     if (deleteError) {
       return NextResponse.json(
@@ -145,7 +167,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Task deleted successfully" });
   } catch (error) {
-    console.error("Error in DELETE /api/tasks/[id]:", error);
+    console.error("Error in DELETE /api/projects/[id]/tasks/[taskId]:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
