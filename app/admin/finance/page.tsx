@@ -26,7 +26,7 @@ interface ProjectFinance {
 interface SystemFinance {
   total_income: number;
   total_expenses: number;
-  total_balance: number;
+  balance: number;
   project_count: number;
   record_count: number;
 }
@@ -121,7 +121,7 @@ export default function AdminFinancePage() {
                 <TrendingUp className="w-8 h-8 text-cyan-400" />
                 <div>
                   <div className="text-cyan-400 text-lg font-bold">
-                    ${systemFinance.total_income.toLocaleString()}
+                    ${(systemFinance.total_income ?? 0).toLocaleString()}
                   </div>
                   <div className="text-neutral-400 text-sm">Total Income</div>
                 </div>
@@ -133,7 +133,7 @@ export default function AdminFinancePage() {
                 <TrendingDown className="w-8 h-8 text-orange-400" />
                 <div>
                   <div className="text-orange-400 text-lg font-bold">
-                    ${systemFinance.total_expenses.toLocaleString()}
+                    ${(systemFinance.total_expenses ?? 0).toLocaleString()}
                   </div>
                   <div className="text-neutral-400 text-sm">Total Expenses</div>
                 </div>
@@ -145,7 +145,7 @@ export default function AdminFinancePage() {
                 <DollarSign className="w-8 h-8 text-green-400" />
                 <div>
                   <div className="text-green-400 text-lg font-bold">
-                    ${systemFinance.total_balance.toLocaleString()}
+                    ${(systemFinance.balance ?? 0).toLocaleString()}
                   </div>
                   <div className="text-neutral-400 text-sm">Net Balance</div>
                 </div>
@@ -157,7 +157,7 @@ export default function AdminFinancePage() {
                 <FolderOpen className="w-8 h-8 text-blue-400" />
                 <div>
                   <div className="text-blue-400 text-lg font-bold">
-                    {systemFinance.project_count}
+                    {systemFinance.project_count ?? 0}
                   </div>
                   <div className="text-neutral-400 text-sm">
                     Active Projects
@@ -171,7 +171,7 @@ export default function AdminFinancePage() {
                 <BarChart3 className="w-8 h-8 text-purple-400" />
                 <div>
                   <div className="text-purple-400 text-lg font-bold">
-                    {systemFinance.record_count}
+                    {systemFinance.record_count ?? 0}
                   </div>
                   <div className="text-neutral-400 text-sm">Total Records</div>
                 </div>
@@ -228,35 +228,37 @@ export default function AdminFinancePage() {
                           {project.title}
                         </td>
                         <td className="py-3 px-4 text-right text-cyan-400">
-                          ${project.total_income.toLocaleString()}
+                          ${(project.total_income ?? 0).toLocaleString()}
                         </td>
                         <td className="py-3 px-4 text-right text-orange-400">
-                          ${project.total_expenses.toLocaleString()}
+                          ${(project.total_expenses ?? 0).toLocaleString()}
                         </td>
                         <td className="py-3 px-4 text-right">
                           <span
                             className={
-                              project.balance >= 0
+                              (project.balance ?? 0) >= 0
                                 ? "text-green-400"
                                 : "text-red-400"
                             }
                           >
-                            ${project.balance.toLocaleString()}
+                            ${(project.balance ?? 0).toLocaleString()}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-right text-neutral-400">
-                          {project.record_count}
+                          {project.record_count ?? 0}
                         </td>
                         <td className="py-3 px-4 text-center">
                           <Badge
                             variant="outline"
                             className={
-                              project.balance >= 0
+                              (project.balance ?? 0) >= 0
                                 ? "border-green-500 text-green-400"
                                 : "border-red-500 text-red-400"
                             }
                           >
-                            {project.balance >= 0 ? "Profitable" : "Deficit"}
+                            {(project.balance ?? 0) >= 0
+                              ? "Profitable"
+                              : "Deficit"}
                           </Badge>
                         </td>
                       </tr>

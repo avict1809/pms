@@ -593,17 +593,49 @@ export default function ProjectDashboardPage() {
           )}
 
           {activeTab === "requests" && (
-            <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-              <CardContent className="p-8 text-center">
-                <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-neutral-400" />
-                <h3 className="text-lg font-medium text-white mb-2">
-                  Approval Requests
-                </h3>
-                <p className="text-neutral-400">
-                  Request management system coming soon...
-                </p>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-white">
+                    Approval Requests
+                  </h2>
+                  <p className="text-neutral-400">
+                    Manage and submit approval requests for this project
+                  </p>
+                </div>
+                <Button
+                  onClick={() =>
+                    (window.location.href = `/projects/${projectId}/requests`)
+                  }
+                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  <AlertTriangle className="w-4 h-4 mr-2" />
+                  View All Requests
+                </Button>
+              </div>
+
+              <Card className="bg-[#23232a] border-orange-500 shadow-lg">
+                <CardContent className="p-8 text-center">
+                  <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-neutral-400" />
+                  <h3 className="text-lg font-medium text-white mb-2">
+                    Approval Requests
+                  </h3>
+                  <p className="text-neutral-400 mb-4">
+                    Submit and track approval requests for tools, documents,
+                    budget changes, and more.
+                  </p>
+                  <Button
+                    onClick={() =>
+                      (window.location.href = `/projects/${projectId}/requests`)
+                    }
+                    className="bg-orange-500 hover:bg-orange-600 text-white"
+                  >
+                    <AlertTriangle className="w-4 h-4 mr-2" />
+                    Manage Requests
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {activeTab === "settings" && (

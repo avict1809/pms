@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
@@ -175,12 +176,12 @@ export default function Sidebar() {
               onClick={() => setActiveSection(item.id)}
               asChild
             >
-              <a href={item.href}>
+              <Link href={item.href}>
                 <item.icon className="w-5 h-5 md:w-5 md:h-5 sm:w-6 sm:h-6" />
                 {!sidebarCollapsed && (
                   <span className="text-sm font-medium">{item.label}</span>
                 )}
-              </a>
+              </Link>
             </Button>
           ))}
         </nav>
@@ -193,10 +194,10 @@ export default function Sidebar() {
               className="w-full flex items-center gap-3 p-3 rounded transition-colors justify-start text-neutral-400 hover:text-white hover:bg-neutral-800"
               asChild
             >
-              <a href="/profile">
+              <Link href="/profile">
                 <User className="w-5 h-5" />
                 <span className="text-sm font-medium">Profile/Settings</span>
-              </a>
+              </Link>
             </Button>
             <Button
               variant="destructive"

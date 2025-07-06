@@ -66,7 +66,7 @@ export default function AuthGuard({ children, requiredRole }: AuthGuardProps) {
 
   if (loading || checkingRole) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#18181b]">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-orange-400 text-lg">Loading...</div>
       </div>
     );

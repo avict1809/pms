@@ -1,33 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/supabase/client";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createClient();
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll() {},
+        },
+      }
+    );
+
     const projectId = params.id;
-
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user is a member of the project
-    const { data: projectMember, error: memberError } = await supabase
-      .from("project_members")
-      .select("*")
-      .eq("project_id", projectId)
-      .eq("user_id", user.id)
-      .single();
-    if (memberError) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
 
     // Fetch financial records for the project with user info
     const { data: records, error: recordsError } = await supabase
@@ -74,29 +68,22 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createClient();
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll() {},
+        },
+      }
+    );
+
     const projectId = params.id;
     const body = await request.json();
-
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user is a member of the project
-    const { data: projectMember, error: memberError } = await supabase
-      .from("project_members")
-      .select("*")
-      .eq("project_id", projectId)
-      .eq("user_id", user.id)
-      .single();
-    if (memberError) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
 
     // Validate required fields
     if (
@@ -119,7 +106,7 @@ export async function POST(
         description: body.description || "",
         type: body.type,
         category: body.category || null,
-        recorded_by: user.id,
+        recorded_by: null, // Anonymous record
         date: body.date || null,
       })
       .select(

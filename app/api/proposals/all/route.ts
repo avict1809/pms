@@ -1,30 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "../../../../supabase/client";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export async function GET(request: NextRequest) {
   try {
-    const { data, error } = await supabase
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll() {},
+        },
+      }
+    );
+
+    // Get all proposals
+    const { data: proposals, error } = await supabase
       .from("project_proposals")
       .select(
         `
-        id,
-        title,
-        description,
-        objectives,
-        methodology,
-        expected_outcomes,
-        timeline,
-        resources,
-        status,
-        created_at,
-        updated_at,
-        admin_comment,
-        reviewed_by,
-        reviewed_at,
-        proposed_by,
-        user:users!project_proposals_proposed_by_fkey(
+        *,
+        proposed_by_user:users!project_proposals_proposed_by_fkey(
+          id,
           display_name,
-          email
+          email,
+          role
         )
       `
       )
@@ -38,9 +42,86 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ data });
+    return NextResponse.json({ data: proposals });
   } catch (error) {
-    console.error("Error in all-proposals API:", error);
+    console.error("Error in GET /api/proposals/all:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll() {},
+        },
+      }
+    );
+
+    const {
+      title,
+      description,
+      objectives,
+      methodology,
+      expected_outcomes,
+      timeline,
+      resources,
+    } = await request.json();
+
+    if (!title || !description) {
+      return NextResponse.json(
+        { error: "Title and description are required" },
+        { status: 400 }
+      );
+    }
+
+    const { data: proposal, error: insertError } = await supabase
+      .from("project_proposals")
+      .insert({
+        title,
+        description,
+        objectives: objectives || null,
+        methodology: methodology || null,
+        expected_outcomes: expected_outcomes || null,
+        timeline: timeline || null,
+        resources: resources || null,
+        status: "pending",
+        proposed_by: null, // Anonymous submission
+      })
+      .select(
+        `
+        *,
+        proposed_by_user:users!project_proposals_proposed_by_fkey(
+          id,
+          display_name,
+          email,
+          role
+        )
+      `
+      )
+      .single();
+
+    if (insertError) {
+      console.error("Error creating proposal:", insertError);
+      return NextResponse.json(
+        { error: "Failed to create proposal" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ data: proposal }, { status: 201 });
+  } catch (error) {
+    console.error("Error in POST /api/proposals/all:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

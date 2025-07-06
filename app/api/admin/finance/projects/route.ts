@@ -1,31 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/supabase/client";
 
 export async function GET(request: NextRequest) {
   try {
-    // supabase client is already imported
-
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user is admin
-    const { data: userData, error: roleError } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    if (roleError || userData?.role !== "admin") {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
-
     // Get all projects with their financial records
+    const { createServerClient } = await import("@supabase/ssr");
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll() {},
+        },
+      }
+    );
     const { data: projects, error: projectsError } = await supabase.from(
       "projects"
     ).select(`
@@ -48,15 +40,12 @@ export async function GET(request: NextRequest) {
     const projectFinances = projects.map((project) => {
       const records = project.financial_records || [];
       const totalIncome = records
-        .filter((r: any) => r.type === "income")
-        .reduce((sum: number, r: any) => sum + Number(r.amount), 0);
-
+        .filter((r) => r.type === "income")
+        .reduce((sum, r) => sum + Number(r.amount), 0);
       const totalExpenses = records
-        .filter((r: any) => r.type === "expense")
-        .reduce((sum: number, r: any) => sum + Number(r.amount), 0);
-
+        .filter((r) => r.type === "expense")
+        .reduce((sum, r) => sum + Number(r.amount), 0);
       const balance = totalIncome - totalExpenses;
-
       return {
         id: project.id,
         title: project.title,
@@ -66,7 +55,6 @@ export async function GET(request: NextRequest) {
         record_count: records.length,
       };
     });
-
     return NextResponse.json({ data: projectFinances });
   } catch (error) {
     console.error("Error in GET /api/admin/finance/projects:", error);

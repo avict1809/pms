@@ -52,7 +52,7 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#18181b] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-orange-400 text-lg">Loading...</div>
       </div>
     );
@@ -64,7 +64,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#18181b] text-white p-6">
+    <div className="min-h-screen text-white p-6">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-orange-400 tracking-wider mb-4">

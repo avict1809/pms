@@ -1,31 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/supabase/client";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user has access to this project
-    const { data: projectAccess, error: accessError } = await supabase
-      .from("project_members")
-      .select("role")
-      .eq("project_id", params.id)
-      .eq("user_id", user.id)
-      .single();
-
-    if (accessError && !projectAccess) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll() {},
+        },
+      }
+    );
 
     // Get tasks for the project
     const { data: tasks, error: tasksError } = await supabase
@@ -63,26 +57,19 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user has access to this project
-    const { data: projectAccess, error: accessError } = await supabase
-      .from("project_members")
-      .select("role")
-      .eq("project_id", params.id)
-      .eq("user_id", user.id)
-      .single();
-
-    if (accessError && !projectAccess) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll() {},
+        },
+      }
+    );
 
     const body = await request.json();
     const { title, description, priority, assigned_to, due_date } = body;
@@ -102,7 +89,7 @@ export async function POST(
         status: "pending",
         assigned_to: assigned_to || null,
         due_date: due_date || null,
-        created_by: user.id,
+        created_by: null, // Anonymous creation
       })
       .select(
         `
