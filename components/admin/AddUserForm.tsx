@@ -2,26 +2,32 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { X, UserPlus, Mail, User, Shield } from "lucide-react";
+import { useCreateUser, CreateUserData } from "@/hooks/useUsers";
 
 interface AddUserFormProps {
   onClose: () => void;
-  onSubmit: (userData: any) => void;
 }
 
-export default function AddUserForm({ onClose, onSubmit }: AddUserFormProps) {
-  const [formData, setFormData] = useState({
+export default function AddUserForm({ onClose }: AddUserFormProps) {
+  const createUserMutation = useCreateUser();
+  const [formData, setFormData] = useState<CreateUserData>({
     email: "",
-    displayName: "",
+    display_name: "",
     role: "student",
-    isActive: false,
+    is_active: false,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
-    onClose();
+
+    try {
+      await createUserMutation.mutateAsync(formData);
+      onClose();
+    } catch (error) {
+      // Error is handled by the mutation hook
+      console.error("Error creating user:", error);
+    }
   };
 
   const handleChange = (field: string, value: string | boolean) => {
@@ -56,7 +62,8 @@ export default function AddUserForm({ onClose, onSubmit }: AddUserFormProps) {
                   value={formData.email}
                   onChange={(e) => handleChange("email", e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none"
+                  disabled={createUserMutation.isPending}
+                  className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none disabled:opacity-50"
                   placeholder="user@example.com"
                 />
               </div>
@@ -70,10 +77,11 @@ export default function AddUserForm({ onClose, onSubmit }: AddUserFormProps) {
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-4 h-4" />
                 <input
                   type="text"
-                  value={formData.displayName}
-                  onChange={(e) => handleChange("displayName", e.target.value)}
+                  value={formData.display_name}
+                  onChange={(e) => handleChange("display_name", e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none"
+                  disabled={createUserMutation.isPending}
+                  className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none disabled:opacity-50"
                   placeholder="Full Name"
                 />
               </div>
@@ -85,8 +93,14 @@ export default function AddUserForm({ onClose, onSubmit }: AddUserFormProps) {
                 <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-4 h-4" />
                 <select
                   value={formData.role}
-                  onChange={(e) => handleChange("role", e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white focus:border-orange-400 outline-none"
+                  onChange={(e) =>
+                    handleChange(
+                      "role",
+                      e.target.value as "admin" | "supervisor" | "student"
+                    )
+                  }
+                  disabled={createUserMutation.isPending}
+                  className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white focus:border-orange-400 outline-none disabled:opacity-50"
                 >
                   <option value="student">Student</option>
                   <option value="supervisor">Supervisor</option>
@@ -99,9 +113,10 @@ export default function AddUserForm({ onClose, onSubmit }: AddUserFormProps) {
               <input
                 type="checkbox"
                 id="isActive"
-                checked={formData.isActive}
-                onChange={(e) => handleChange("isActive", e.target.checked)}
-                className="w-4 h-4 text-orange-500 bg-[#18181b] border-neutral-700 rounded focus:ring-orange-400"
+                checked={formData.is_active}
+                onChange={(e) => handleChange("is_active", e.target.checked)}
+                disabled={createUserMutation.isPending}
+                className="w-4 h-4 text-orange-500 bg-[#18181b] border-neutral-700 rounded focus:ring-orange-400 disabled:opacity-50"
               />
               <label htmlFor="isActive" className="text-gray-300 text-sm">
                 Activate user immediately
@@ -113,12 +128,17 @@ export default function AddUserForm({ onClose, onSubmit }: AddUserFormProps) {
                 type="button"
                 variant="outline"
                 onClick={onClose}
+                disabled={createUserMutation.isPending}
                 className="flex-1"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="flex-1">
-                Create User
+              <Button
+                type="submit"
+                disabled={createUserMutation.isPending}
+                className="flex-1"
+              >
+                {createUserMutation.isPending ? "Creating..." : "Create User"}
               </Button>
             </div>
           </form>

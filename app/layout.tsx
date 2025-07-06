@@ -4,6 +4,8 @@ import "./globals.css";
 import { SupabaseProvider } from "../supabase/context";
 import AppLayout from "../components/layout/AppLayout";
 import PWAScript from "../components/pwa/PWAScript";
+import { QueryProvider } from "../components/providers/QueryProvider";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -114,9 +116,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SupabaseProvider>
-          <AppLayout>{children}</AppLayout>
-        </SupabaseProvider>
+        <QueryProvider>
+          <SupabaseProvider>
+            <AppLayout>{children}</AppLayout>
+          </SupabaseProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: "#23232a",
+                color: "#fff",
+                border: "1px solid #f97316",
+              },
+            }}
+          />
+        </QueryProvider>
         <PWAScript />
       </body>
     </html>

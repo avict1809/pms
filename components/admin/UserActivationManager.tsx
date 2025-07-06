@@ -12,20 +12,11 @@ import {
   XCircle,
   AlertTriangle,
 } from "lucide-react";
-
-interface User {
-  id: string;
-  email: string;
-  displayName: string;
-  role: string;
-  isActive: boolean;
-  isFirstLogin: boolean;
-  createdAt: string;
-}
+import { User } from "@/hooks/useUsers";
 
 interface UserActivationManagerProps {
   users: User[];
-  onUserUpdate: (userId: string, updates: Partial<User>) => void;
+  onUserUpdate: (userId: string, updates: any) => void;
 }
 
 export default function UserActivationManager({
@@ -35,8 +26,8 @@ export default function UserActivationManager({
   const [selectedAction, setSelectedAction] = useState<string>("");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
-  const pendingUsers = users.filter((user) => !user.isActive);
-  const activeUsers = users.filter((user) => user.isActive);
+  const pendingUsers = users.filter((user) => !user.is_active);
+  const activeUsers = users.filter((user) => user.is_active);
 
   const handleSelectUser = (userId: string) => {
     setSelectedUsers((prev) =>
@@ -57,11 +48,11 @@ export default function UserActivationManager({
   const handleBulkAction = () => {
     if (selectedAction === "activate") {
       selectedUsers.forEach((userId) => {
-        onUserUpdate(userId, { isActive: true });
+        onUserUpdate(userId, { is_active: true });
       });
     } else if (selectedAction === "deactivate") {
       selectedUsers.forEach((userId) => {
-        onUserUpdate(userId, { isActive: false });
+        onUserUpdate(userId, { is_active: false });
       });
     }
     setSelectedUsers([]);
@@ -199,7 +190,7 @@ export default function UserActivationManager({
                   key={user.id}
                   className="flex items-center justify-between p-4 bg-[#18181b] rounded border border-neutral-700"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <input
                       type="checkbox"
                       checked={selectedUsers.includes(user.id)}
@@ -208,31 +199,23 @@ export default function UserActivationManager({
                     />
                     <div>
                       <div className="font-medium text-white">
-                        {user.displayName}
+                        {user.display_name}
                       </div>
                       <div className="text-sm text-neutral-400">
                         {user.email}
                       </div>
                     </div>
                   </div>
-
                   <div className="flex items-center gap-3">
                     <Badge
                       variant="outline"
-                      className={
-                        user.role === "admin"
-                          ? "border-red-500 text-red-400"
-                          : user.role === "supervisor"
-                          ? "border-blue-500 text-blue-400"
-                          : "border-green-500 text-green-400"
-                      }
+                      className="border-blue-500 text-blue-400"
                     >
                       {user.role}
                     </Badge>
-
                     <Button
                       size="sm"
-                      onClick={() => onUserUpdate(user.id, { isActive: true })}
+                      onClick={() => onUserUpdate(user.id, { is_active: true })}
                       className="bg-green-500 hover:bg-green-600 text-white"
                     >
                       <UserCheck className="w-4 h-4 mr-1" />
@@ -263,33 +246,34 @@ export default function UserActivationManager({
               >
                 <div>
                   <div className="font-medium text-white">
-                    {user.displayName}
+                    {user.display_name}
                   </div>
                   <div className="text-sm text-neutral-400">{user.email}</div>
                 </div>
-
                 <div className="flex items-center gap-3">
                   <Badge
                     variant="outline"
-                    className={
-                      user.role === "admin"
-                        ? "border-red-500 text-red-400"
-                        : user.role === "supervisor"
-                        ? "border-blue-500 text-blue-400"
-                        : "border-green-500 text-green-400"
-                    }
+                    className="border-blue-500 text-blue-400"
                   >
                     {user.role}
                   </Badge>
-
-                  <Badge variant="default" className="bg-green-500 text-white">
-                    Active
+                  <Badge
+                    variant="outline"
+                    className={
+                      user.is_first_login
+                        ? "border-yellow-500 text-yellow-400"
+                        : "border-green-500 text-green-400"
+                    }
+                  >
+                    {user.is_first_login
+                      ? "First Login Pending"
+                      : "Setup Complete"}
                   </Badge>
-
                   <Button
                     size="sm"
-                    variant="destructive"
-                    onClick={() => onUserUpdate(user.id, { isActive: false })}
+                    variant="outline"
+                    onClick={() => onUserUpdate(user.id, { is_active: false })}
+                    className="border-red-500 text-red-400 hover:bg-red-500 hover:text-white"
                   >
                     <UserX className="w-4 h-4 mr-1" />
                     Deactivate

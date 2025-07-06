@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SignInForm from "../../../components/auth/SignInForm";
 import { useSupabase } from "../../../supabase/context";
+import { supabase } from "../../../supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,13 +14,11 @@ export default function LoginPage() {
       // User is already authenticated, redirect to appropriate dashboard
       const redirectToDashboard = async () => {
         try {
-          const { data, error } = await fetch("/api/user/role", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId: user.id }),
-          }).then((res) => res.json());
+          const { data, error } = await supabase
+            .from("users")
+            .select("role")
+            .eq("id", user.id)
+            .single();
 
           if (error) {
             console.error("Error fetching user role:", error);

@@ -32,6 +32,7 @@ import {
   XCircle,
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
+import SystemSettings from "@/components/admin/SystemSettings";
 
 // Mock data for demonstration
 const mockTools = [
@@ -101,6 +102,7 @@ export default function AdminToolsPage() {
   const [tools, setTools] = useState(mockTools);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [activeTab, setActiveTab] = useState<"tools" | "settings">("tools");
 
   const handleToolUpdate = (toolId: string, updates: any) => {
     setTools((prevTools) =>
@@ -149,265 +151,205 @@ export default function AdminToolsPage() {
   return (
     <AuthGuard requiredRole="admin">
       <div className="space-y-8">
+        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Wrench className="text-orange-500 w-7 h-7" />
             <h1 className="text-2xl font-bold text-orange-400 tracking-wider">
-              Tool Management
+              Admin Tools & Settings
             </h1>
           </div>
-          <div className="flex gap-3">
-            <Button variant="outline">
-              <Settings className="w-4 h-4 mr-2" />
-              Tool Settings
-            </Button>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Add Tool
-            </Button>
-          </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-white">{stats.totalTools}</div>
-              <div className="text-xs text-neutral-400">Total Tools</div>
-            </CardContent>
-          </Card>
-          <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-white">{stats.eligibleTools}</div>
-              <div className="text-xs text-neutral-400">Eligible Tools</div>
-            </CardContent>
-          </Card>
-          <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-white">{stats.ineligibleTools}</div>
-              <div className="text-xs text-neutral-400">Ineligible Tools</div>
-            </CardContent>
-          </Card>
-          <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-white">{stats.totalRequests}</div>
-              <div className="text-xs text-neutral-400">Total Requests</div>
-            </CardContent>
-          </Card>
+        {/* Tab Navigation */}
+        <div className="flex border-b border-gray-700">
+          <button
+            onClick={() => setActiveTab("tools")}
+            className={`px-6 py-3 font-medium transition-colors ${
+              activeTab === "tools"
+                ? "text-orange-400 border-b-2 border-orange-400"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            <Wrench className="w-4 h-4 inline mr-2" />
+            Tool Management
+          </button>
+          <button
+            onClick={() => setActiveTab("settings")}
+            className={`px-6 py-3 font-medium transition-colors ${
+              activeTab === "settings"
+                ? "text-orange-400 border-b-2 border-orange-400"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            <Settings className="w-4 h-4 inline mr-2" />
+            System Settings
+          </button>
         </div>
 
-        {/* Search and Filters */}
-        <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search tools..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none"
-                />
+        {/* Tab Content */}
+        {activeTab === "tools" && (
+          <div className="space-y-8">
+            {/* Tool Management Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-white">
+                  Tool Management
+                </h2>
+                <p className="text-gray-400">
+                  Manage available tools and software for projects
+                </p>
               </div>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white focus:border-orange-400 outline-none"
-              >
-                <option value="all">All Status</option>
-                <option value="eligible">Eligible</option>
-                <option value="ineligible">Ineligible</option>
-              </select>
-              <Button variant="outline">
-                <Filter className="w-4 h-4 mr-2" />
-                Filter
-              </Button>
+              <div className="flex gap-3">
+                <Button variant="outline">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Tool Settings
+                </Button>
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Tool
+                </Button>
+              </div>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Tools Table */}
-        <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-orange-400">All Tools</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-neutral-700">
-                    <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                      Tool
-                    </th>
-                    <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                      Category
-                    </th>
-                    <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                      Status
-                    </th>
-                    <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                      Requests
-                    </th>
-                    <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                      Approval Rate
-                    </th>
-                    <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                      Added
-                    </th>
-                    <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredTools.map((tool) => (
-                    <tr
-                      key={tool.id}
-                      className="border-b border-neutral-800 hover:bg-neutral-800/50"
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <Card className="bg-[#23232a] border-orange-500 shadow-lg">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-white">
+                    {stats.totalTools}
+                  </div>
+                  <div className="text-xs text-neutral-400">Total Tools</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-[#23232a] border-orange-500 shadow-lg">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-white">
+                    {stats.eligibleTools}
+                  </div>
+                  <div className="text-xs text-neutral-400">Eligible Tools</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-[#23232a] border-orange-500 shadow-lg">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-white">
+                    {stats.ineligibleTools}
+                  </div>
+                  <div className="text-xs text-neutral-400">
+                    Ineligible Tools
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-[#23232a] border-orange-500 shadow-lg">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-white">
+                    {stats.totalRequests}
+                  </div>
+                  <div className="text-xs text-neutral-400">Total Requests</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Search and Filters */}
+            <Card className="bg-[#23232a] border-orange-500 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <input
+                        type="text"
+                        placeholder="Search tools..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-gray-700 rounded-md text-white placeholder-gray-400 focus:border-orange-400 outline-none"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="px-4 py-2 bg-[#18181b] border border-gray-700 rounded-md text-white focus:border-orange-400 outline-none"
                     >
-                      <td className="py-3 px-4">
-                        <div>
-                          <div className="font-medium text-white">
-                            {tool.name}
-                          </div>
-                          <div className="text-sm text-neutral-400">
-                            {tool.description}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge className={getCategoryColor(tool.category)}>
-                          {tool.category}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge className={getStatusColor(tool.status)}>
-                          {tool.status === "eligible" ? (
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                          ) : (
-                            <XCircle className="w-3 h-3 mr-1" />
-                          )}
-                          {tool.status}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="text-white font-medium">
-                          {tool.requestCount}
-                        </div>
-                        <div className="text-xs text-neutral-400">requests</div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <div className="text-white font-medium">
-                            {tool.approvalRate}%
-                          </div>
-                          <div className="w-16 bg-neutral-700 rounded-full h-2">
-                            <div
-                              className="bg-green-500 h-2 rounded-full"
-                              style={{ width: `${tool.approvalRate}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-neutral-400 text-sm">
-                        {new Date(tool.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-neutral-400 hover:text-white"
-                            onClick={() => handleToolUpdate(tool.id, {
-                              status: tool.status === "eligible" ? "ineligible" : "eligible"
-                            })}
-                          >
-                            {tool.status === "eligible" ? (
-                              <XCircle className="w-4 h-4" />
-                            ) : (
-                              <CheckCircle className="w-4 h-4" />
-                            )}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-neutral-400 hover:text-white"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-red-400 hover:text-red-300"
-                            onClick={() => handleToolDelete(tool.id)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+                      <option value="all">All Status</option>
+                      <option value="eligible">Eligible</option>
+                      <option value="ineligible">Ineligible</option>
+                    </select>
+                    <Button variant="outline">
+                      <Filter className="w-4 h-4 mr-2" />
+                      More Filters
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        {/* Analytics Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-orange-400">Most Requested Tools</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {tools
-                  .sort((a, b) => b.requestCount - a.requestCount)
-                  .slice(0, 5)
-                  .map((tool) => (
-                    <div key={tool.id} className="flex items-center justify-between">
+            {/* Tools List */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTools.map((tool) => (
+                <Card
+                  key={tool.id}
+                  className="bg-[#23232a] border-orange-500 shadow-lg"
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-white text-lg">
+                          {tool.name}
+                        </CardTitle>
+                        <CardDescription className="text-gray-400 mt-1">
+                          {tool.description}
+                        </CardDescription>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleToolDelete(tool.id)}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Badge className={getCategoryColor(tool.category)}>
+                        {tool.category}
+                      </Badge>
+                      <Badge className={getStatusColor(tool.status)}>
+                        {tool.status}
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <div className="text-white font-medium">{tool.name}</div>
-                        <div className="text-sm text-neutral-400">{tool.category}</div>
+                        <span className="text-gray-400">Requests:</span>
+                        <span className="text-white ml-2">
+                          {tool.requestCount}
+                        </span>
                       </div>
-                      <div className="text-right">
-                        <div className="text-white font-medium">{tool.requestCount}</div>
-                        <div className="text-xs text-neutral-400">requests</div>
+                      <div>
+                        <span className="text-gray-400">Approval Rate:</span>
+                        <span className="text-white ml-2">
+                          {tool.approvalRate}%
+                        </span>
                       </div>
                     </div>
-                  ))}
-              </div>
-            </CardContent>
-          </Card>
+                    <div className="text-xs text-gray-500">
+                      Added: {new Date(tool.createdAt).toLocaleDateString()}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
 
-          <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-orange-400">Category Distribution</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(
-                  tools.reduce((acc, tool) => {
-                    acc[tool.category] = (acc[tool.category] || 0) + 1;
-                    return acc;
-                  }, {} as { [key: string]: number })
-                )
-                  .sort(([, a], [, b]) => b - a)
-                  .map(([category, count]) => (
-                    <div key={category} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Badge className={getCategoryColor(category)}>
-                          {category}
-                        </Badge>
-                      </div>
-                      <div className="text-white font-medium">{count}</div>
-                    </div>
-                  ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {activeTab === "settings" && <SystemSettings />}
       </div>
     </AuthGuard>
   );

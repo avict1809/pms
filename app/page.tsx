@@ -35,7 +35,6 @@ export default function HomePage() {
           console.error("Error:", error);
         }
       };
-
       fetchUserData();
     }
   }, [session, user]);

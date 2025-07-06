@@ -1,43 +1,68 @@
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config({ path: '.env' });
 
-// Debug: Check if environment variables are loaded
-console.log('Environment variables:');
-console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Not set');
-console.log('SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not set');
+// Load environment variables
+require('dotenv').config({ path: '.env.local' });
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables');
+  process.exit(1);
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 async function createAdminUser() {
   try {
-    console.log('Creating admin user...');
+    console.log('Checking for existing admin user...');
     
-    // Step 1: Create user in Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: 'admin1@pms.com',
-      password: 'admin123456',
-    });
+    // Check if admin user already exists
+    const { data: existingAdmin, error: checkError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', 'admin@pms.com')
+      .single();
 
-    if (authError) {
-      console.error('Auth error:', authError);
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('Error checking for existing admin:', checkError);
       return;
     }
 
-    console.log('✅ Auth user created successfully!');
-    console.log('📧 Email: admin1@pms.com');
-    console.log('🔑 Password: admin123456');
-    console.log('🆔 User ID:', authData.user?.id);
-    console.log('');
-    console.log('⚠️  IMPORTANT: Now you need to manually insert the user record in the database.');
-    console.log('📝 Go to Supabase Dashboard > SQL Editor and run the script in supabase/insert-admin.sql');
-    console.log('🔄 Replace the user ID in the script with:', authData.user?.id);
+    if (existingAdmin) {
+      console.log('Admin user already exists:', existingAdmin.email);
+      return;
+    }
 
+    console.log('Creating admin user...');
+    
+    // Create admin user
+    const { data: newAdmin, error: insertError } = await supabase
+      .from('users')
+      .insert([
+        {
+          email: 'admin@pms.com',
+          display_name: 'System Administrator',
+          role: 'admin',
+          is_active: true,
+          is_first_login: false,
+        }
+      ])
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Error creating admin user:', insertError);
+      return;
+    }
+
+    console.log('Admin user created successfully:', newAdmin);
+    console.log('Email: admin@pms.com');
+    console.log('Role: admin');
+    console.log('Status: active');
+    
   } catch (error) {
-    console.error('Error creating admin user:', error);
+    console.error('Unexpected error:', error);
   }
 }
 
