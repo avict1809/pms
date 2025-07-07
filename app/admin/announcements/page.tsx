@@ -18,6 +18,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Megaphone,
@@ -36,6 +38,7 @@ import {
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { useAuth } from "@/hooks/useAuthRedirect";
+import { toast } from "react-hot-toast";
 
 interface Announcement {
   id: string;
@@ -66,6 +69,24 @@ interface User {
   role: string;
 }
 
+interface DeleteAnnouncementDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  announcement: Announcement | null;
+  isLoading?: boolean;
+}
+
+interface EditAnnouncementDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (formData: any) => Promise<void>;
+  announcement: Announcement | null;
+  projects: Project[];
+  users: User[];
+  isLoading?: boolean;
+}
+
 export default function AdminAnnouncements() {
   const { user, loading: authLoading } = useAuth();
 
@@ -90,6 +111,16 @@ export default function AdminAnnouncements() {
     target_id: "",
   });
 
+  const [deleteDialog, setDeleteDialog] = useState<{
+    isOpen: boolean;
+    announcement: Announcement | null;
+  }>({ isOpen: false, announcement: null });
+  const [editDialog, setEditDialog] = useState<{
+    isOpen: boolean;
+    announcement: Announcement | null;
+  }>({ isOpen: false, announcement: null });
+  const [actionLoading, setActionLoading] = useState(false);
+
   useEffect(() => {
     if (user?.id) {
       fetchAnnouncements();
@@ -101,7 +132,7 @@ export default function AdminAnnouncements() {
   const fetchAnnouncements = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3002/api/announcements?userId=${user?.id}`
+        `http://localhost:3000/api/announcements?userId=${user?.id}`
       );
       const result = await response.json();
       if (response.ok) {
@@ -116,7 +147,7 @@ export default function AdminAnnouncements() {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch("http://localhost:3002/api/projects/all");
+      const response = await fetch("http://localhost:3000/api/projects/all");
       const result = await response.json();
       if (response.ok) {
         setProjects(result.data);
@@ -128,7 +159,7 @@ export default function AdminAnnouncements() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:3002/api/admin/users");
+      const response = await fetch("http://localhost:3000/api/admin/users");
       const result = await response.json();
       if (response.ok) {
         setUsers(result.data);
@@ -165,7 +196,7 @@ export default function AdminAnnouncements() {
         return;
       }
 
-      const response = await fetch("http://localhost:3002/api/announcements", {
+      const response = await fetch("http://localhost:3000/api/announcements", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -192,22 +223,53 @@ export default function AdminAnnouncements() {
     }
   };
 
-  const handleDeleteAnnouncement = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this announcement?")) return;
-
+  const handleEditAnnouncement = async (formData: any) => {
+    if (!editDialog.announcement) return;
+    setActionLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:3002/api/announcements/${id}?userId=${user?.id}`,
+        `http://localhost:3000/api/announcements/${editDialog.announcement.id}`,
         {
-          method: "DELETE",
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, userId: user?.id }),
         }
       );
-
       if (response.ok) {
+        toast.success("Announcement updated");
+        setEditDialog({ isOpen: false, announcement: null });
         fetchAnnouncements();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.error || "Failed to update announcement");
       }
     } catch (error) {
-      console.error("Error deleting announcement:", error);
+      toast.error("Failed to update announcement");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDeleteAnnouncement = async () => {
+    if (!deleteDialog.announcement) return;
+    setActionLoading(true);
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/announcements/${deleteDialog.announcement.id}?userId=${user?.id}`,
+        { method: "DELETE" }
+      );
+      if (response.ok) {
+        toast.success("Announcement deleted");
+        setDeleteDialog({ isOpen: false, announcement: null });
+        fetchAnnouncements();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.error || "Failed to delete announcement");
+      }
+    } catch (error) {
+      toast.error("Failed to delete announcement");
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -253,6 +315,304 @@ export default function AdminAnnouncements() {
       filterType === "all" || announcement.target_type === filterType;
     return matchesSearch && matchesFilter;
   });
+
+  // Delete Announcement Dialog
+  function DeleteAnnouncementDialog(props: DeleteAnnouncementDialogProps) {
+    const {
+      isOpen,
+      onClose,
+      onConfirm,
+      announcement,
+      isLoading = false,
+    } = props;
+    if (!announcement) return null;
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="bg-[#23232a] border-orange-500 shadow-lg max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <DialogTitle className="text-xl font-bold text-red-400">
+                  Delete Announcement
+                </DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  This action cannot be undone.
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+              <div className="flex items-center gap-3 mb-3">
+                <Megaphone className="w-5 h-5 text-red-400" />
+                <span className="text-red-400 font-medium">
+                  Announcement Details
+                </span>
+              </div>
+              <div className="space-y-2 text-sm">
+                <div>
+                  <span className="text-gray-400">Title:</span>
+                  <span className="text-white ml-2 font-medium">
+                    {announcement.title}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-400">Target:</span>
+                  <span className="text-white ml-2 font-medium capitalize">
+                    {announcement.target_type}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-orange-900/20 border border-orange-500/30 rounded-lg">
+              <div className="flex items-start gap-3">
+                <Trash2 className="w-5 h-5 text-orange-400 mt-0.5" />
+                <div className="text-sm">
+                  <p className="text-orange-400 font-medium mb-1">Warning</p>
+                  <p className="text-orange-300">
+                    Deleting this announcement will permanently remove it. This
+                    action cannot be undone.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter className="flex gap-3">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              disabled={isLoading}
+              className="border-gray-600 text-gray-400 hover:text-white hover:bg-gray-800"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={onConfirm}
+              disabled={isLoading}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              {isLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete Announcement
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Edit Announcement Dialog
+  function EditAnnouncementDialog(props: EditAnnouncementDialogProps) {
+    const {
+      isOpen,
+      onClose,
+      onSave,
+      announcement,
+      projects,
+      users,
+      isLoading = false,
+    } = props;
+    const [formData, setFormData] = useState({
+      title: announcement?.title || "",
+      content: announcement?.content || "",
+      target_type: (announcement?.target_type || "global") as
+        | "global"
+        | "project"
+        | "student"
+        | "supervisor",
+      target_id: announcement?.target_id || "",
+    });
+
+    useEffect(() => {
+      if (announcement) {
+        setFormData({
+          title: announcement.title || "",
+          content: announcement.content || "",
+          target_type: (announcement.target_type || "global") as
+            | "global"
+            | "project"
+            | "student"
+            | "supervisor",
+          target_id: announcement.target_id || "",
+        });
+      }
+    }, [announcement]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!formData.title || !formData.content || !formData.target_type) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
+      await onSave(formData);
+    };
+
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="bg-[#23232a] border-orange-500 shadow-lg max-w-lg">
+          <DialogHeader>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+                <Edit className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <DialogTitle className="text-xl font-bold text-orange-400">
+                  Edit Announcement
+                </DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  Update announcement details
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-neutral-300">
+                  Title
+                </label>
+                <Input
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  className="bg-[#23232a] border-neutral-600 text-white"
+                  placeholder="Announcement title"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-neutral-300">
+                  Content
+                </label>
+                <Textarea
+                  value={formData.content}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                  }
+                  className="bg-[#23232a] border-neutral-600 text-white min-h-[100px]"
+                  placeholder="Announcement content"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-neutral-300">
+                  Target Type
+                </label>
+                <Select
+                  value={formData.target_type}
+                  onValueChange={(value: any) =>
+                    setFormData({
+                      ...formData,
+                      target_type: value,
+                      target_id: "",
+                    })
+                  }
+                >
+                  <SelectTrigger className="bg-[#23232a] border-neutral-600 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#23232a] border-neutral-600">
+                    <SelectItem value="global">Global (All Users)</SelectItem>
+                    <SelectItem value="project">Project-Specific</SelectItem>
+                    <SelectItem value="student">Student-Specific</SelectItem>
+                    <SelectItem value="supervisor">
+                      Supervisor-Specific
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {formData.target_type !== "global" && (
+                <div>
+                  <label className="text-sm font-medium text-neutral-300">
+                    {formData.target_type === "project"
+                      ? "Project"
+                      : formData.target_type === "student"
+                      ? "Student"
+                      : "Supervisor"}
+                  </label>
+                  <Select
+                    value={formData.target_id}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, target_id: value })
+                    }
+                  >
+                    <SelectTrigger className="bg-[#23232a] border-neutral-600 text-white">
+                      <SelectValue
+                        placeholder={`Select ${formData.target_type}`}
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#23232a] border-neutral-600">
+                      {formData.target_type === "project" &&
+                        projects.map((project) => (
+                          <SelectItem key={project.id} value={project.id}>
+                            {project.title}
+                          </SelectItem>
+                        ))}
+                      {formData.target_type === "student" &&
+                        users
+                          .filter((u) => u.role === "student")
+                          .map((user) => (
+                            <SelectItem key={user.id} value={user.id}>
+                              {user.display_name} ({user.email})
+                            </SelectItem>
+                          ))}
+                      {formData.target_type === "supervisor" &&
+                        users
+                          .filter((u) => u.role === "supervisor")
+                          .map((user) => (
+                            <SelectItem key={user.id} value={user.id}>
+                              {user.display_name} ({user.email})
+                            </SelectItem>
+                          ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+            <DialogFooter className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={onClose}
+                disabled={isLoading}
+                className="border-gray-600 text-gray-400 hover:text-white hover:bg-gray-800"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Save Changes
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   if (dataLoading) {
     return (
@@ -488,11 +848,10 @@ export default function AdminAnnouncements() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-neutral-400 hover:text-white"
-                          onClick={() => {
-                            setSelectedAnnouncement(announcement);
-                            setEditDialogOpen(true);
-                          }}
+                          className="text-gray-400 hover:text-white"
+                          onClick={() =>
+                            setEditDialog({ isOpen: true, announcement })
+                          }
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -501,7 +860,7 @@ export default function AdminAnnouncements() {
                           size="sm"
                           className="text-red-400 hover:text-red-300"
                           onClick={() =>
-                            handleDeleteAnnouncement(announcement.id)
+                            setDeleteDialog({ isOpen: true, announcement })
                           }
                         >
                           <Trash2 className="w-4 h-4" />
@@ -557,6 +916,22 @@ export default function AdminAnnouncements() {
           )}
         </div>
       </div>
+      <EditAnnouncementDialog
+        isOpen={editDialog.isOpen}
+        onClose={() => setEditDialog({ isOpen: false, announcement: null })}
+        onSave={handleEditAnnouncement}
+        announcement={editDialog.announcement}
+        projects={projects}
+        users={users}
+        isLoading={actionLoading}
+      />
+      <DeleteAnnouncementDialog
+        isOpen={deleteDialog.isOpen}
+        onClose={() => setDeleteDialog({ isOpen: false, announcement: null })}
+        onConfirm={handleDeleteAnnouncement}
+        announcement={deleteDialog.announcement}
+        isLoading={actionLoading}
+      />
     </AuthGuard>
   );
 }

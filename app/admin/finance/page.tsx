@@ -121,7 +121,7 @@ export default function AdminFinancePage() {
                 <TrendingUp className="w-8 h-8 text-cyan-400" />
                 <div>
                   <div className="text-cyan-400 text-lg font-bold">
-                    ${(systemFinance.total_income ?? 0).toLocaleString()}
+                    TZS {(systemFinance.total_income ?? 0).toLocaleString()}
                   </div>
                   <div className="text-neutral-400 text-sm">Total Income</div>
                 </div>
@@ -133,7 +133,7 @@ export default function AdminFinancePage() {
                 <TrendingDown className="w-8 h-8 text-orange-400" />
                 <div>
                   <div className="text-orange-400 text-lg font-bold">
-                    ${(systemFinance.total_expenses ?? 0).toLocaleString()}
+                    TZS {(systemFinance.total_expenses ?? 0).toLocaleString()}
                   </div>
                   <div className="text-neutral-400 text-sm">Total Expenses</div>
                 </div>
@@ -145,7 +145,7 @@ export default function AdminFinancePage() {
                 <DollarSign className="w-8 h-8 text-green-400" />
                 <div>
                   <div className="text-green-400 text-lg font-bold">
-                    ${(systemFinance.balance ?? 0).toLocaleString()}
+                    TZS {(systemFinance.balance ?? 0).toLocaleString()}
                   </div>
                   <div className="text-neutral-400 text-sm">Net Balance</div>
                 </div>
@@ -228,10 +228,10 @@ export default function AdminFinancePage() {
                           {project.title}
                         </td>
                         <td className="py-3 px-4 text-right text-cyan-400">
-                          ${(project.total_income ?? 0).toLocaleString()}
+                          TZS {(project.total_income ?? 0).toLocaleString()}
                         </td>
                         <td className="py-3 px-4 text-right text-orange-400">
-                          ${(project.total_expenses ?? 0).toLocaleString()}
+                          TZS {(project.total_expenses ?? 0).toLocaleString()}
                         </td>
                         <td className="py-3 px-4 text-right">
                           <span
@@ -241,7 +241,7 @@ export default function AdminFinancePage() {
                                 : "text-red-400"
                             }
                           >
-                            ${(project.balance ?? 0).toLocaleString()}
+                            TZS {(project.balance ?? 0).toLocaleString()}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-right text-neutral-400">
