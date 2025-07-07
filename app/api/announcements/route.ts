@@ -1,40 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { getAuthenticatedUser } from "@/lib/auth-helper";
+import { supabase } from "../../../supabase/client";
 
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll() {},
-        },
-      }
-    );
-    const {
-      user,
-      supabase: supabaseUser,
-      error: userError,
-    } = await getAuthenticatedUser();
-    if (userError) {
-      return NextResponse.json(
-        { error: userError.message },
-        { status: userError.status }
-      );
+    // Get user ID from query params
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json({ error: "User ID required" }, { status: 400 });
     }
 
     // Get user role
-    const { data: userData, error: roleError } = await supabaseUser
+    const { data: userData, error: roleError } = await supabase
       .from("users")
       .select("role")
-      .eq("id", user.id)
+      .eq("id", userId)
       .single();
 
     if (roleError || !userData) {
@@ -63,7 +44,7 @@ export async function GET(request: NextRequest) {
     } else {
       // For non-admins, get announcements they should see
       query = query.or(
-        `target_type.eq.global,target_type.eq.${userData.role},target_id.eq.${user.id}`
+        `target_type.eq.global,target_type.eq.${userData.role},target_id.eq.${userId}`
       );
     }
 
@@ -89,49 +70,25 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll() {},
-        },
-      }
-    );
-    const {
-      user,
-      supabase: supabaseUser,
-      error: userError,
-    } = await getAuthenticatedUser();
-    if (userError) {
+    const { title, content, target_type, target_id, userId } =
+      await request.json();
+
+    if (!title || !content || !target_type || !userId) {
       return NextResponse.json(
-        { error: userError.message },
-        { status: userError.status }
+        { error: "Title, content, target_type, and userId are required" },
+        { status: 400 }
       );
     }
 
     // Check if user is admin
-    const { data: userData, error: roleError } = await supabaseUser
+    const { data: userData, error: roleError } = await supabase
       .from("users")
       .select("role")
-      .eq("id", user.id)
+      .eq("id", userId)
       .single();
 
     if (roleError || userData?.role !== "admin") {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
-
-    const { title, content, target_type, target_id } = await request.json();
-
-    if (!title || !content || !target_type) {
-      return NextResponse.json(
-        { error: "Title, content, and target_type are required" },
-        { status: 400 }
-      );
     }
 
     if (!["global", "project", "student", "supervisor"].includes(target_type)) {
@@ -177,7 +134,7 @@ export async function POST(request: NextRequest) {
         content,
         target_type,
         target_id: target_id || null,
-        posted_by: user.id,
+        posted_by: userId,
       })
       .select(
         `
@@ -200,9 +157,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ data: announcement });
-  } catch (err) {
-    console.error("Error in POST /api/announcements:", err);
+    return NextResponse.json({ data: announcement }, { status: 201 });
+  } catch (error) {
+    console.error("Error in POST /api/announcements:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

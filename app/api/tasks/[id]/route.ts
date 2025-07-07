@@ -39,7 +39,7 @@ export async function GET(
         assigned_to:users!tasks_assigned_to_fkey(display_name, email)
       `
       )
-      .eq("id", params.id)
+      .eq("id", projectId)
       .single();
 
     if (taskError) {
@@ -91,7 +91,7 @@ export async function PUT(
         due_date: due_date,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", params.id)
+      .eq("id", projectId)
       .select(
         `
         *,
@@ -141,7 +141,7 @@ export async function DELETE(
     const { error: deleteError } = await supabase
       .from("tasks")
       .delete()
-      .eq("id", params.id);
+      .eq("id", projectId);
 
     if (deleteError) {
       return NextResponse.json(

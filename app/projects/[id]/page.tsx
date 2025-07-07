@@ -31,6 +31,7 @@ import FileList from "@/components/projects/files/FileList";
 import FileGrid from "@/components/projects/files/FileGrid";
 import TaskList from "@/components/projects/tasks/TaskList";
 import CreateTaskForm from "@/components/projects/tasks/CreateTaskForm";
+import Breadcrumbs from "@/components/projects/Breadcrumbs";
 
 interface Project {
   id: string;
@@ -39,15 +40,17 @@ interface Project {
   status: "pending" | "active" | "completed" | "archived";
   created_at: string;
   updated_at: string;
-  supervisor: {
+  supervisor?: {
     id: string;
     display_name: string;
     email: string;
+    role: string;
   };
-  created_by: {
+  created_by_user?: {
     id: string;
     display_name: string;
     email: string;
+    role: string;
   };
   member_count: number;
   task_count: number;
@@ -279,6 +282,32 @@ export default function ProjectDashboardPage() {
   return (
     <AuthGuard>
       <div className="space-y-8">
+        {/* Breadcrumbs */}
+        <Breadcrumbs
+          items={[
+            {
+              label: "My Projects",
+              href: "/projects",
+              icon: <FolderKanban className="w-4 h-4" />,
+            },
+            {
+              label: project?.title || "Project",
+              href: `/projects/${projectId}`,
+              icon: <FolderKanban className="w-4 h-4" />,
+            },
+            ...(activeTab !== "dashboard"
+              ? [
+                  {
+                    label:
+                      tabs.find((tab) => tab.id === activeTab)?.label ||
+                      activeTab,
+                    icon: tabs.find((tab) => tab.id === activeTab)?.icon,
+                  },
+                ]
+              : []),
+          ]}
+        />
+
         {/* Project Header */}
         <ProjectHeader project={project} />
 
@@ -324,7 +353,7 @@ export default function ProjectDashboardPage() {
                         <div className="flex items-center gap-2">
                           <User className="w-4 h-4 text-neutral-400" />
                           <span className="text-neutral-400">
-                            {project.supervisor.display_name}
+                            {project.supervisor?.display_name || "Not assigned"}
                           </span>
                         </div>
                       </div>
@@ -336,7 +365,7 @@ export default function ProjectDashboardPage() {
                         <div className="flex items-center gap-2">
                           <User className="w-4 h-4 text-neutral-400" />
                           <span className="text-neutral-400">
-                            {project.created_by.display_name}
+                            {project.created_by_user?.display_name || "Unknown"}
                           </span>
                         </div>
                       </div>

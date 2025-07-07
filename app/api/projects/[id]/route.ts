@@ -1,27 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { supabase } from "../../../../supabase/client";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll() {},
-        },
-      }
-    );
-
-    const projectId = params.id;
+    const { id: projectId } = await params;
 
     // Get project with all related data
     const { data: project, error } = await supabase
@@ -29,6 +14,18 @@ export async function GET(
       .select(
         `
         *,
+        supervisor:users!projects_supervisor_id_fkey(
+          id,
+          display_name,
+          email,
+          role
+        ),
+        created_by_user:users!projects_created_by_fkey(
+          id,
+          display_name,
+          email,
+          role
+        ),
         project_members!project_members_project_id_fkey(
           user_id,
           role,
@@ -97,7 +94,20 @@ export async function GET(
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ data: project });
+    // For now, set a default user role since we can't get the current user
+    // The frontend can handle role-based permissions based on the user context
+    const projectWithStats = {
+      ...project,
+      user_role: "member", // Default role, frontend can override based on user context
+      member_count: project.project_members?.length || 0,
+      task_count: project.tasks?.length || 0,
+      completed_task_count:
+        project.tasks?.filter((task: any) => task.status === "completed")
+          ?.length || 0,
+      file_count: project.files?.length || 0,
+    };
+
+    return NextResponse.json({ data: projectWithStats });
   } catch (error) {
     console.error("Error in GET /api/projects/[id]:", error);
     return NextResponse.json(

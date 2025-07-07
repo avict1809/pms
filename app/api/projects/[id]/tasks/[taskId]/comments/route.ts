@@ -19,7 +19,7 @@ export async function GET(
     const { data: projectAccess, error: accessError } = await supabase
       .from("project_members")
       .select("role")
-      .eq("project_id", params.id)
+      .eq("project_id", projectId)
       .eq("user_id", user.id)
       .single();
 
@@ -77,7 +77,7 @@ export async function POST(
     const { data: projectAccess, error: accessError } = await supabase
       .from("project_members")
       .select("role")
-      .eq("project_id", params.id)
+      .eq("project_id", projectId)
       .eq("user_id", user.id)
       .single();
 

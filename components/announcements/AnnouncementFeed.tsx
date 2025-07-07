@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Megaphone, Search, Filter, RefreshCw, Loader2 } from "lucide-react";
 import AnnouncementCard from "./AnnouncementCard";
+import { useAuth } from "@/hooks/useAuthRedirect";
 
 interface Announcement {
   id: string;
@@ -50,6 +51,7 @@ export default function AnnouncementFeed({
   showFilters = true,
   maxItems,
 }: AnnouncementFeedProps) {
+  const { user } = useAuth();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,15 +60,17 @@ export default function AnnouncementFeed({
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetchAnnouncements();
-  }, []);
+    if (user?.id) {
+      fetchAnnouncements();
+    }
+  }, [user?.id]);
 
   const fetchAnnouncements = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch("/api/announcements");
+      const response = await fetch(`/api/announcements?userId=${user?.id}`);
       const result = await response.json();
 
       if (response.ok) {

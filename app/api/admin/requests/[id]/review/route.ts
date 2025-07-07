@@ -21,7 +21,7 @@ export async function POST(
     const { data: requestData, error: fetchError } = await supabase
       .from("approval_requests")
       .select("*")
-      .eq("id", params.id)
+      .eq("id", projectId)
       .single();
 
     if (fetchError || !requestData) {
@@ -39,7 +39,7 @@ export async function POST(
     const { error: updateError } = await supabase
       .from("approval_requests")
       .update(updateData)
-      .eq("id", params.id);
+      .eq("id", projectId);
 
     if (updateError) {
       console.error("Error updating request:", updateError);

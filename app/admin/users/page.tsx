@@ -15,12 +15,17 @@ import {
   UserX,
   Upload,
   Loader2,
+  User,
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
 import AddUserForm from "@/components/admin/AddUserForm";
 import BulkUploadUsers from "@/components/admin/BulkUploadUsers";
 import UserActivationManager from "@/components/admin/UserActivationManager";
-import { useUsers, useUpdateUser, useDeleteUser, User } from "@/hooks/useUsers";
+import DeleteUserDialog from "@/components/admin/DeleteUserDialog";
+import EditUserDialog from "@/components/admin/EditUserDialog";
+import { useUsers, useUpdateUser, useDeleteUser } from "@/hooks/useUsers";
+import type { User } from "@/hooks/useUsers";
+import { useRouter } from "next/navigation";
 
 export default function AdminUsersPage() {
   const [showAddUser, setShowAddUser] = useState(false);
@@ -30,10 +35,22 @@ export default function AdminUsersPage() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
+  // Dialog states
+  const [deleteDialog, setDeleteDialog] = useState<{
+    isOpen: boolean;
+    user: User | null;
+  }>({ isOpen: false, user: null });
+  const [editDialog, setEditDialog] = useState<{
+    isOpen: boolean;
+    user: User | null;
+  }>({ isOpen: false, user: null });
+
   // Data fetching hooks
   const { data: users = [], isLoading, error, refetch } = useUsers();
   const updateUserMutation = useUpdateUser();
   const deleteUserMutation = useDeleteUser();
+
+  const router = useRouter();
 
   const handleUserUpdate = async (userId: string, updates: any) => {
     try {
@@ -44,13 +61,28 @@ export default function AdminUsersPage() {
   };
 
   const handleUserDelete = async (userId: string) => {
-    if (confirm("Are you sure you want to delete this user?")) {
-      try {
-        await deleteUserMutation.mutateAsync(userId);
-      } catch (error) {
-        console.error("Error deleting user:", error);
-      }
+    try {
+      await deleteUserMutation.mutateAsync(userId);
+      setDeleteDialog({ isOpen: false, user: null });
+    } catch (error) {
+      console.error("Error deleting user:", error);
     }
+  };
+
+  const openDeleteDialog = (user: User) => {
+    setDeleteDialog({ isOpen: true, user });
+  };
+
+  const openEditDialog = (user: User) => {
+    setEditDialog({ isOpen: true, user });
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialog({ isOpen: false, user: null });
+  };
+
+  const closeEditDialog = () => {
+    setEditDialog({ isOpen: false, user: null });
   };
 
   // Filter users based on search and filters
@@ -204,188 +236,136 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
 
-        {/* Users Table */}
-        <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-orange-400">All Users</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-8 h-8 animate-spin text-orange-400" />
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-neutral-700">
-                      <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                        User
-                      </th>
-                      <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                        Role
-                      </th>
-                      <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                        Status
-                      </th>
-                      <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                        First Login
-                      </th>
-                      <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                        Created
-                      </th>
-                      <th className="text-left py-3 px-4 text-neutral-400 font-medium">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredUsers.map((user: User) => (
-                      <tr
-                        key={user.id}
-                        className="border-b border-neutral-800 hover:bg-neutral-800/50"
-                      >
-                        <td className="py-3 px-4">
-                          <div>
-                            <div className="font-medium text-white">
-                              {user.display_name}
-                            </div>
-                            <div className="text-sm text-neutral-400">
-                              {user.email}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4">
-                          <Badge
-                            variant={
-                              user.role === "admin"
-                                ? "default"
-                                : user.role === "supervisor"
-                                ? "secondary"
-                                : "outline"
-                            }
-                            className={
-                              user.role === "admin"
-                                ? "bg-red-500 text-white"
-                                : user.role === "supervisor"
-                                ? "bg-blue-500 text-white"
-                                : "border-green-500 text-green-400"
-                            }
-                          >
-                            {user.role}
-                          </Badge>
-                        </td>
-                        <td className="py-3 px-4">
-                          <Badge
-                            variant={user.is_active ? "default" : "destructive"}
-                            className={
-                              user.is_active
-                                ? "bg-green-500 text-white"
-                                : "bg-red-500 text-white"
-                            }
-                          >
-                            {user.is_active ? "Active" : "Inactive"}
-                          </Badge>
-                        </td>
-                        <td className="py-3 px-4">
-                          <Badge
-                            variant="outline"
-                            className={
-                              user.is_first_login
-                                ? "border-yellow-500 text-yellow-400"
-                                : "border-green-500 text-green-400"
-                            }
-                          >
-                            {user.is_first_login ? "Pending" : "Completed"}
-                          </Badge>
-                        </td>
-                        <td className="py-3 px-4 text-neutral-400 text-sm">
-                          {new Date(user.created_at).toLocaleDateString()}
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="flex items-center gap-2">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="text-neutral-400 hover:text-white"
-                              onClick={() =>
-                                handleUserUpdate(user.id, {
-                                  is_active: !user.is_active,
-                                })
-                              }
-                              disabled={updateUserMutation.isPending}
-                            >
-                              {user.is_active ? (
-                                <UserX className="w-4 h-4" />
-                              ) : (
-                                <UserCheck className="w-4 h-4" />
-                              )}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="text-neutral-400 hover:text-white"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="text-red-400 hover:text-red-300"
-                              onClick={() => handleUserDelete(user.id)}
-                              disabled={deleteUserMutation.isPending}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {filteredUsers.length === 0 && !isLoading && (
-                  <div className="text-center py-8 text-neutral-400">
-                    No users found matching your criteria
+        {/* Users List */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredUsers.map((user: User) => (
+            <Card
+              key={user.id}
+              className="bg-[#23232a] border-orange-500 shadow-lg"
+            >
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-white text-lg">
+                      {user.display_name}
+                    </CardTitle>
+                    <CardContent className="p-0 mt-2">
+                      <p className="text-gray-400 text-sm">{user.email}</p>
+                    </CardContent>
                   </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Add User Modal */}
-      {showAddUser && <AddUserForm onClose={() => setShowAddUser(false)} />}
-
-      {/* Bulk Upload Modal */}
-      {showBulkUpload && (
-        <BulkUploadUsers
-          onClose={() => setShowBulkUpload(false)}
-          onUpload={() => {
-            setShowBulkUpload(false);
-            refetch();
-          }}
-        />
-      )}
-
-      {/* User Activation Manager Modal */}
-      {showActivationManager && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#23232a] border border-orange-500 rounded-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <UserActivationManager
-                users={users}
-                onUserUpdate={handleUserUpdate}
-              />
-              <div className="mt-6 flex justify-end">
-                <Button onClick={() => setShowActivationManager(false)}>
-                  Close
-                </Button>
-              </div>
-            </div>
-          </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => router.push(`/admin/users/${user.id}`)}
+                      className="border-blue-600 text-blue-400 hover:text-white hover:bg-blue-600"
+                    >
+                      <User className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openEditDialog(user)}
+                      className="border-gray-600 text-gray-400 hover:text-white hover:bg-gray-800"
+                    >
+                      <Edit className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openDeleteDialog(user)}
+                      className="border-red-600 text-red-400 hover:text-white hover:bg-red-600"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant={user.is_active ? "default" : "destructive"}
+                    className={
+                      user.is_active
+                        ? "bg-green-500 text-white"
+                        : "bg-red-500 text-white"
+                    }
+                  >
+                    {user.is_active ? "Active" : "Inactive"}
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="border-orange-500 text-orange-400 capitalize"
+                  >
+                    {user.role}
+                  </Badge>
+                  {user.is_first_login && (
+                    <Badge
+                      variant="outline"
+                      className="border-yellow-500 text-yellow-400"
+                    >
+                      First Login
+                    </Badge>
+                  )}
+                </div>
+                <div className="text-xs text-gray-500">
+                  Created: {new Date(user.created_at).toLocaleDateString()}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      )}
+
+        {/* Dialogs */}
+        <DeleteUserDialog
+          isOpen={deleteDialog.isOpen}
+          onClose={closeDeleteDialog}
+          onConfirm={() =>
+            deleteDialog.user && handleUserDelete(deleteDialog.user.id)
+          }
+          user={deleteDialog.user}
+          isLoading={deleteUserMutation.isPending}
+        />
+
+        <EditUserDialog
+          isOpen={editDialog.isOpen}
+          onClose={closeEditDialog}
+          onSave={handleUserUpdate}
+          user={editDialog.user}
+          isLoading={updateUserMutation.isPending}
+        />
+
+        {/* Other Modals */}
+        {showAddUser && (
+          <AddUserForm
+            onClose={() => setShowAddUser(false)}
+            onSuccess={() => {
+              setShowAddUser(false);
+              refetch();
+            }}
+          />
+        )}
+
+        {showBulkUpload && (
+          <BulkUploadUsers
+            onClose={() => setShowBulkUpload(false)}
+            onSuccess={() => {
+              setShowBulkUpload(false);
+              refetch();
+            }}
+          />
+        )}
+
+        {showActivationManager && (
+          <UserActivationManager
+            onClose={() => setShowActivationManager(false)}
+            onSuccess={() => {
+              setShowActivationManager(false);
+              refetch();
+            }}
+          />
+        )}
+      </div>
     </AuthGuard>
   );
 }

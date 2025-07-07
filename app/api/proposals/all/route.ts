@@ -18,13 +18,19 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    // Get all proposals
+    // Get all proposals with team members and supervisor data
     const { data: proposals, error } = await supabase
       .from("project_proposals")
       .select(
         `
         *,
         proposed_by_user:users!project_proposals_proposed_by_fkey(
+          id,
+          display_name,
+          email,
+          role
+        ),
+        supervisor_data:users!project_proposals_proposed_supervisor_id_fkey(
           id,
           display_name,
           email,
@@ -42,7 +48,28 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ data: proposals });
+    // Get team members data for each proposal
+    const proposalsWithTeamMembers = await Promise.all(
+      proposals.map(async (proposal) => {
+        if (proposal.team_members && proposal.team_members.length > 0) {
+          const { data: teamMembersData } = await supabase
+            .from("users")
+            .select("id, display_name, email, role")
+            .in("id", proposal.team_members);
+
+          return {
+            ...proposal,
+            team_members_data: teamMembersData || [],
+          };
+        }
+        return {
+          ...proposal,
+          team_members_data: [],
+        };
+      })
+    );
+
+    return NextResponse.json({ data: proposalsWithTeamMembers });
   } catch (error) {
     console.error("Error in GET /api/proposals/all:", error);
     return NextResponse.json(

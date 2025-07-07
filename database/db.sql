@@ -65,13 +65,29 @@ CREATE TABLE project_proposals (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
     description TEXT,
+    objectives TEXT,
+    methodology TEXT,
+    expected_outcomes TEXT,
+    timeline TEXT,
+    resources TEXT,
     proposed_by UUID REFERENCES users(id) ON DELETE CASCADE,
-    status TEXT CHECK (status IN ('pending', 'approved', 'denied')) DEFAULT 'pending',
+    proposed_supervisor_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT CHECK (status IN ('draft', 'pending', 'approved', 'denied')) DEFAULT 'draft',
     admin_comment TEXT, -- Admin's feedback on proposal
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()),
     reviewed_by UUID REFERENCES users(id) ON DELETE SET NULL,
     reviewed_at TIMESTAMP WITH TIME ZONE
+);
+
+-- PROPOSAL TEAM MEMBERS TABLE
+CREATE TABLE proposal_team_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    proposal_id UUID REFERENCES project_proposals(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    role TEXT CHECK (role IN ('student', 'supervisor')) NOT NULL DEFAULT 'student',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()),
+    UNIQUE(proposal_id, user_id) -- Prevent duplicate memberships
 );
 
 -- TASKS TABLE
@@ -203,6 +219,11 @@ CREATE INDEX idx_project_members_role ON project_members(role);
 -- Project proposals indexes
 CREATE INDEX idx_project_proposals_status ON project_proposals(status);
 CREATE INDEX idx_project_proposals_proposed_by ON project_proposals(proposed_by);
+CREATE INDEX idx_project_proposals_supervisor ON project_proposals(proposed_supervisor_id);
+
+-- Proposal team members indexes
+CREATE INDEX idx_proposal_team_members_proposal ON proposal_team_members(proposal_id);
+CREATE INDEX idx_proposal_team_members_user ON proposal_team_members(user_id);
 
 -- Tasks indexes
 CREATE INDEX idx_tasks_project ON tasks(project_id);

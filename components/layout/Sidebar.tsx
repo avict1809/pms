@@ -18,10 +18,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useSupabase } from "@/supabase/context";
+import { useUserRole } from "@/hooks/useUserRole";
 import { toast } from "react-hot-toast";
-
-// TODO: Replace with actual user/role context
-const role = "admin"; // placeholder
 
 const navLinks = {
   admin: [
@@ -66,7 +64,7 @@ const navLinks = {
     {
       id: "settings",
       icon: Settings,
-      label: "System Settings",
+      label: "Settings",
       href: "/admin/settings",
     },
   ],
@@ -136,9 +134,14 @@ export default function Sidebar() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const links = navLinks[role as keyof typeof navLinks] || [];
   const { supabase, user } = useSupabase();
+  const { data: userRole, isLoading: loadingRole } = useUserRole();
   const router = useRouter();
+
+  // Get the appropriate navigation links based on user role
+  const links = userRole?.role
+    ? navLinks[userRole.role as keyof typeof navLinks] || []
+    : [];
 
   const handleLogout = async () => {
     try {
@@ -152,7 +155,7 @@ export default function Sidebar() {
       }
 
       toast.success("Logged out successfully");
-      router.push("/auth/login");
+      router.push("/login");
     } catch (error) {
       toast.error("Error logging out. Please try again.");
       console.error("Logout error:", error);
@@ -161,10 +164,24 @@ export default function Sidebar() {
     }
   };
 
+  // Show loading state while fetching user role
+  if (loadingRole) {
+    return (
+      <div className="w-64 bg-neutral-900 border-r border-neutral-700 h-screen flex items-center justify-center">
+        <div className="text-neutral-400">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render sidebar if no user or no role
+  if (!user || !userRole) {
+    return null;
+  }
+
   return (
     <div
       className={`${
-        sidebarCollapsed ? "w-20" : "w-80"
+        sidebarCollapsed ? "w-16" : "w-64"
       } bg-neutral-900 border-r border-neutral-700 transition-all duration-300 fixed md:relative z-50 md:z-auto h-screen ${
         !sidebarCollapsed ? "md:block" : ""
       }`}
@@ -220,7 +237,10 @@ export default function Sidebar() {
             <div className="px-4 py-3 bg-neutral-800 rounded-lg">
               <div className="text-sm text-neutral-400 mb-1">Logged in as</div>
               <div className="text-white font-medium truncate">
-                {user?.email || "Unknown User"}
+                {userRole.display_name || user?.email || "Unknown User"}
+              </div>
+              <div className="text-xs text-neutral-500 capitalize">
+                {userRole.role}
               </div>
             </div>
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/supabase/client";
+import { supabaseAdmin } from "@/supabase/server";
 
 // GET - Fetch all users
 export async function GET(request: NextRequest) {
@@ -63,11 +64,44 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create new user
+    // Create user in Supabase Auth first (this will generate the UID)
+    const { data: authData, error: authError } =
+      await supabaseAdmin.auth.admin.createUser({
+        email,
+        password: "temp-password-" + Math.random().toString(36).substring(2), // Temporary password
+        email_confirm: true, // Auto-confirm the email
+        user_metadata: {
+          display_name: display_name,
+          role: role,
+        },
+        app_metadata: {
+          role: role,
+        },
+      });
+
+    if (authError) {
+      console.error("Error creating auth user:", authError);
+      return NextResponse.json(
+        { error: "Failed to create user account" },
+        { status: 500 }
+      );
+    }
+
+    const authUserId = authData.user?.id;
+    if (!authUserId) {
+      console.error("No auth user ID returned");
+      return NextResponse.json(
+        { error: "Failed to create user account" },
+        { status: 500 }
+      );
+    }
+
+    // Create user in our database using the Supabase Auth UID
     const { data: newUser, error } = await supabase
       .from("users")
       .insert([
         {
+          id: authUserId, // Use the Supabase Auth UID
           email,
           display_name,
           role,
@@ -80,7 +114,13 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error("Error creating user:", error);
+      console.error("Error creating user in database:", error);
+      // Try to clean up the auth user if database creation fails
+      try {
+        await supabaseAdmin.auth.admin.deleteUser(authUserId);
+      } catch (cleanupError) {
+        console.error("Error cleaning up auth user:", cleanupError);
+      }
       return NextResponse.json(
         { error: "Failed to create user" },
         { status: 500 }

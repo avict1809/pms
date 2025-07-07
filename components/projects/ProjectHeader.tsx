@@ -3,14 +3,14 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  FolderKanban, 
+import {
+  FolderKanban,
   ArrowLeft,
   Edit,
   Settings,
   Users,
   FileText,
-  ClipboardList
+  ClipboardList,
 } from "lucide-react";
 
 interface Project {
@@ -90,35 +90,42 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
                     variant="outline"
                     className={getStatusColor(project.status)}
                   >
-                    <span className="mr-1">{getStatusIcon(project.status)}</span>
-                    {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                    <span className="mr-1">
+                      {getStatusIcon(project.status)}
+                    </span>
+                    {project.status.charAt(0).toUpperCase() +
+                      project.status.slice(1)}
                   </Badge>
                   <span className="text-neutral-400 text-sm">
-                    • {project.user_role.charAt(0).toUpperCase() + project.user_role.slice(1)} Access
+                    •{" "}
+                    {project.user_role
+                      ? project.user_role.charAt(0).toUpperCase() +
+                        project.user_role.slice(1)
+                      : "Unknown"}{" "}
+                    Access
                   </span>
                 </div>
               </div>
             </div>
-            
+
             <p className="text-neutral-400 text-sm line-clamp-2">
               {project.description}
             </p>
           </div>
 
           <div className="flex items-center gap-2 ml-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.back()}
-            >
+            <Button variant="outline" size="sm" onClick={() => router.back()}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-            
-            {(project.user_role === "admin" || project.user_role === "supervisor") && (
+
+            {(project.user_role === "admin" ||
+              project.user_role === "supervisor") && (
               <Button
                 size="sm"
-                onClick={() => router.push(`/admin/projects/${project.id}/edit`)}
+                onClick={() =>
+                  router.push(`/admin/projects/${project.id}/edit`)
+                }
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit
@@ -132,34 +139,42 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
               <Users className="w-4 h-4 text-orange-400" />
-              <span className="text-lg font-bold text-white">{project.member_count}</span>
+              <span className="text-lg font-bold text-white">
+                {project.member_count}
+              </span>
             </div>
             <span className="text-xs text-neutral-400">Members</span>
           </div>
-          
+
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
               <ClipboardList className="w-4 h-4 text-orange-400" />
-              <span className="text-lg font-bold text-white">{project.task_count}</span>
+              <span className="text-lg font-bold text-white">
+                {project.task_count}
+              </span>
             </div>
             <span className="text-xs text-neutral-400">Tasks</span>
           </div>
-          
+
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
               <FileText className="w-4 h-4 text-orange-400" />
-              <span className="text-lg font-bold text-white">{project.file_count || 0}</span>
+              <span className="text-lg font-bold text-white">
+                {project.file_count || 0}
+              </span>
             </div>
             <span className="text-xs text-neutral-400">Files</span>
           </div>
-          
+
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
               <span className="text-lg font-bold text-white">
-                {project.task_count > 0 
-                  ? Math.round((project.completed_task_count / project.task_count) * 100)
-                  : 0
-                }%
+                {project.task_count > 0
+                  ? Math.round(
+                      (project.completed_task_count / project.task_count) * 100
+                    )
+                  : 0}
+                %
               </span>
             </div>
             <span className="text-xs text-neutral-400">Complete</span>
@@ -168,4 +183,4 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
       </CardContent>
     </Card>
   );
-} 
+}

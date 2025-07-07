@@ -48,7 +48,7 @@ export async function GET(
           title
         )
       `)
-      .eq("id", params.id)
+      .eq("id", projectId)
       .single();
 
     if (error) {
@@ -122,7 +122,7 @@ export async function PUT(
         responded_at: new Date().toISOString(),
         responded_by: user.id,
       })
-      .eq("id", params.id)
+      .eq("id", projectId)
       .select(`
         *,
         requested_by_user:users!approval_requests_requested_by_fkey(
@@ -190,7 +190,7 @@ export async function DELETE(
     const { error } = await supabase
       .from("approval_requests")
       .delete()
-      .eq("id", params.id);
+      .eq("id", projectId);
 
     if (error) {
       console.error("Error deleting approval request:", error);

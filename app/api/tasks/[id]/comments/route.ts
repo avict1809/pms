@@ -30,7 +30,7 @@ export async function GET(
     const { data: task, error: taskError } = await supabase
       .from("tasks")
       .select("project_id")
-      .eq("id", params.id)
+      .eq("id", projectId)
       .single();
 
     if (taskError) {
@@ -63,7 +63,7 @@ export async function GET(
         )
       `
       )
-      .eq("task_id", params.id)
+      .eq("task_id", taskId)
       .order("created_at", { ascending: true });
 
     if (commentsError) {
@@ -112,7 +112,7 @@ export async function POST(
     const { data: task, error: taskError } = await supabase
       .from("tasks")
       .select("project_id")
-      .eq("id", params.id)
+      .eq("id", projectId)
       .single();
 
     if (taskError) {

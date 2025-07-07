@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -33,7 +33,7 @@ import {
   Database,
   Bell,
   Lock,
-  Backup,
+  HardDrive,
   BarChart3,
   Globe,
   AlertTriangle,
@@ -50,6 +50,23 @@ import { toast } from "react-hot-toast";
 
 interface SystemSettingsProps {
   onClose?: () => void;
+}
+
+// Debounce hook
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }
 
 export default function SystemSettings({ onClose }: SystemSettingsProps) {
@@ -69,13 +86,32 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
   });
   const [showNewForm, setShowNewForm] = useState(false);
 
+  // Debounced editing state for real-time updates
+  const [editingValues, setEditingValues] = useState<Record<string, string>>(
+    {}
+  );
+  const debouncedEditingValues = useDebounce(editingValues, 1000); // 1 second delay
+
+  // Auto-save when debounced values change
+  useEffect(() => {
+    Object.entries(debouncedEditingValues).forEach(([key, value]) => {
+      const setting = settings?.find((s) => s.setting_key === key);
+      if (setting && setting.setting_value !== value) {
+        handleSave({
+          ...setting,
+          setting_value: value,
+        });
+      }
+    });
+  }, [debouncedEditingValues, settings]);
+
   const categories = [
     { key: "general", label: "General", icon: Globe },
     { key: "users", label: "User Management", icon: Users },
     { key: "projects", label: "Projects", icon: Database },
     { key: "notifications", label: "Notifications", icon: Bell },
     { key: "security", label: "Security", icon: Lock },
-    { key: "backup", label: "Backup", icon: Backup },
+    { key: "backup", label: "Backup", icon: HardDrive },
     { key: "analytics", label: "Analytics", icon: BarChart3 },
   ];
 
@@ -102,6 +138,12 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
         },
       });
       setEditingSetting(null);
+      // Clear the editing value after successful save
+      setEditingValues((prev) => {
+        const newValues = { ...prev };
+        delete newValues[setting.setting_key];
+        return newValues;
+      });
     } catch (error) {
       console.error("Error saving setting:", error);
     }
@@ -139,69 +181,87 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
     }
   };
 
+  const handleValueChange = (settingKey: string, value: string) => {
+    setEditingValues((prev) => ({
+      ...prev,
+      [settingKey]: value,
+    }));
+  };
+
   const renderSettingValue = (setting: SystemSetting) => {
+    const currentValue =
+      editingValues[setting.setting_key] ?? setting.setting_value;
+    const isEditing = editingValues.hasOwnProperty(setting.setting_key);
+
     switch (setting.setting_type) {
       case "boolean":
         return (
-          <Select
-            value={setting.setting_value}
-            onValueChange={(value) => {
-              const updatedSetting = { ...setting, setting_value: value };
-              handleSave(updatedSetting);
-            }}
-          >
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="true">True</SelectItem>
-              <SelectItem value="false">False</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-2">
+            <Select
+              value={currentValue}
+              onValueChange={(value) => {
+                handleValueChange(setting.setting_key, value);
+              }}
+            >
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="true">True</SelectItem>
+                <SelectItem value="false">False</SelectItem>
+              </SelectContent>
+            </Select>
+            {isEditing && (
+              <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+            )}
+          </div>
         );
       case "number":
         return (
-          <Input
-            type="number"
-            value={setting.setting_value}
-            onChange={(e) => {
-              const updatedSetting = {
-                ...setting,
-                setting_value: e.target.value,
-              };
-              handleSave(updatedSetting);
-            }}
-            className="w-32"
-          />
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              value={currentValue}
+              onChange={(e) =>
+                handleValueChange(setting.setting_key, e.target.value)
+              }
+              className="w-32"
+            />
+            {isEditing && (
+              <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+            )}
+          </div>
         );
       case "json":
         return (
-          <Textarea
-            value={setting.setting_value}
-            onChange={(e) => {
-              const updatedSetting = {
-                ...setting,
-                setting_value: e.target.value,
-              };
-              handleSave(updatedSetting);
-            }}
-            className="w-64"
-            rows={3}
-          />
+          <div className="flex items-start gap-2">
+            <Textarea
+              value={currentValue}
+              onChange={(e) =>
+                handleValueChange(setting.setting_key, e.target.value)
+              }
+              className="w-64"
+              rows={3}
+            />
+            {isEditing && (
+              <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse mt-2"></div>
+            )}
+          </div>
         );
       default:
         return (
-          <Input
-            value={setting.setting_value}
-            onChange={(e) => {
-              const updatedSetting = {
-                ...setting,
-                setting_value: e.target.value,
-              };
-              handleSave(updatedSetting);
-            }}
-            className="w-64"
-          />
+          <div className="flex items-center gap-2">
+            <Input
+              value={currentValue}
+              onChange={(e) =>
+                handleValueChange(setting.setting_key, e.target.value)
+              }
+              className="w-64"
+            />
+            {isEditing && (
+              <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+            )}
+          </div>
         );
     }
   };
@@ -258,6 +318,16 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
           )}
         </div>
       </div>
+
+      {/* Auto-save indicator */}
+      {Object.keys(editingValues).length > 0 && (
+        <div className="flex items-center gap-2 p-3 bg-orange-900/20 border border-orange-500/30 rounded-lg">
+          <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+          <span className="text-orange-400 text-sm">
+            Auto-saving changes...
+          </span>
+        </div>
+      )}
 
       {/* New Setting Form */}
       {showNewForm && (

@@ -56,15 +56,17 @@ export default function SupervisorAnnouncements({
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetchAnnouncements();
-  }, []);
+    if (user?.id) {
+      fetchAnnouncements();
+    }
+  }, [user?.id]);
 
   const fetchAnnouncements = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch("/api/announcements");
+      const response = await fetch(`/api/announcements?userId=${user?.id}`);
       const result = await response.json();
 
       if (response.ok) {

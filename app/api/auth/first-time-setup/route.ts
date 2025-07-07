@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/supabase/client";
+import { supabaseAdmin } from "@/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,66 +46,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create user in Supabase Auth using signUp (this will send confirmation email)
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: display_name,
-          role: userData.role,
-        },
-      },
-    });
+    // Update the user's password in Supabase Auth using admin API
+    const { data: authData, error: authError } =
+      await supabaseAdmin.auth.admin.updateUserById(
+        userData.id, // Use the database ID (which should match auth ID now)
+        {
+          password: password,
+          user_metadata: {
+            display_name: display_name,
+            role: userData.role,
+          },
+          app_metadata: {
+            role: userData.role,
+          },
+        }
+      );
 
     if (authError) {
       console.error("Auth error:", authError);
-
-      // If user already exists in auth, try to update password
-      if (authError.message.includes("User already registered")) {
-        // Try to sign in to check if password is correct
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (signInError) {
-          return NextResponse.json(
-            {
-              error:
-                "This email is already registered. Please use your existing password or reset it.",
-            },
-            { status: 400 }
-          );
-        } else {
-          // Password is correct, update our database
-          const { error: updateError } = await supabase
-            .from("users")
-            .update({
-              is_first_login: false,
-              password_set_at: new Date().toISOString(),
-            })
-            .eq("id", userData.id);
-
-          if (updateError) {
-            console.error("Update error:", updateError);
-          }
-
-          return NextResponse.json({
-            success: true,
-            message: "Password set up successfully. You can now log in.",
-            user: {
-              id: userData.id,
-              email: userData.email,
-              display_name: display_name,
-              role: userData.role,
-            },
-          });
-        }
-      }
-
       return NextResponse.json(
-        { error: "Failed to create user account. Please try again." },
+        { error: "Failed to update user password. Please try again." },
         { status: 500 }
       );
     }
@@ -120,14 +81,14 @@ export async function POST(request: NextRequest) {
 
     if (updateError) {
       console.error("Update error:", updateError);
-      // Even if update fails, the auth user was created, so we should still return success
+      // Even if update fails, the auth user was updated, so we should still return success
     }
 
     return NextResponse.json({
       success: true,
       message: "Password set up successfully. You can now log in.",
       user: {
-        id: authData.user?.id || userData.id,
+        id: userData.id,
         email: authData.user?.email || userData.email,
         display_name: display_name,
         role: userData.role,

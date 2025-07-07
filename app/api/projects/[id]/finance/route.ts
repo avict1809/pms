@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const cookieStore = await cookies();
@@ -21,7 +21,7 @@ export async function GET(
       }
     );
 
-    const projectId = params.id;
+    const { id: projectId } = await params;
 
     // Fetch financial records for the project with user info
     const { data: records, error: recordsError } = await supabase
@@ -82,7 +82,7 @@ export async function POST(
       }
     );
 
-    const projectId = params.id;
+    const { id: projectId } = await params;
     const body = await request.json();
 
     // Validate required fields

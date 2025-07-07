@@ -6,20 +6,19 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Get user ID from query params
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json({ error: "User ID required" }, { status: 400 });
     }
 
     // Get user role
     const { data: userData, error: roleError } = await supabase
       .from("users")
       .select("role")
-      .eq("id", user.id)
+      .eq("id", userId)
       .single();
 
     if (roleError || !userData) {
@@ -59,7 +58,7 @@ export async function GET(
         (announcement.target_type === "project" &&
           // TODO: Check if user is member of this project
           true) ||
-        announcement.target_id === user.id;
+        announcement.target_id === userId;
 
       if (!hasAccess) {
         return NextResponse.json({ error: "Access denied" }, { status: 403 });
@@ -81,33 +80,25 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { title, content, target_type, target_id, userId } =
+      await request.json();
+
+    if (!title || !content || !target_type || !userId) {
+      return NextResponse.json(
+        { error: "Title, content, target_type, and userId are required" },
+        { status: 400 }
+      );
     }
 
     // Check if user is admin
     const { data: userData, error: roleError } = await supabase
       .from("users")
       .select("role")
-      .eq("id", user.id)
+      .eq("id", userId)
       .single();
 
     if (roleError || userData?.role !== "admin") {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
-
-    const { title, content, target_type, target_id } = await request.json();
-
-    if (!title || !content || !target_type) {
-      return NextResponse.json(
-        { error: "Title, content, and target_type are required" },
-        { status: 400 }
-      );
     }
 
     if (!["global", "project", "student", "supervisor"].includes(target_type)) {
@@ -192,20 +183,19 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Get user ID from query params
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json({ error: "User ID required" }, { status: 400 });
     }
 
     // Check if user is admin
     const { data: userData, error: roleError } = await supabase
       .from("users")
       .select("role")
-      .eq("id", user.id)
+      .eq("id", userId)
       .single();
 
     if (roleError || userData?.role !== "admin") {
@@ -225,7 +215,7 @@ export async function DELETE(
       );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ message: "Announcement deleted successfully" });
   } catch (error) {
     console.error("Error in DELETE /api/announcements/[id]:", error);
     return NextResponse.json(

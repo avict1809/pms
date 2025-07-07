@@ -67,11 +67,14 @@ interface User {
 }
 
 export default function AdminAnnouncements() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+
+  // Debug: Log user state
+  console.log("User state:", { user, authLoading, userId: user?.id });
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] =
@@ -88,14 +91,18 @@ export default function AdminAnnouncements() {
   });
 
   useEffect(() => {
-    fetchAnnouncements();
-    fetchProjects();
-    fetchUsers();
-  }, []);
+    if (user?.id) {
+      fetchAnnouncements();
+      fetchProjects();
+      fetchUsers();
+    }
+  }, [user?.id]);
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await fetch("/api/announcements");
+      const response = await fetch(
+        `http://localhost:3002/api/announcements?userId=${user?.id}`
+      );
       const result = await response.json();
       if (response.ok) {
         setAnnouncements(result.data);
@@ -103,13 +110,13 @@ export default function AdminAnnouncements() {
     } catch (error) {
       console.error("Error fetching announcements:", error);
     } finally {
-      setLoading(false);
+      setDataLoading(false);
     }
   };
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch("/api/projects/all");
+      const response = await fetch("http://localhost:3002/api/projects/all");
       const result = await response.json();
       if (response.ok) {
         setProjects(result.data);
@@ -121,7 +128,7 @@ export default function AdminAnnouncements() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("/api/admin/users");
+      const response = await fetch("http://localhost:3002/api/admin/users");
       const result = await response.json();
       if (response.ok) {
         setUsers(result.data);
@@ -133,12 +140,37 @@ export default function AdminAnnouncements() {
 
   const handleCreateAnnouncement = async () => {
     try {
-      const response = await fetch("/api/announcements", {
+      // Check if user is loaded
+      if (!user?.id) {
+        console.error("User not loaded yet");
+        return;
+      }
+
+      // Debug: Log what we're sending
+      const requestBody = {
+        ...formData,
+        userId: user.id,
+      };
+      console.log("Sending announcement data:", requestBody);
+      console.log("User ID:", user.id);
+      console.log("Form data:", formData);
+
+      // Validate required fields
+      if (!formData.title || !formData.content || !formData.target_type) {
+        console.error("Missing required fields:", {
+          title: !!formData.title,
+          content: !!formData.content,
+          target_type: !!formData.target_type,
+        });
+        return;
+      }
+
+      const response = await fetch("http://localhost:3002/api/announcements", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
@@ -150,6 +182,10 @@ export default function AdminAnnouncements() {
           target_id: "",
         });
         fetchAnnouncements();
+      } else {
+        // Debug: Log error response
+        const errorData = await response.json();
+        console.error("Error response:", errorData);
       }
     } catch (error) {
       console.error("Error creating announcement:", error);
@@ -160,9 +196,12 @@ export default function AdminAnnouncements() {
     if (!confirm("Are you sure you want to delete this announcement?")) return;
 
     try {
-      const response = await fetch(`/api/announcements/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:3002/api/announcements/${id}?userId=${user?.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         fetchAnnouncements();
@@ -215,9 +254,9 @@ export default function AdminAnnouncements() {
     return matchesSearch && matchesFilter;
   });
 
-  if (loading) {
+  if (dataLoading) {
     return (
-      <AuthGuard allowedRoles={["admin"]}>
+      <AuthGuard requiredRole="admin">
         <div className="min-h-screen text-white p-6">
           <div className="max-w-7xl mx-auto">
             <div className="animate-pulse">
@@ -235,7 +274,7 @@ export default function AdminAnnouncements() {
   }
 
   return (
-    <AuthGuard allowedRoles={["admin"]}>
+    <AuthGuard requiredRole="admin">
       <div className="min-h-screen text-white p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -372,9 +411,16 @@ export default function AdminAnnouncements() {
                       Cancel
                     </Button>
                     <Button
-                      onClick={handleCreateAnnouncement}
+                      onClick={() => {
+                        console.log("Create button clicked!");
+                        console.log("Form data:", formData);
+                        console.log("User:", user);
+                        handleCreateAnnouncement();
+                      }}
                       className="bg-orange-500 hover:bg-orange-600 text-white"
-                      disabled={!formData.title || !formData.content}
+                      disabled={
+                        !formData.title || !formData.content || !user?.id
+                      }
                     >
                       Create Announcement
                     </Button>

@@ -14,6 +14,8 @@ import {
   User,
   Filter,
   Search,
+  Edit,
+  Users,
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
 
@@ -33,7 +35,19 @@ interface Proposal {
   reviewed_by?: string;
   reviewed_at?: string;
   proposed_by: string;
+  team_members?: string[];
+  proposed_supervisor_id?: string;
   user: {
+    display_name: string;
+    email: string;
+  };
+  team_members_data?: Array<{
+    id: string;
+    display_name: string;
+    email: string;
+  }>;
+  supervisor_data?: {
+    id: string;
     display_name: string;
     email: string;
   };
@@ -63,7 +77,11 @@ export default function AdminProposalsPage() {
       if (data.error) {
         setError("Failed to fetch proposals");
       } else {
-        setProposals(data.data || []);
+        // Filter out drafts for admin view
+        const nonDraftProposals = (data.data || []).filter(
+          (proposal: Proposal) => proposal.status !== "draft"
+        );
+        setProposals(nonDraftProposals);
       }
     } catch (err) {
       setError("Failed to fetch proposals");
@@ -328,12 +346,29 @@ export default function AdminProposalsPage() {
                       <div className="flex items-center gap-4 text-sm text-neutral-500">
                         <div className="flex items-center gap-1">
                           <User className="w-4 h-4" />
-                          {proposal.user.display_name}
+                          {proposal.user?.display_name || (
+                            <span className="italic text-neutral-400">
+                              Unknown
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
                           {formatDate(proposal.created_at)}
                         </div>
+                        {proposal.team_members_data &&
+                          proposal.team_members_data.length > 0 && (
+                            <div className="flex items-center gap-1">
+                              <Users className="w-4 h-4" />
+                              {proposal.team_members_data.length} team members
+                            </div>
+                          )}
+                        {proposal.supervisor_data && (
+                          <div className="flex items-center gap-1">
+                            <User className="w-4 h-4" />
+                            Supervisor: {proposal.supervisor_data.display_name}
+                          </div>
+                        )}
                       </div>
 
                       {proposal.admin_comment && (
@@ -431,7 +466,10 @@ function ProposalReviewModal({
         </h3>
         <div className="flex items-center gap-3 mb-4">
           <span className="text-neutral-400">
-            By: {proposal.user.display_name}
+            By:{" "}
+            {proposal.user?.display_name || (
+              <span className="italic text-neutral-400">Unknown</span>
+            )}
           </span>
           <span className="text-neutral-400">•</span>
           <span className="text-neutral-400">

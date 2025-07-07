@@ -32,7 +32,7 @@ export default function AnnouncementsPage() {
   };
 
   return (
-    <AuthGuard allowedRoles={["admin", "supervisor", "student"]}>
+    <AuthGuard requiredRoles={["admin", "supervisor", "student"]}>
       <div className="max-w-7xl mx-auto">{renderAnnouncements()}</div>
     </AuthGuard>
   );

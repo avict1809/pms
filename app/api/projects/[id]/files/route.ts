@@ -20,7 +20,7 @@ export async function GET(
         },
       }
     );
-    const projectId = params.id;
+    const { id: projectId } = await params;
     // Fetch files for the project
     const { data: files, error: filesError } = await supabase
       .from("files")
@@ -77,7 +77,7 @@ export async function POST(
         },
       }
     );
-    const projectId = params.id;
+    const { id: projectId } = await params;
     const formData = await request.formData();
     const files = formData.getAll("files");
     if (!files || files.length === 0) {
@@ -163,7 +163,7 @@ export async function DELETE(
         },
       }
     );
-    const projectId = params.id;
+    const { id: projectId } = await params;
     const { searchParams } = new URL(request.url);
     const fileId = searchParams.get("fileId");
     if (!fileId) {

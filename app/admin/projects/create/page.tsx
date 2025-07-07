@@ -63,7 +63,7 @@ export default function CreateProjectPage() {
       const { data: studentData } = await supabase
         .from("users")
         .select("id, display_name, email, role")
-        .eq("role", "student")
+        .eq("role", "member")
         .eq("is_active", true);
 
       setSupervisors(supervisorData || []);
@@ -114,7 +114,7 @@ export default function CreateProjectPage() {
         ...selectedMembers.map((member) => ({
           project_id: projectData.id,
           user_id: member.id,
-          role: "student",
+          role: "member",
         })),
       ];
 

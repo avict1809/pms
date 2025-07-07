@@ -31,7 +31,7 @@ export async function GET(
         assigned_to:users!tasks_assigned_to_fkey(display_name, email)
       `
       )
-      .eq("project_id", params.id)
+      .eq("project_id", projectId)
       .order("created_at", { ascending: false });
 
     if (tasksError) {

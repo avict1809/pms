@@ -39,6 +39,12 @@ export default function HomePage() {
     }
   }, [session, user]);
 
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
+
   const navigateToDashboard = () => {
     if (userRole === "admin") {
       router.push("/admin");

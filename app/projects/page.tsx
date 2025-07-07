@@ -17,6 +17,7 @@ import {
   Plus,
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
+import Breadcrumbs from "@/components/projects/Breadcrumbs";
 
 interface Project {
   id: string;
@@ -134,6 +135,16 @@ export default function ProjectsPage() {
   return (
     <AuthGuard>
       <div className="space-y-8">
+        {/* Breadcrumbs */}
+        <Breadcrumbs
+          items={[
+            {
+              label: "My Projects",
+              icon: <FolderKanban className="w-4 h-4" />,
+            },
+          ]}
+        />
+
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

@@ -19,7 +19,7 @@ export async function GET(
     const { data: projectAccess, error: accessError } = await supabase
       .from("project_members")
       .select("role")
-      .eq("project_id", params.id)
+      .eq("project_id", projectId)
       .eq("user_id", user.id)
       .single();
 
@@ -38,7 +38,7 @@ export async function GET(
       `
       )
       .eq("id", params.taskId)
-      .eq("project_id", params.id)
+      .eq("project_id", projectId)
       .single();
 
     if (taskError) {
@@ -73,7 +73,7 @@ export async function PUT(
     const { data: projectAccess, error: accessError } = await supabase
       .from("project_members")
       .select("role")
-      .eq("project_id", params.id)
+      .eq("project_id", projectId)
       .eq("user_id", user.id)
       .single();
 
@@ -98,7 +98,7 @@ export async function PUT(
         updated_at: new Date().toISOString(),
       })
       .eq("id", params.taskId)
-      .eq("project_id", params.id)
+      .eq("project_id", projectId)
       .select(
         `
         *,
@@ -143,7 +143,7 @@ export async function DELETE(
     const { data: projectAccess, error: accessError } = await supabase
       .from("project_members")
       .select("role")
-      .eq("project_id", params.id)
+      .eq("project_id", projectId)
       .eq("user_id", user.id)
       .single();
 
@@ -156,7 +156,7 @@ export async function DELETE(
       .from("tasks")
       .delete()
       .eq("id", params.taskId)
-      .eq("project_id", params.id);
+      .eq("project_id", projectId);
 
     if (deleteError) {
       return NextResponse.json(
