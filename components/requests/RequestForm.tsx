@@ -109,7 +109,7 @@ export default function RequestForm({
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-neutral-300 mb-2 block">
+            <label className="text-md font-medium text-neutral-300 mb-2 block">
               Project
             </label>
             <Select
@@ -132,7 +132,7 @@ export default function RequestForm({
           </div>
 
           <div>
-            <label className="text-sm font-medium text-neutral-300 mb-2 block">
+            <label className="text-md font-medium text-neutral-300 mb-2 block">
               Request Type
             </label>
             <Select
@@ -180,7 +180,7 @@ export default function RequestForm({
           </div>
 
           <div>
-            <label className="text-sm font-medium text-neutral-300 mb-2 block">
+            <label className="text-md font-medium text-neutral-300 mb-2 block">
               Title
             </label>
             <Input
@@ -195,7 +195,7 @@ export default function RequestForm({
           </div>
 
           <div>
-            <label className="text-sm font-medium text-neutral-300 mb-2 block">
+            <label className="text-md font-medium text-neutral-300 mb-2 block">
               Description
             </label>
             <Textarea

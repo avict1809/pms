@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSupabase } from "../../../supabase/context";
-import { supabase } from "../../../supabase/client";
+import { useRouter, useParams } from "next/navigation";
+import { useSupabase } from "../../../../supabase/context";
+import { supabase } from "../../../../supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -42,9 +42,11 @@ interface User {
   role: string;
 }
 
-export default function ProposeProjectPage() {
+export default function EditProposalPage() {
   const { user } = useSupabase();
   const router = useRouter();
+  const params = useParams();
+  const proposalId = params?.id as string;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -52,6 +54,7 @@ export default function ProposeProjectPage() {
   const [availableStudents, setAvailableStudents] = useState<User[]>([]);
   const [availableSupervisors, setAvailableSupervisors] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
+  const [loadingProposal, setLoadingProposal] = useState(true);
 
   const [formData, setFormData] = useState<ProposalFormData>({
     title: "",
@@ -66,8 +69,14 @@ export default function ProposeProjectPage() {
   });
 
   useEffect(() => {
-    fetchAvailableUsers();
-  }, []);
+    if (user) {
+      fetchAvailableUsers();
+    }
+    if (user && proposalId) {
+      fetchProposal();
+    }
+    // eslint-disable-next-line
+  }, [user, proposalId]);
 
   const fetchAvailableUsers = async () => {
     try {
@@ -99,16 +108,69 @@ export default function ProposeProjectPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const fetchProposal = async () => {
+    if (!user || !proposalId) return;
+    setLoadingProposal(true);
+    setError(null);
+    try {
+      const { data, error } = await supabase
+        .from("project_proposals")
+        .select("*")
+        .eq("id", proposalId)
+        .single();
+      if (error || !data) {
+        setError("Proposal not found.");
+        return;
+      }
+      if (data.proposed_by !== user.id) {
+        setError("You are not authorized to edit this proposal.");
+        return;
+      }
+      if (data.status !== "draft") {
+        setError("Only draft proposals can be edited.");
+        return;
+      }
+      // Fetch team members
+      let teamMembers: string[] = [];
+      if (Array.isArray(data.team_members)) {
+        teamMembers = data.team_members;
+      } else {
+        // fallback: fetch from proposal_team_members table
+        const { data: teamRows } = await supabase
+          .from("proposal_team_members")
+          .select("user_id")
+          .eq("proposal_id", proposalId);
+        if (teamRows) {
+          teamMembers = teamRows.map((row: any) => row.user_id);
+        }
+      }
+      setFormData({
+        title: data.title || "",
+        description: data.description || "",
+        objectives: data.objectives || "",
+        methodology: data.methodology || "",
+        expectedOutcomes: data.expected_outcomes || "",
+        timeline: data.timeline || "",
+        resources: data.resources || "",
+        selectedSupervisor: data.proposed_supervisor_id || "",
+        selectedTeamMembers: teamMembers,
+      });
+    } catch (err) {
+      setError("Failed to load proposal.");
+    } finally {
+      setLoadingProposal(false);
+    }
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     try {
-      // Create the proposal
-      const { data: proposal, error: proposalError } = await supabase
+      // Update the proposal
+      const { error: proposalError } = await supabase
         .from("project_proposals")
-        .insert({
+        .update({
           title: formData.title,
           description: formData.description,
           objectives: formData.objectives,
@@ -116,53 +178,37 @@ export default function ProposeProjectPage() {
           expected_outcomes: formData.expectedOutcomes,
           timeline: formData.timeline,
           resources: formData.resources,
-          proposed_by: user?.id,
           proposed_supervisor_id: formData.selectedSupervisor || null,
-          status: "pending",
+          team_members: formData.selectedTeamMembers,
         })
-        .select()
-        .single();
-
+        .eq("id", proposalId);
       if (proposalError) {
-        setError("Failed to submit proposal: " + proposalError.message);
+        setError("Failed to update proposal: " + proposalError.message);
         return;
       }
-
-      // Add team members
+      // Update team members table
+      await supabase
+        .from("proposal_team_members")
+        .delete()
+        .eq("proposal_id", proposalId);
       if (formData.selectedTeamMembers.length > 0) {
         const teamMembers = formData.selectedTeamMembers.map((memberId) => ({
-          proposal_id: proposal.id,
+          proposal_id: proposalId,
           user_id: memberId,
           role: "member",
         }));
-
         const { error: teamError } = await supabase
           .from("proposal_team_members")
           .insert(teamMembers);
-
         if (teamError) {
-          setError("Failed to add team members: " + teamError.message);
+          setError("Failed to update team members: " + teamError.message);
           return;
         }
-
-        // Also update the team_members column in project_proposals for consistency
-        const { error: updateError } = await supabase
-          .from("project_proposals")
-          .update({ team_members: formData.selectedTeamMembers })
-          .eq("id", proposal.id);
-
-        if (updateError) {
-          console.error("Failed to update team_members column:", updateError);
-          // Don't fail the whole operation, just log the error
-        }
       }
-
-      setSuccess(
-        "Proposal submitted successfully! It will be reviewed by an administrator."
-      );
+      setSuccess("Draft updated successfully!");
       setTimeout(() => {
         router.push("/student");
-      }, 2000);
+      }, 1500);
     } catch (err) {
       setError("An unexpected error occurred");
     } finally {
@@ -170,14 +216,15 @@ export default function ProposeProjectPage() {
     }
   };
 
-  const handleSaveDraft = async () => {
+  const handleSubmit = async () => {
     setLoading(true);
     setError(null);
-
     try {
-      const { data: proposal, error: proposalError } = await supabase
+      // Submit the proposal (change status to pending)
+      const { error: proposalError } = await supabase
         .from("project_proposals")
-        .insert({
+        .update({
+          status: "pending",
           title: formData.title,
           description: formData.description,
           objectives: formData.objectives,
@@ -185,48 +232,39 @@ export default function ProposeProjectPage() {
           expected_outcomes: formData.expectedOutcomes,
           timeline: formData.timeline,
           resources: formData.resources,
-          proposed_by: user?.id,
           proposed_supervisor_id: formData.selectedSupervisor || null,
-          status: "draft",
+          team_members: formData.selectedTeamMembers,
         })
-        .select()
-        .single();
-
+        .eq("id", proposalId);
       if (proposalError) {
-        setError("Failed to save draft: " + proposalError.message);
+        setError("Failed to submit proposal: " + proposalError.message);
         return;
       }
-
-      // Add team members
+      // Update team members table
+      await supabase
+        .from("proposal_team_members")
+        .delete()
+        .eq("proposal_id", proposalId);
       if (formData.selectedTeamMembers.length > 0) {
         const teamMembers = formData.selectedTeamMembers.map((memberId) => ({
-          proposal_id: proposal.id,
+          proposal_id: proposalId,
           user_id: memberId,
           role: "member",
         }));
-
         const { error: teamError } = await supabase
           .from("proposal_team_members")
           .insert(teamMembers);
-
         if (teamError) {
-          setError("Failed to add team members: " + teamError.message);
+          setError("Failed to update team members: " + teamError.message);
           return;
         }
-
-        // Also update the team_members column in project_proposals for consistency
-        const { error: updateError } = await supabase
-          .from("project_proposals")
-          .update({ team_members: formData.selectedTeamMembers })
-          .eq("id", proposal.id);
-
-        if (updateError) {
-          console.error("Failed to update team_members column:", updateError);
-          // Don't fail the whole operation, just log the error
-        }
       }
-
-      setSuccess("Draft saved successfully!");
+      setSuccess(
+        "Proposal submitted successfully! It will be reviewed by an administrator."
+      );
+      setTimeout(() => {
+        router.push("/student");
+      }, 1500);
     } catch (err) {
       setError("An unexpected error occurred");
     } finally {
@@ -271,11 +309,28 @@ export default function ProposeProjectPage() {
     );
   };
 
-  if (loadingUsers) {
+  if (loadingUsers || loadingProposal) {
     return (
       <AuthGuard requiredRole="student">
         <div className="flex items-center justify-center py-8">
           <div className="text-orange-400 text-lg">Loading...</div>
+        </div>
+      </AuthGuard>
+    );
+  }
+
+  if (error) {
+    return (
+      <AuthGuard requiredRole="student">
+        <div className="flex items-center justify-center py-8">
+          <Card className="bg-red-900/20 border-red-500">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 text-red-400">
+                <AlertTriangle className="w-5 h-5" />
+                <span>{error}</span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </AuthGuard>
     );
@@ -289,7 +344,7 @@ export default function ProposeProjectPage() {
           <div className="flex items-center gap-3">
             <FileText className="text-orange-500 w-7 h-7" />
             <h1 className="text-2xl font-bold text-orange-400 tracking-wider">
-              Propose New Project
+              Edit Draft Proposal
             </h1>
           </div>
           <Button variant="outline" onClick={() => router.push("/student")}>
@@ -326,12 +381,12 @@ export default function ProposeProjectPage() {
           <CardHeader>
             <CardTitle className="text-orange-400 flex items-center gap-2">
               <FileText className="w-5 h-5" />
-              Project Proposal Form
+              Edit Proposal Form
             </CardTitle>
           </CardHeader>
           <CardContent>
             {!isPreview ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleUpdate} className="space-y-6">
                 {/* Project Title */}
                 <div>
                   <label className="block text-gray-300 mb-2 text-md font-medium">
@@ -342,7 +397,7 @@ export default function ProposeProjectPage() {
                     value={formData.title}
                     onChange={(e) => updateFormData("title", e.target.value)}
                     required
-                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none"
+                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none text-md"
                     placeholder="Enter a descriptive project title"
                   />
                 </div>
@@ -359,7 +414,7 @@ export default function ProposeProjectPage() {
                     }
                     required
                     rows={4}
-                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none"
+                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none text-md"
                     placeholder="Provide a comprehensive description of your project"
                   />
                 </div>
@@ -376,7 +431,7 @@ export default function ProposeProjectPage() {
                     }
                     required
                     rows={3}
-                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none"
+                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none text-md"
                     placeholder="List the main objectives and goals of your project"
                   />
                 </div>
@@ -393,7 +448,7 @@ export default function ProposeProjectPage() {
                     }
                     required
                     rows={3}
-                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none"
+                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none text-md"
                     placeholder="Describe the methods and approaches you plan to use"
                   />
                 </div>
@@ -410,7 +465,7 @@ export default function ProposeProjectPage() {
                     }
                     required
                     rows={3}
-                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none"
+                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none text-md"
                     placeholder="What do you expect to achieve with this project?"
                   />
                 </div>
@@ -425,7 +480,7 @@ export default function ProposeProjectPage() {
                     onChange={(e) => updateFormData("timeline", e.target.value)}
                     required
                     rows={2}
-                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none"
+                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none text-md"
                     placeholder="Estimated timeline and milestones"
                   />
                 </div>
@@ -441,7 +496,7 @@ export default function ProposeProjectPage() {
                       updateFormData("resources", e.target.value)
                     }
                     rows={2}
-                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none"
+                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white placeholder-neutral-400 focus:border-orange-400 outline-none resize-none text-md"
                     placeholder="List any resources, tools, or support you'll need"
                   />
                 </div>
@@ -457,7 +512,7 @@ export default function ProposeProjectPage() {
                       updateFormData("selectedSupervisor", e.target.value)
                     }
                     required
-                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white focus:border-orange-400 outline-none"
+                    className="w-full px-4 py-3 bg-[#18181b] border border-neutral-700 rounded text-white focus:border-orange-400 outline-none text-md"
                   >
                     <option value="">Select a supervisor</option>
                     {availableSupervisors.map((supervisor) => (
@@ -554,9 +609,8 @@ export default function ProposeProjectPage() {
                 {/* Action Buttons */}
                 <div className="flex gap-3 pt-6">
                   <Button
-                    type="button"
+                    type="submit"
                     variant="outline"
-                    onClick={handleSaveDraft}
                     disabled={loading}
                     className="flex-1"
                   >
@@ -572,7 +626,12 @@ export default function ProposeProjectPage() {
                     <Eye className="w-4 h-4 mr-2" />
                     Preview
                   </Button>
-                  <Button type="submit" disabled={loading} className="flex-1">
+                  <Button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="flex-1"
+                  >
                     {loading ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />

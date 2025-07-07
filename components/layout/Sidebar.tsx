@@ -192,7 +192,7 @@ export default function Sidebar() {
             <h1 className="text-orange-500 font-bold text-xl tracking-wider">
               Project MS
             </h1>
-            <p className="text-neutral-500 text-sm">v1.0</p>
+            <p className="text-neutral-500 text-md">v1.0</p>
           </div>
           <Button
             variant="ghost"
@@ -235,11 +235,11 @@ export default function Sidebar() {
         {!sidebarCollapsed && (
           <div className="mb-6 mt-8 flex flex-col gap-3">
             <div className="px-4 py-3 bg-neutral-800 rounded-lg">
-              <div className="text-sm text-neutral-400 mb-1">Logged in as</div>
+              <div className="text-md text-neutral-400 mb-1">Logged in as</div>
               <div className="text-white font-medium truncate">
                 {userRole.display_name || user?.email || "Unknown User"}
               </div>
-              <div className="text-xs text-neutral-500 capitalize">
+              <div className="text-sm text-neutral-500 capitalize">
                 {userRole.role}
               </div>
             </div>

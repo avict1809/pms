@@ -155,7 +155,7 @@ export default function AdminProjectsPage() {
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
             <CardContent className="p-4">
               <div className="text-2xl font-bold text-white">{stats.total}</div>
-              <div className="text-xs text-neutral-400">Total Projects</div>
+              <div className="text-sm text-neutral-400">Total Projects</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-green-500 shadow-lg">
@@ -163,7 +163,7 @@ export default function AdminProjectsPage() {
               <div className="text-2xl font-bold text-green-400">
                 {stats.active}
               </div>
-              <div className="text-xs text-neutral-400">Active Projects</div>
+              <div className="text-sm text-neutral-400">Active Projects</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-blue-500 shadow-lg">
@@ -171,7 +171,7 @@ export default function AdminProjectsPage() {
               <div className="text-2xl font-bold text-blue-400">
                 {stats.completed}
               </div>
-              <div className="text-xs text-neutral-400">Completed</div>
+              <div className="text-sm text-neutral-400">Completed</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-gray-500 shadow-lg">
@@ -179,7 +179,7 @@ export default function AdminProjectsPage() {
               <div className="text-2xl font-bold text-gray-400">
                 {stats.archived}
               </div>
-              <div className="text-xs text-neutral-400">Archived</div>
+              <div className="text-sm text-neutral-400">Archived</div>
             </CardContent>
           </Card>
         </div>
@@ -293,7 +293,7 @@ export default function AdminProjectsPage() {
                   </p>
 
                   {/* Meta Info */}
-                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-neutral-400 mb-4">
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-md text-neutral-400 mb-4">
                     <div className="flex items-center gap-1">
                       <User className="w-4 h-4" />
                       <span>{project.supervisor.display_name}</span>

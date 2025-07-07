@@ -89,20 +89,20 @@ export default function FirstTimePasswordSetup({
       <div className="mb-6 p-4 bg-neutral-800 rounded-lg">
         <div className="flex items-center gap-3 mb-2">
           <User className="w-4 h-4 text-neutral-400" />
-          <span className="text-sm text-neutral-400">User</span>
+          <span className="text-md text-neutral-400">User</span>
         </div>
         <div className="text-white font-medium">{displayName}</div>
 
         <div className="flex items-center gap-3 mt-3">
           <Mail className="w-4 h-4 text-neutral-400" />
-          <span className="text-sm text-neutral-400">Email</span>
+          <span className="text-md text-neutral-400">Email</span>
         </div>
         <div className="text-white font-medium">{email}</div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-300 mb-2 text-sm font-medium">
+          <label className="block text-gray-300 mb-2 text-md font-medium">
             New Password
           </label>
           <div className="relative">
@@ -127,13 +127,13 @@ export default function FirstTimePasswordSetup({
               )}
             </button>
           </div>
-          <p className="text-xs text-neutral-500 mt-1">
+          <p className="text-sm text-neutral-500 mt-1">
             Password must be at least 8 characters long
           </p>
         </div>
 
         <div>
-          <label className="block text-gray-300 mb-2 text-sm font-medium">
+          <label className="block text-gray-300 mb-2 text-md font-medium">
             Confirm Password
           </label>
           <div className="relative">
@@ -183,13 +183,13 @@ export default function FirstTimePasswordSetup({
       <div className="mt-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
         <div className="flex items-start gap-3">
           <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
-            <span className="text-white text-xs font-bold">i</span>
+            <span className="text-white text-sm font-bold">i</span>
           </div>
           <div>
-            <h4 className="text-blue-400 font-medium text-sm mb-1">
+            <h4 className="text-blue-400 font-medium text-md mb-1">
               First-Time Login
             </h4>
-            <p className="text-blue-300 text-xs">
+            <p className="text-blue-300 text-sm">
               Your account was created by an administrator. This is your first
               login, so you need to set up your password to access the system.
             </p>

@@ -124,7 +124,10 @@ export default function SearchFilters({
           )}
           <div className="flex items-center gap-2">
             {hasActiveFilters() && (
-              <Badge variant="outline" className="border-orange-500 text-orange-400">
+              <Badge
+                variant="outline"
+                className="border-orange-500 text-orange-400"
+              >
                 {getActiveFilterCount()} active
               </Badge>
             )}
@@ -150,7 +153,11 @@ export default function SearchFilters({
                 { value: "project", label: "Projects", icon: FolderOpen },
                 { value: "task", label: "Tasks", icon: ClipboardList },
                 { value: "file", label: "Files", icon: FileText },
-                { value: "announcement", label: "Announcements", icon: Megaphone },
+                {
+                  value: "announcement",
+                  label: "Announcements",
+                  icon: Megaphone,
+                },
                 { value: "user", label: "Users", icon: Users },
               ].map(({ value, label, icon: Icon }) => (
                 <Button
@@ -176,14 +183,32 @@ export default function SearchFilters({
             <h4 className="text-white font-medium mb-3">Status</h4>
             <div className="flex flex-wrap gap-2">
               {[
-                { value: "pending", label: "Pending", color: "border-yellow-500 text-yellow-400" },
-                { value: "active", label: "Active", color: "border-green-500 text-green-400" },
-                { value: "completed", label: "Completed", color: "border-blue-500 text-blue-400" },
-                { value: "archived", label: "Archived", color: "border-gray-500 text-gray-400" },
+                {
+                  value: "pending",
+                  label: "Pending",
+                  color: "border-yellow-500 text-yellow-400",
+                },
+                {
+                  value: "active",
+                  label: "Active",
+                  color: "border-green-500 text-green-400",
+                },
+                {
+                  value: "completed",
+                  label: "Completed",
+                  color: "border-blue-500 text-blue-400",
+                },
+                {
+                  value: "archived",
+                  label: "Archived",
+                  color: "border-gray-500 text-gray-400",
+                },
               ].map(({ value, label, color }) => (
                 <Button
                   key={value}
-                  variant={filters.status.includes(value) ? "default" : "outline"}
+                  variant={
+                    filters.status.includes(value) ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={() => handleStatusToggle(value)}
                   className={
@@ -206,7 +231,9 @@ export default function SearchFilters({
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-neutral-400 mb-1">From</label>
+                <label className="block text-md text-neutral-400 mb-1">
+                  From
+                </label>
                 <input
                   type="date"
                   value={filters.dateRange.start}
@@ -220,7 +247,9 @@ export default function SearchFilters({
                 />
               </div>
               <div>
-                <label className="block text-sm text-neutral-400 mb-1">To</label>
+                <label className="block text-md text-neutral-400 mb-1">
+                  To
+                </label>
                 <input
                   type="date"
                   value={filters.dateRange.end}
@@ -247,7 +276,9 @@ export default function SearchFilters({
                 type="text"
                 placeholder="Enter user name..."
                 value={filters.assignedTo}
-                onChange={(e) => handleFilterChange("assignedTo", e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange("assignedTo", e.target.value)
+                }
                 className="w-full px-3 py-2 bg-[#18181b] border border-neutral-700 rounded-md text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
@@ -260,7 +291,9 @@ export default function SearchFilters({
                 type="text"
                 placeholder="Enter user name..."
                 value={filters.createdBy}
-                onChange={(e) => handleFilterChange("createdBy", e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange("createdBy", e.target.value)
+                }
                 className="w-full px-3 py-2 bg-[#18181b] border border-neutral-700 rounded-md text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
@@ -286,7 +319,9 @@ export default function SearchFilters({
               </Select>
               <Select
                 value={filters.sortOrder}
-                onValueChange={(value) => handleFilterChange("sortOrder", value)}
+                onValueChange={(value) =>
+                  handleFilterChange("sortOrder", value)
+                }
               >
                 <SelectTrigger className="bg-[#18181b] border-neutral-700 text-white">
                   <SelectValue />
@@ -323,4 +358,4 @@ export default function SearchFilters({
       )}
     </Card>
   );
-} 
+}

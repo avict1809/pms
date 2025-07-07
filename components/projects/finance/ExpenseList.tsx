@@ -24,12 +24,12 @@ export default function ExpenseList({ records }: { records: any[] }) {
                   </span>
                   <span className="text-neutral-300">{r.description}</span>
                   {r.category && (
-                    <span className="ml-2 text-xs bg-orange-900/40 text-orange-300 px-2 py-0.5 rounded">
+                    <span className="ml-2 text-sm bg-orange-900/40 text-orange-300 px-2 py-0.5 rounded">
                       {r.category}
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-3 text-xs text-neutral-500 mt-1">
+                <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1">
                   <Calendar className="w-3 h-3" />
                   <span>
                     {new Date(r.date || r.created_at).toLocaleDateString()}

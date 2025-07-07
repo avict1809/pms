@@ -253,7 +253,7 @@ export default function AdminRequestsPage() {
                 <div className="text-blue-400 text-lg font-bold">
                   {stats.total}
                 </div>
-                <div className="text-neutral-400 text-sm">Total Requests</div>
+                <div className="text-neutral-400 text-md">Total Requests</div>
               </div>
             </CardContent>
           </Card>
@@ -265,7 +265,7 @@ export default function AdminRequestsPage() {
                 <div className="text-yellow-400 text-lg font-bold">
                   {stats.pending}
                 </div>
-                <div className="text-neutral-400 text-sm">Pending</div>
+                <div className="text-neutral-400 text-md">Pending</div>
               </div>
             </CardContent>
           </Card>
@@ -277,7 +277,7 @@ export default function AdminRequestsPage() {
                 <div className="text-green-400 text-lg font-bold">
                   {stats.approved}
                 </div>
-                <div className="text-neutral-400 text-sm">Approved</div>
+                <div className="text-neutral-400 text-md">Approved</div>
               </div>
             </CardContent>
           </Card>
@@ -289,7 +289,7 @@ export default function AdminRequestsPage() {
                 <div className="text-red-400 text-lg font-bold">
                   {stats.denied}
                 </div>
-                <div className="text-neutral-400 text-sm">Denied</div>
+                <div className="text-neutral-400 text-md">Denied</div>
               </div>
             </CardContent>
           </Card>
@@ -301,7 +301,7 @@ export default function AdminRequestsPage() {
                 <div className="text-orange-400 text-lg font-bold">
                   {stats.highPriority}
                 </div>
-                <div className="text-neutral-400 text-sm">High Priority</div>
+                <div className="text-neutral-400 text-md">High Priority</div>
               </div>
             </CardContent>
           </Card>
@@ -403,12 +403,12 @@ export default function AdminRequestsPage() {
                   </CardTitle>
                   <div className="flex gap-2">
                     <Badge
-                      className={`text-xs ${getStatusColor(request.status)}`}
+                      className={`text-sm ${getStatusColor(request.status)}`}
                     >
                       {request.status}
                     </Badge>
                     <Badge
-                      className={`text-xs ${getPriorityColor(
+                      className={`text-sm ${getPriorityColor(
                         request.priority
                       )}`}
                     >
@@ -419,22 +419,22 @@ export default function AdminRequestsPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <p className="text-neutral-300 text-sm line-clamp-3">
+                  <p className="text-neutral-300 text-md line-clamp-3">
                     {request.description}
                   </p>
 
-                  <div className="flex items-center gap-2 text-xs text-neutral-400">
+                  <div className="flex items-center gap-2 text-sm text-neutral-400">
                     <User className="w-3 h-3" />
                     <span>{request.requested_by.display_name}</span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs text-neutral-400">
+                  <div className="flex items-center gap-2 text-sm text-neutral-400">
                     <Calendar className="w-3 h-3" />
                     <span>{formatDate(request.created_at)}</span>
                   </div>
 
                   {request.project && (
-                    <div className="flex items-center gap-2 text-xs text-neutral-400">
+                    <div className="flex items-center gap-2 text-sm text-neutral-400">
                       <span>📋</span>
                       <span>{request.project.title}</span>
                     </div>
@@ -471,11 +471,11 @@ export default function AdminRequestsPage() {
 
                   {request.admin_comment && (
                     <div className="pt-2 border-t border-neutral-700">
-                      <div className="flex items-center gap-2 text-xs text-neutral-400 mb-1">
+                      <div className="flex items-center gap-2 text-sm text-neutral-400 mb-1">
                         <MessageSquare className="w-3 h-3" />
                         <span>Admin Comment:</span>
                       </div>
-                      <p className="text-xs text-neutral-300">
+                      <p className="text-sm text-neutral-300">
                         {request.admin_comment}
                       </p>
                     </div>
@@ -515,7 +515,7 @@ export default function AdminRequestsPage() {
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-md font-medium text-white mb-2">
                   Comment (Optional)
                 </label>
                 <textarea

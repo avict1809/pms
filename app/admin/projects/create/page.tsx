@@ -211,7 +211,7 @@ export default function CreateProjectPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Project Title */}
               <div>
-                <label className="block text-gray-300 mb-2 text-sm font-medium">
+                <label className="block text-gray-300 mb-2 text-md font-medium">
                   Project Title *
                 </label>
                 <input
@@ -226,7 +226,7 @@ export default function CreateProjectPage() {
 
               {/* Project Description */}
               <div>
-                <label className="block text-gray-300 mb-2 text-sm font-medium">
+                <label className="block text-gray-300 mb-2 text-md font-medium">
                   Project Description *
                 </label>
                 <textarea
@@ -243,7 +243,7 @@ export default function CreateProjectPage() {
 
               {/* Supervisor Selection */}
               <div>
-                <label className="block text-gray-300 mb-2 text-sm font-medium">
+                <label className="block text-gray-300 mb-2 text-md font-medium">
                   Assign Supervisor *
                 </label>
                 <select
@@ -266,7 +266,7 @@ export default function CreateProjectPage() {
               {/* Team Members */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="block text-gray-300 text-sm font-medium">
+                  <label className="block text-gray-300 text-md font-medium">
                     Team Members
                   </label>
                   <Button
@@ -295,7 +295,7 @@ export default function CreateProjectPage() {
                           <div className="text-white font-medium">
                             {member.display_name}
                           </div>
-                          <div className="text-neutral-400 text-sm">
+                          <div className="text-neutral-400 text-md">
                             {member.email}
                           </div>
                         </div>
@@ -374,7 +374,7 @@ export default function CreateProjectPage() {
                           <div className="text-white font-medium">
                             {student.display_name}
                           </div>
-                          <div className="text-neutral-400 text-sm">
+                          <div className="text-neutral-400 text-md">
                             {student.email}
                           </div>
                         </div>

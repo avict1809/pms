@@ -193,7 +193,7 @@ export default function AdminToolsPage() {
                   <div className="text-2xl font-bold text-white">
                     {stats.totalTools}
                   </div>
-                  <div className="text-xs text-neutral-400">Total Tools</div>
+                  <div className="text-sm text-neutral-400">Total Tools</div>
                 </CardContent>
               </Card>
               <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -201,7 +201,7 @@ export default function AdminToolsPage() {
                   <div className="text-2xl font-bold text-white">
                     {stats.eligibleTools}
                   </div>
-                  <div className="text-xs text-neutral-400">Eligible Tools</div>
+                  <div className="text-sm text-neutral-400">Eligible Tools</div>
                 </CardContent>
               </Card>
               <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -209,7 +209,7 @@ export default function AdminToolsPage() {
                   <div className="text-2xl font-bold text-white">
                     {stats.ineligibleTools}
                   </div>
-                  <div className="text-xs text-neutral-400">
+                  <div className="text-sm text-neutral-400">
                     Ineligible Tools
                   </div>
                 </CardContent>
@@ -219,7 +219,7 @@ export default function AdminToolsPage() {
                   <div className="text-2xl font-bold text-white">
                     {stats.totalRequests}
                   </div>
-                  <div className="text-xs text-neutral-400">Total Requests</div>
+                  <div className="text-sm text-neutral-400">Total Requests</div>
                 </CardContent>
               </Card>
             </div>
@@ -296,7 +296,7 @@ export default function AdminToolsPage() {
                         <CardDescription className="text-gray-400 mt-1">
                           {tool.description}
                         </CardDescription>
-                        <div className="text-xs text-gray-400 mt-2">
+                        <div className="text-sm text-gray-400 mt-2">
                           <span>
                             Submitted by:{" "}
                             {tool.requested_by?.display_name ||
@@ -327,7 +327,7 @@ export default function AdminToolsPage() {
                     <div className="flex items-center gap-2">
                       <Badge>{tool.status}</Badge>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-sm text-gray-500">
                       Requested:{" "}
                       {tool.created_at
                         ? new Date(tool.created_at).toLocaleDateString()

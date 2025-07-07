@@ -144,7 +144,7 @@ export default function TaskCard({
                 <h3 className="text-lg font-semibold text-white mb-1">
                   {task.title}
                 </h3>
-                <p className="text-neutral-400 text-sm line-clamp-2">
+                <p className="text-neutral-400 text-md line-clamp-2">
                   {task.description}
                 </p>
               </div>
@@ -161,7 +161,7 @@ export default function TaskCard({
 
             {/* Task Details */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-md">
                 <User className="w-4 h-4 text-orange-400" />
                 <span className="text-neutral-400">Assigned to:</span>
                 <span className="text-white font-medium">
@@ -169,7 +169,7 @@ export default function TaskCard({
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-md">
                 <Calendar className="w-4 h-4 text-orange-400" />
                 <span className="text-neutral-400">Due:</span>
                 <span
@@ -182,7 +182,7 @@ export default function TaskCard({
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-md">
                 <Clock className="w-4 h-4 text-orange-400" />
                 <span className="text-neutral-400">Created:</span>
                 <span className="text-white font-medium">

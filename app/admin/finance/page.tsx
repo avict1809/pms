@@ -123,7 +123,7 @@ export default function AdminFinancePage() {
                   <div className="text-cyan-400 text-lg font-bold">
                     TZS {(systemFinance.total_income ?? 0).toLocaleString()}
                   </div>
-                  <div className="text-neutral-400 text-sm">Total Income</div>
+                  <div className="text-neutral-400 text-md">Total Income</div>
                 </div>
               </CardContent>
             </Card>
@@ -135,7 +135,7 @@ export default function AdminFinancePage() {
                   <div className="text-orange-400 text-lg font-bold">
                     TZS {(systemFinance.total_expenses ?? 0).toLocaleString()}
                   </div>
-                  <div className="text-neutral-400 text-sm">Total Expenses</div>
+                  <div className="text-neutral-400 text-md">Total Expenses</div>
                 </div>
               </CardContent>
             </Card>
@@ -147,7 +147,7 @@ export default function AdminFinancePage() {
                   <div className="text-green-400 text-lg font-bold">
                     TZS {(systemFinance.balance ?? 0).toLocaleString()}
                   </div>
-                  <div className="text-neutral-400 text-sm">Net Balance</div>
+                  <div className="text-neutral-400 text-md">Net Balance</div>
                 </div>
               </CardContent>
             </Card>
@@ -159,7 +159,7 @@ export default function AdminFinancePage() {
                   <div className="text-blue-400 text-lg font-bold">
                     {systemFinance.project_count ?? 0}
                   </div>
-                  <div className="text-neutral-400 text-sm">
+                  <div className="text-neutral-400 text-md">
                     Active Projects
                   </div>
                 </div>
@@ -173,7 +173,7 @@ export default function AdminFinancePage() {
                   <div className="text-purple-400 text-lg font-bold">
                     {systemFinance.record_count ?? 0}
                   </div>
-                  <div className="text-neutral-400 text-sm">Total Records</div>
+                  <div className="text-neutral-400 text-md">Total Records</div>
                 </div>
               </CardContent>
             </Card>

@@ -414,7 +414,7 @@ export default function ProjectDashboardPage() {
                       onClick={() => setActiveTab("files")}
                     >
                       <FileText className="w-6 h-6 text-orange-400" />
-                      <span className="text-sm">View Files</span>
+                      <span className="text-md">View Files</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -422,7 +422,7 @@ export default function ProjectDashboardPage() {
                       onClick={() => setActiveTab("tasks")}
                     >
                       <ClipboardList className="w-6 h-6 text-orange-400" />
-                      <span className="text-sm">View Tasks</span>
+                      <span className="text-md">View Tasks</span>
                     </Button>
                     <Button
                       variant="outline"
@@ -430,7 +430,7 @@ export default function ProjectDashboardPage() {
                       onClick={() => setActiveTab("members")}
                     >
                       <Users className="w-6 h-6 text-orange-400" />
-                      <span className="text-sm">View Members</span>
+                      <span className="text-md">View Members</span>
                     </Button>
                   </div>
                 </CardContent>

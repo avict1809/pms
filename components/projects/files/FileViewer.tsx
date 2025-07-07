@@ -2,18 +2,18 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  X, 
-  Download, 
-  ExternalLink, 
-  FileText, 
-  Image, 
-  Video, 
+import {
+  X,
+  Download,
+  ExternalLink,
+  FileText,
+  Image,
+  Video,
   Music,
   Archive,
   File,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 
 interface ProjectFile {
@@ -38,13 +38,13 @@ interface FileViewerProps {
   hasPrevious?: boolean;
 }
 
-export default function FileViewer({ 
-  file, 
-  onClose, 
-  onNext, 
-  onPrevious, 
-  hasNext = false, 
-  hasPrevious = false 
+export default function FileViewer({
+  file,
+  onClose,
+  onNext,
+  onPrevious,
+  hasNext = false,
+  hasPrevious = false,
 }: FileViewerProps) {
   const [loading, setLoading] = useState(false);
 
@@ -69,36 +69,45 @@ export default function FileViewer({
   };
 
   const getFileIcon = (filename: string, fileType: string) => {
-    const ext = filename.split('.').pop()?.toLowerCase();
-    
-    if (fileType.startsWith('image/')) return <Image className="w-8 h-8" />;
-    if (fileType.startsWith('video/')) return <Video className="w-8 h-8" />;
-    if (fileType.startsWith('audio/')) return <Music className="w-8 h-8" />;
-    if (fileType.includes('pdf')) return <FileText className="w-8 h-8" />;
-    if (fileType.includes('zip') || fileType.includes('rar')) return <Archive className="w-8 h-8" />;
-    
+    const ext = filename.split(".").pop()?.toLowerCase();
+
+    if (fileType.startsWith("image/")) return <Image className="w-8 h-8" />;
+    if (fileType.startsWith("video/")) return <Video className="w-8 h-8" />;
+    if (fileType.startsWith("audio/")) return <Music className="w-8 h-8" />;
+    if (fileType.includes("pdf")) return <FileText className="w-8 h-8" />;
+    if (fileType.includes("zip") || fileType.includes("rar"))
+      return <Archive className="w-8 h-8" />;
+
     switch (ext) {
-      case 'pdf': return <FileText className="w-8 h-8" />;
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'gif': return <Image className="w-8 h-8" />;
-      case 'mp4':
-      case 'avi':
-      case 'mov': return <Video className="w-8 h-8" />;
-      case 'mp3':
-      case 'wav': return <Music className="w-8 h-8" />;
-      case 'zip':
-      case 'rar': return <Archive className="w-8 h-8" />;
-      default: return <File className="w-8 h-8" />;
+      case "pdf":
+        return <FileText className="w-8 h-8" />;
+      case "jpg":
+      case "jpeg":
+      case "png":
+      case "gif":
+        return <Image className="w-8 h-8" />;
+      case "mp4":
+      case "avi":
+      case "mov":
+        return <Video className="w-8 h-8" />;
+      case "mp3":
+      case "wav":
+        return <Music className="w-8 h-8" />;
+      case "zip":
+      case "rar":
+        return <Archive className="w-8 h-8" />;
+      default:
+        return <File className="w-8 h-8" />;
     }
   };
 
   const canPreview = () => {
-    return file.file_type.startsWith('image/') || 
-           file.file_type.startsWith('video/') || 
-           file.file_type.startsWith('audio/') ||
-           file.file_type.includes('pdf');
+    return (
+      file.file_type.startsWith("image/") ||
+      file.file_type.startsWith("video/") ||
+      file.file_type.startsWith("audio/") ||
+      file.file_type.includes("pdf")
+    );
   };
 
   const getPreviewUrl = () => {
@@ -130,7 +139,7 @@ export default function FileViewer({
   };
 
   const renderPreview = () => {
-    if (file.file_type.startsWith('image/')) {
+    if (file.file_type.startsWith("image/")) {
       return (
         <div className="flex items-center justify-center bg-[#18181b] rounded-lg p-4">
           <img
@@ -138,8 +147,8 @@ export default function FileViewer({
             alt={file.filename}
             className="max-w-full max-h-96 object-contain rounded"
             onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling!.style.display = 'flex';
+              e.currentTarget.style.display = "none";
+              e.currentTarget.nextElementSibling!.style.display = "flex";
             }}
           />
           <div className="hidden flex items-center justify-center text-neutral-400">
@@ -150,7 +159,7 @@ export default function FileViewer({
       );
     }
 
-    if (file.file_type.startsWith('video/')) {
+    if (file.file_type.startsWith("video/")) {
       return (
         <div className="flex items-center justify-center bg-[#18181b] rounded-lg p-4">
           <video
@@ -164,21 +173,17 @@ export default function FileViewer({
       );
     }
 
-    if (file.file_type.startsWith('audio/')) {
+    if (file.file_type.startsWith("audio/")) {
       return (
         <div className="flex items-center justify-center bg-[#18181b] rounded-lg p-4">
-          <audio
-            controls
-            className="w-full max-w-md"
-            src={getPreviewUrl()}
-          >
+          <audio controls className="w-full max-w-md" src={getPreviewUrl()}>
             Your browser does not support the audio tag.
           </audio>
         </div>
       );
     }
 
-    if (file.file_type.includes('pdf')) {
+    if (file.file_type.includes("pdf")) {
       return (
         <div className="flex items-center justify-center bg-[#18181b] rounded-lg p-4 h-96">
           <iframe
@@ -194,7 +199,9 @@ export default function FileViewer({
       <div className="flex items-center justify-center bg-[#18181b] rounded-lg p-8">
         <div className="text-center">
           {getFileIcon(file.filename, file.file_type)}
-          <p className="text-neutral-400 mt-2">Preview not available for this file type</p>
+          <p className="text-neutral-400 mt-2">
+            Preview not available for this file type
+          </p>
           <Button
             variant="outline"
             className="mt-4"
@@ -220,35 +227,28 @@ export default function FileViewer({
                 <CardTitle className="text-orange-400 text-lg">
                   {file.filename}
                 </CardTitle>
-                <div className="text-neutral-400 text-sm">
-                  {formatFileSize(file.file_size)} • {formatDate(file.uploaded_at)}
+                <div className="text-neutral-400 text-md">
+                  {formatFileSize(file.file_size)} •{" "}
+                  {formatDate(file.uploaded_at)}
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             {/* Navigation */}
             {hasPrevious && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onPrevious}
-              >
+              <Button variant="outline" size="sm" onClick={onPrevious}>
                 <ArrowLeft className="w-4 h-4" />
               </Button>
             )}
-            
+
             {hasNext && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onNext}
-              >
+              <Button variant="outline" size="sm" onClick={onNext}>
                 <ArrowRight className="w-4 h-4" />
               </Button>
             )}
-            
+
             {/* Actions */}
             <Button
               variant="outline"
@@ -259,47 +259,49 @@ export default function FileViewer({
               <Download className="w-4 h-4 mr-2" />
               Download
             </Button>
-            
+
             <Button
               variant="outline"
               size="sm"
-              onClick={() => window.open(getPreviewUrl(), '_blank')}
+              onClick={() => window.open(getPreviewUrl(), "_blank")}
             >
               <ExternalLink className="w-4 h-4 mr-2" />
               Open
             </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-            >
+
+            <Button variant="ghost" size="sm" onClick={onClose}>
               <X className="w-4 h-4" />
             </Button>
           </div>
         </CardHeader>
-        
+
         <CardContent className="p-6 overflow-y-auto">
           <div className="space-y-4">
             {/* File Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-md">
               <div>
                 <span className="text-neutral-400">Uploaded by:</span>
-                <span className="text-white ml-2">{file.uploaded_by.display_name}</span>
+                <span className="text-white ml-2">
+                  {file.uploaded_by.display_name}
+                </span>
               </div>
               <div>
                 <span className="text-neutral-400">File type:</span>
                 <span className="text-white ml-2">{file.file_type}</span>
               </div>
             </div>
-            
+
             {/* Preview */}
             <div className="mt-6">
-              {canPreview() ? renderPreview() : (
+              {canPreview() ? (
+                renderPreview()
+              ) : (
                 <div className="flex items-center justify-center bg-[#18181b] rounded-lg p-8">
                   <div className="text-center">
                     {getFileIcon(file.filename, file.file_type)}
-                    <p className="text-neutral-400 mt-2">Preview not available for this file type</p>
+                    <p className="text-neutral-400 mt-2">
+                      Preview not available for this file type
+                    </p>
                     <Button
                       variant="outline"
                       className="mt-4"
@@ -318,4 +320,4 @@ export default function FileViewer({
       </Card>
     </div>
   );
-} 
+}

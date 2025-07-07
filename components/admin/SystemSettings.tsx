@@ -340,7 +340,7 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
       {Object.keys(editingValues).length > 0 && (
         <div className="flex items-center gap-2 p-3 bg-orange-900/20 border border-orange-500/30 rounded-lg">
           <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
-          <span className="text-orange-400 text-sm">
+          <span className="text-orange-400 text-md">
             Auto-saving changes...
           </span>
         </div>
@@ -392,15 +392,15 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
                         {setting.setting_type}
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-400 mb-2">
+                    <p className="text-md text-gray-400 mb-2">
                       {setting.description}
                     </p>
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500">Value:</span>
+                        <span className="text-sm text-gray-500">Value:</span>
                         {renderSettingValue(setting)}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-sm text-gray-500">
                         Updated:{" "}
                         {new Date(setting.updated_at).toLocaleDateString()}
                       </div>

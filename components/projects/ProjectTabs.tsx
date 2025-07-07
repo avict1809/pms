@@ -38,7 +38,7 @@ export default function ProjectTabs({
               }`}
             >
               {tab.icon}
-              <span className="text-sm font-medium">{tab.label}</span>
+              <span className="text-md font-medium">{tab.label}</span>
               {tab.badge && tab.badge > 0 && (
                 <Badge
                   variant="outline"

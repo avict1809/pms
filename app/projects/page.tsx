@@ -160,7 +160,7 @@ export default function ProjectsPage() {
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
             <CardContent className="p-4">
               <div className="text-2xl font-bold text-white">{stats.total}</div>
-              <div className="text-xs text-neutral-400">Total Projects</div>
+              <div className="text-sm text-neutral-400">Total Projects</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-green-500 shadow-lg">
@@ -168,7 +168,7 @@ export default function ProjectsPage() {
               <div className="text-2xl font-bold text-green-400">
                 {stats.active}
               </div>
-              <div className="text-xs text-neutral-400">Active Projects</div>
+              <div className="text-sm text-neutral-400">Active Projects</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-blue-500 shadow-lg">
@@ -176,7 +176,7 @@ export default function ProjectsPage() {
               <div className="text-2xl font-bold text-blue-400">
                 {stats.completed}
               </div>
-              <div className="text-xs text-neutral-400">Completed</div>
+              <div className="text-sm text-neutral-400">Completed</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-gray-500 shadow-lg">
@@ -184,7 +184,7 @@ export default function ProjectsPage() {
               <div className="text-2xl font-bold text-gray-400">
                 {stats.archived}
               </div>
-              <div className="text-xs text-neutral-400">Archived</div>
+              <div className="text-sm text-neutral-400">Archived</div>
             </CardContent>
           </Card>
         </div>
@@ -300,7 +300,7 @@ export default function ProjectsPage() {
                         {project.description}
                       </p>
 
-                      <div className="flex items-center gap-4 text-sm text-neutral-500">
+                      <div className="flex items-center gap-4 text-md text-neutral-500">
                         <div className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
                           {project.supervisor.display_name}

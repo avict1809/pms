@@ -134,7 +134,7 @@ export default function ProjectProgress({ project }: ProjectProgressProps) {
                 {project.completed_task_count}
               </span>
             </div>
-            <span className="text-xs text-neutral-400">Completed</span>
+            <span className="text-sm text-neutral-400">Completed</span>
           </div>
 
           <div className="text-center">
@@ -144,7 +144,7 @@ export default function ProjectProgress({ project }: ProjectProgressProps) {
                 {pendingTasks}
               </span>
             </div>
-            <span className="text-xs text-neutral-400">Pending</span>
+            <span className="text-sm text-neutral-400">Pending</span>
           </div>
 
           <div className="text-center">
@@ -154,7 +154,7 @@ export default function ProjectProgress({ project }: ProjectProgressProps) {
                 {project.task_count}
               </span>
             </div>
-            <span className="text-xs text-neutral-400">Total</span>
+            <span className="text-sm text-neutral-400">Total</span>
           </div>
         </div>
 
@@ -176,36 +176,36 @@ export default function ProjectProgress({ project }: ProjectProgressProps) {
         <div className="pt-4 border-t border-neutral-700">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-neutral-400 text-sm">Project Setup</span>
+              <span className="text-neutral-400 text-md">Project Setup</span>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-green-400 text-sm">Complete</span>
+                <span className="text-green-400 text-md">Complete</span>
               </div>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-neutral-400 text-sm">
+              <span className="text-neutral-400 text-md">
                 Development Phase
               </span>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                <span className="text-orange-400 text-sm">In Progress</span>
+                <span className="text-orange-400 text-md">In Progress</span>
               </div>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-neutral-400 text-sm">Testing & Review</span>
+              <span className="text-neutral-400 text-md">Testing & Review</span>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                <span className="text-gray-400 text-sm">Pending</span>
+                <span className="text-gray-400 text-md">Pending</span>
               </div>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-neutral-400 text-sm">Final Delivery</span>
+              <span className="text-neutral-400 text-md">Final Delivery</span>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                <span className="text-gray-400 text-sm">Pending</span>
+                <span className="text-gray-400 text-md">Pending</span>
               </div>
             </div>
           </div>

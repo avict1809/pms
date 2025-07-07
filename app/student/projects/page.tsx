@@ -15,6 +15,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
+import { Input } from "@/components/ui/input";
 
 interface Project {
   id: string;
@@ -39,6 +40,9 @@ export default function StudentProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
   useEffect(() => {
     fetchProjects();
@@ -122,7 +126,17 @@ export default function StudentProjectsPage() {
 
   const stats = {
     active: projects.filter((p) => p.status === "active").length,
-    totalMembers: projects.reduce((sum, p) => sum + p.member_count, 0),
+    totalMembers: (() => {
+      // Collect all user_ids from all project_members arrays
+      const allMembers = projects.flatMap((p: any) =>
+        Array.isArray(p.project_members)
+          ? p.project_members.map((m: any) => m.user_id)
+          : []
+      );
+      // Deduplicate by user_id
+      const uniqueMembers = Array.from(new Set(allMembers));
+      return uniqueMembers.length;
+    })(),
     dueThisWeek: projects.filter((p) => p.status === "active").length, // Simplified for now
     averageProgress:
       projects.length > 0
@@ -131,6 +145,16 @@ export default function StudentProjectsPage() {
           )
         : 0,
   };
+
+  // Filtered and paginated projects
+  const filteredProjects = projects.filter((p: any) =>
+    p.title.toLowerCase().includes(search.toLowerCase())
+  );
+  const totalPages = Math.ceil(filteredProjects.length / pageSize);
+  const paginatedProjects = filteredProjects.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
 
   if (loading) {
     return (
@@ -145,15 +169,24 @@ export default function StudentProjectsPage() {
   return (
     <AuthGuard requiredRole="student">
       <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-bold text-white">My Projects</h1>
+          <Input
+            placeholder="Search projects..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            className="w-64 bg-[#18181b] border-neutral-700 text-white"
+          />
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="bg-[#23232a] border-orange-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-400">
+              <CardTitle className="text-md font-medium text-neutral-400">
                 Active Projects
               </CardTitle>
               <FolderKanban className="h-4 w-4 text-orange-500" />
@@ -162,28 +195,28 @@ export default function StudentProjectsPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.active}
               </div>
-              <p className="text-xs text-neutral-500">Currently working on</p>
+              <p className="text-sm text-neutral-500">Currently working on</p>
             </CardContent>
           </Card>
 
           <Card className="bg-[#23232a] border-orange-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-400">
+              <CardTitle className="text-md font-medium text-neutral-400">
                 Team Members
               </CardTitle>
               <Users className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {stats.totalMembers}
+                {isNaN(stats.totalMembers) ? "0" : String(stats.totalMembers)}
               </div>
-              <p className="text-xs text-neutral-500">Across all projects</p>
+              <p className="text-sm text-neutral-500">Across all projects</p>
             </CardContent>
           </Card>
 
           <Card className="bg-[#23232a] border-orange-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-400">
+              <CardTitle className="text-md font-medium text-neutral-400">
                 Due This Week
               </CardTitle>
               <Calendar className="h-4 w-4 text-orange-500" />
@@ -192,13 +225,13 @@ export default function StudentProjectsPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.dueThisWeek}
               </div>
-              <p className="text-xs text-neutral-500">Deadlines approaching</p>
+              <p className="text-sm text-neutral-500">Deadlines approaching</p>
             </CardContent>
           </Card>
 
           <Card className="bg-[#23232a] border-orange-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-400">
+              <CardTitle className="text-md font-medium text-neutral-400">
                 Completion
               </CardTitle>
               <TrendingUp className="h-4 w-4 text-orange-500" />
@@ -207,7 +240,7 @@ export default function StudentProjectsPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.averageProgress}%
               </div>
-              <p className="text-xs text-neutral-500">Average progress</p>
+              <p className="text-sm text-neutral-500">Average progress</p>
             </CardContent>
           </Card>
         </div>
@@ -227,14 +260,31 @@ export default function StudentProjectsPage() {
             <CardTitle className="text-white">My Projects</CardTitle>
           </CardHeader>
           <CardContent>
-            {projects.length === 0 ? (
+            {paginatedProjects.length === 0 ? (
               <div className="text-center py-8 text-neutral-400">
                 No projects found. You may not be assigned to any projects yet.
               </div>
             ) : (
               <div className="space-y-4">
-                {projects.map((project) => {
+                {paginatedProjects.map((project: any) => {
                   const progressStatus = getProgressStatus(project.progress);
+                  // Members: list display_name (and role) for each member
+                  const members = Array.isArray(project.project_members)
+                    ? project.project_members.map((m: any) =>
+                        m.users?.display_name
+                          ? `${m.users.display_name} (${m.role})`
+                          : m.user_id
+                      )
+                    : [];
+                  // Tasks: show 0/0 if no tasks, else show completed/total
+                  const completedTasks =
+                    typeof project.completed_task_count === "number"
+                      ? project.completed_task_count
+                      : 0;
+                  const totalTasks =
+                    typeof project.task_count === "number"
+                      ? project.task_count
+                      : 0;
                   return (
                     <div
                       key={project.id}
@@ -260,19 +310,23 @@ export default function StudentProjectsPage() {
                               variant="outline"
                               className="border-neutral-500 text-neutral-400"
                             >
-                              {project.user_role.charAt(0).toUpperCase() +
-                                project.user_role.slice(1)}
+                              {typeof project.user_role === "string" &&
+                              project.user_role.length > 0
+                                ? project.user_role.charAt(0).toUpperCase() +
+                                  project.user_role.slice(1)
+                                : "Member"}
                             </Badge>
                           </div>
-                          <p className="text-sm text-neutral-400 mb-2">
+                          <p className="text-md text-neutral-400 mb-2">
                             Supervisor: {project.supervisor.display_name}
                           </p>
-                          <p className="text-xs text-neutral-500 mb-2">
-                            Members: {project.member_count} • Tasks:{" "}
-                            {project.completed_task_count}/{project.task_count}
+                          <p className="text-sm text-neutral-500 mb-2">
+                            Members:{" "}
+                            {members.length > 0 ? members.join(", ") : "None"} •
+                            Tasks: {totalTasks}/{completedTasks}
                           </p>
                           <div className="mt-2">
-                            <div className="flex items-center justify-between text-sm">
+                            <div className="flex items-center justify-between text-md">
                               <span className="text-neutral-400">Progress</span>
                               <span className="text-white">
                                 {project.progress}%
@@ -290,7 +344,7 @@ export default function StudentProjectsPage() {
                         </div>
                         <div className="flex flex-col items-end gap-2 ml-4">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${progressStatus.color}`}
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${progressStatus.color}`}
                           >
                             {progressStatus.text}
                           </span>
@@ -309,6 +363,28 @@ export default function StudentProjectsPage() {
                     </div>
                   );
                 })}
+                {/* Pagination Controls */}
+                <div className="flex justify-center items-center gap-2 mt-6">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={page === 1}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-white">
+                    Page {page} of {totalPages}
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={page === totalPages}
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  >
+                    Next
+                  </Button>
+                </div>
               </div>
             )}
           </CardContent>

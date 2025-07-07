@@ -154,7 +154,7 @@ admin@example.com,Admin User,admin,true`;
           {/* Instructions */}
           <div className="bg-[#18181b] p-4 rounded border border-neutral-700">
             <h3 className="text-white font-medium mb-2">Instructions:</h3>
-            <ul className="text-neutral-400 text-sm space-y-1">
+            <ul className="text-neutral-400 text-md space-y-1">
               <li>• Download the template CSV file below</li>
               <li>
                 • Fill in user information (email, display name, role,
@@ -206,7 +206,7 @@ admin@example.com,Admin User,admin,true`;
                     Validation Errors
                   </h3>
                 </div>
-                <ul className="text-red-300 text-sm space-y-1">
+                <ul className="text-red-300 text-md space-y-1">
                   {errors.map((error, index) => (
                     <li key={index}>• {error}</li>
                   ))}
@@ -224,7 +224,7 @@ admin@example.com,Admin User,admin,true`;
                 </h3>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span className="text-green-400 text-sm">Valid data</span>
+                  <span className="text-green-400 text-md">Valid data</span>
                 </div>
               </div>
 
@@ -232,16 +232,16 @@ admin@example.com,Admin User,admin,true`;
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-neutral-700">
-                      <th className="text-left py-2 px-3 text-neutral-400 text-sm">
+                      <th className="text-left py-2 px-3 text-neutral-400 text-md">
                         Email
                       </th>
-                      <th className="text-left py-2 px-3 text-neutral-400 text-sm">
+                      <th className="text-left py-2 px-3 text-neutral-400 text-md">
                         Name
                       </th>
-                      <th className="text-left py-2 px-3 text-neutral-400 text-sm">
+                      <th className="text-left py-2 px-3 text-neutral-400 text-md">
                         Role
                       </th>
-                      <th className="text-left py-2 px-3 text-neutral-400 text-sm">
+                      <th className="text-left py-2 px-3 text-neutral-400 text-md">
                         Status
                       </th>
                     </tr>
@@ -249,10 +249,10 @@ admin@example.com,Admin User,admin,true`;
                   <tbody>
                     {previewData.slice(0, 10).map((user, index) => (
                       <tr key={index} className="border-b border-neutral-800">
-                        <td className="py-2 px-3 text-white text-sm">
+                        <td className="py-2 px-3 text-white text-md">
                           {user.email}
                         </td>
-                        <td className="py-2 px-3 text-white text-sm">
+                        <td className="py-2 px-3 text-white text-md">
                           {user.displayName}
                         </td>
                         <td className="py-2 px-3">
@@ -286,7 +286,7 @@ admin@example.com,Admin User,admin,true`;
                   </tbody>
                 </table>
                 {previewData.length > 10 && (
-                  <p className="text-neutral-400 text-sm mt-2 text-center">
+                  <p className="text-neutral-400 text-md mt-2 text-center">
                     Showing first 10 of {previewData.length} users
                   </p>
                 )}

@@ -263,12 +263,12 @@ export default function FileList({ files, onFileDelete }: FileListProps) {
                     {getFileIcon(file.filename, file.file_type)}
                   </div>
                   <h3
-                    className="text-white font-medium text-sm mb-1 truncate"
+                    className="text-white font-medium text-md mb-1 truncate"
                     title={file.filename}
                   >
                     {file.filename}
                   </h3>
-                  <p className="text-neutral-400 text-xs mb-3">
+                  <p className="text-neutral-400 text-sm mb-3">
                     {formatFileSize(file.file_size)}
                   </p>
 

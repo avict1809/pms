@@ -74,7 +74,7 @@ export default function FinancialChart({ records }: FinancialChartProps) {
       <CardContent>
         <div className="space-y-4">
           {/* Legend */}
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-4 text-md">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-cyan-400 rounded"></div>
               <span className="text-neutral-300">Income</span>
@@ -96,7 +96,7 @@ export default function FinancialChart({ records }: FinancialChartProps) {
 
               return (
                 <div key={monthKey} className="flex items-end gap-2">
-                  <div className="flex-1 text-xs text-neutral-400 min-w-[60px]">
+                  <div className="flex-1 text-sm text-neutral-400 min-w-[60px]">
                     {formatMonth(monthKey)}
                   </div>
                   <div className="flex-1 flex gap-1 h-20">
@@ -106,7 +106,7 @@ export default function FinancialChart({ records }: FinancialChartProps) {
                         style={{ height: `${incomeHeight}%` }}
                         title={`Income: $${data.income.toLocaleString()}`}
                       ></div>
-                      <div className="text-xs text-cyan-400 mt-1">
+                      <div className="text-sm text-cyan-400 mt-1">
                         ${data.income.toLocaleString()}
                       </div>
                     </div>
@@ -116,7 +116,7 @@ export default function FinancialChart({ records }: FinancialChartProps) {
                         style={{ height: `${expenseHeight}%` }}
                         title={`Expenses: $${data.expenses.toLocaleString()}`}
                       ></div>
-                      <div className="text-xs text-orange-400 mt-1">
+                      <div className="text-sm text-orange-400 mt-1">
                         ${data.expenses.toLocaleString()}
                       </div>
                     </div>
@@ -136,7 +136,7 @@ export default function FinancialChart({ records }: FinancialChartProps) {
                   .reduce((sum, r) => sum + Number(r.amount), 0)
                   .toLocaleString()}
               </div>
-              <div className="text-neutral-400 text-sm">Total Income</div>
+              <div className="text-neutral-400 text-md">Total Income</div>
             </div>
             <div className="text-center">
               <div className="text-orange-400 font-bold">
@@ -146,7 +146,7 @@ export default function FinancialChart({ records }: FinancialChartProps) {
                   .reduce((sum, r) => sum + Number(r.amount), 0)
                   .toLocaleString()}
               </div>
-              <div className="text-neutral-400 text-sm">Total Expenses</div>
+              <div className="text-neutral-400 text-md">Total Expenses</div>
             </div>
           </div>
         </div>

@@ -185,7 +185,7 @@ export default function ProjectAnalytics({
               <div className="text-blue-400 text-lg font-bold">
                 {analyticsData.projectStats.totalProjects}
               </div>
-              <div className="text-neutral-400 text-sm">Total Projects</div>
+              <div className="text-neutral-400 text-md">Total Projects</div>
             </div>
           </CardContent>
         </Card>
@@ -197,7 +197,7 @@ export default function ProjectAnalytics({
               <div className="text-green-400 text-lg font-bold">
                 {analyticsData.projectStats.activeProjects}
               </div>
-              <div className="text-neutral-400 text-sm">Active Projects</div>
+              <div className="text-neutral-400 text-md">Active Projects</div>
             </div>
           </CardContent>
         </Card>
@@ -209,7 +209,7 @@ export default function ProjectAnalytics({
               <div className="text-purple-400 text-lg font-bold">
                 {analyticsData.taskStats.totalTasks}
               </div>
-              <div className="text-neutral-400 text-sm">Total Tasks</div>
+              <div className="text-neutral-400 text-md">Total Tasks</div>
             </div>
           </CardContent>
         </Card>
@@ -221,7 +221,7 @@ export default function ProjectAnalytics({
               <div className="text-cyan-400 text-lg font-bold">
                 {analyticsData.userStats.totalUsers}
               </div>
-              <div className="text-neutral-400 text-sm">Total Users</div>
+              <div className="text-neutral-400 text-md">Total Users</div>
             </div>
           </CardContent>
         </Card>
@@ -241,7 +241,7 @@ export default function ProjectAnalytics({
               <div className="text-2xl font-bold text-yellow-400">
                 {analyticsData.taskStats.pendingTasks}
               </div>
-              <div className="text-neutral-400 text-sm">Pending</div>
+              <div className="text-neutral-400 text-md">Pending</div>
               <div className="w-full bg-neutral-700 rounded-full h-2 mt-2">
                 <div
                   className="bg-yellow-400 h-2 rounded-full"
@@ -259,7 +259,7 @@ export default function ProjectAnalytics({
               <div className="text-2xl font-bold text-blue-400">
                 {analyticsData.taskStats.inProgressTasks}
               </div>
-              <div className="text-neutral-400 text-sm">In Progress</div>
+              <div className="text-neutral-400 text-md">In Progress</div>
               <div className="w-full bg-neutral-700 rounded-full h-2 mt-2">
                 <div
                   className="bg-blue-400 h-2 rounded-full"
@@ -277,7 +277,7 @@ export default function ProjectAnalytics({
               <div className="text-2xl font-bold text-green-400">
                 {analyticsData.taskStats.completedTasks}
               </div>
-              <div className="text-neutral-400 text-sm">Completed</div>
+              <div className="text-neutral-400 text-md">Completed</div>
               <div className="w-full bg-neutral-700 rounded-full h-2 mt-2">
                 <div
                   className="bg-green-400 h-2 rounded-full"
@@ -307,12 +307,12 @@ export default function ProjectAnalytics({
                     analyticsData.performanceMetrics.averageTaskCompletionTime
                   )}
                 </div>
-                <div className="text-neutral-400 text-sm">
+                <div className="text-neutral-400 text-md">
                   Avg Task Completion
                 </div>
               </div>
             </div>
-            <div className="text-xs text-neutral-400">
+            <div className="text-sm text-neutral-400">
               Average time to complete tasks
             </div>
           </CardContent>
@@ -326,10 +326,10 @@ export default function ProjectAnalytics({
                 <div className="text-blue-400 text-lg font-bold">
                   {analyticsData.performanceMetrics.projectSuccessRate}%
                 </div>
-                <div className="text-neutral-400 text-sm">Success Rate</div>
+                <div className="text-neutral-400 text-md">Success Rate</div>
               </div>
             </div>
-            <div className="text-xs text-neutral-400">
+            <div className="text-sm text-neutral-400">
               Percentage of completed projects
             </div>
           </CardContent>
@@ -343,10 +343,10 @@ export default function ProjectAnalytics({
                 <div className="text-purple-400 text-lg font-bold">
                   {analyticsData.performanceMetrics.userEngagementRate}%
                 </div>
-                <div className="text-neutral-400 text-sm">Engagement Rate</div>
+                <div className="text-neutral-400 text-md">Engagement Rate</div>
               </div>
             </div>
-            <div className="text-xs text-neutral-400">
+            <div className="text-sm text-neutral-400">
               Active users in the last 30 days
             </div>
           </CardContent>
@@ -367,19 +367,19 @@ export default function ProjectAnalytics({
               <div className="text-2xl font-bold text-white">
                 {analyticsData.fileStats.totalFiles}
               </div>
-              <div className="text-neutral-400 text-sm">Total Files</div>
+              <div className="text-neutral-400 text-md">Total Files</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-white">
                 {formatFileSize(analyticsData.fileStats.totalSize)}
               </div>
-              <div className="text-neutral-400 text-sm">Total Size</div>
+              <div className="text-neutral-400 text-md">Total Size</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-white">
                 {analyticsData.fileStats.averageFilesPerProject.toFixed(1)}
               </div>
-              <div className="text-neutral-400 text-sm">Avg Files/Project</div>
+              <div className="text-neutral-400 text-md">Avg Files/Project</div>
             </div>
           </div>
         </CardContent>
@@ -397,7 +397,7 @@ export default function ProjectAnalytics({
           <div className="space-y-4">
             {analyticsData.timelineData.map((data, index) => (
               <div key={index} className="flex items-center gap-4">
-                <div className="w-20 text-sm text-neutral-400">
+                <div className="w-20 text-md text-neutral-400">
                   {data.month}
                 </div>
                 <div className="flex-1 flex gap-2">
@@ -405,17 +405,17 @@ export default function ProjectAnalytics({
                     <div className="text-blue-400 font-bold">
                       {data.projects}
                     </div>
-                    <div className="text-xs text-neutral-400">Projects</div>
+                    <div className="text-sm text-neutral-400">Projects</div>
                   </div>
                   <div className="flex-1 bg-green-500/20 border border-green-500 rounded p-2 text-center">
                     <div className="text-green-400 font-bold">{data.tasks}</div>
-                    <div className="text-xs text-neutral-400">Tasks</div>
+                    <div className="text-sm text-neutral-400">Tasks</div>
                   </div>
                   <div className="flex-1 bg-purple-500/20 border border-purple-500 rounded p-2 text-center">
                     <div className="text-purple-400 font-bold">
                       {data.users}
                     </div>
-                    <div className="text-xs text-neutral-400">Users</div>
+                    <div className="text-sm text-neutral-400">Users</div>
                   </div>
                 </div>
               </div>

@@ -257,7 +257,7 @@ export default function TaskActions({ task, onTaskUpdated }: TaskActionsProps) {
             <div className="space-y-4">
               {/* Task Title */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-md font-medium text-white mb-2">
                   Task Title
                 </label>
                 <input
@@ -270,7 +270,7 @@ export default function TaskActions({ task, onTaskUpdated }: TaskActionsProps) {
 
               {/* Task Description */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-md font-medium text-white mb-2">
                   Description
                 </label>
                 <textarea
@@ -286,7 +286,7 @@ export default function TaskActions({ task, onTaskUpdated }: TaskActionsProps) {
               {/* Priority and Due Date */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-md font-medium text-white mb-2">
                     <Flag className="w-4 h-4 inline mr-1" />
                     Priority
                   </label>
@@ -304,7 +304,7 @@ export default function TaskActions({ task, onTaskUpdated }: TaskActionsProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-md font-medium text-white mb-2">
                     <Calendar className="w-4 h-4 inline mr-1" />
                     Due Date
                   </label>
@@ -322,7 +322,7 @@ export default function TaskActions({ task, onTaskUpdated }: TaskActionsProps) {
               {/* Error Message */}
               {error && (
                 <div className="p-3 bg-red-900/20 border border-red-500 rounded-md">
-                  <p className="text-red-400 text-sm">{error}</p>
+                  <p className="text-red-400 text-md">{error}</p>
                 </div>
               )}
 
@@ -347,18 +347,18 @@ export default function TaskActions({ task, onTaskUpdated }: TaskActionsProps) {
           ) : (
             <div className="space-y-4">
               <div>
-                <span className="text-neutral-400 text-sm">Title:</span>
+                <span className="text-neutral-400 text-md">Title:</span>
                 <p className="text-white font-medium">{task.title}</p>
               </div>
               <div>
-                <span className="text-neutral-400 text-sm">Description:</span>
+                <span className="text-neutral-400 text-md">Description:</span>
                 <p className="text-white">
                   {task.description || "No description"}
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <span className="text-neutral-400 text-sm">Priority:</span>
+                  <span className="text-neutral-400 text-md">Priority:</span>
                   <div className="mt-1">
                     <Badge className={getPriorityColor(task.priority)}>
                       <Flag className="w-3 h-3 mr-1" />
@@ -367,7 +367,7 @@ export default function TaskActions({ task, onTaskUpdated }: TaskActionsProps) {
                   </div>
                 </div>
                 <div>
-                  <span className="text-neutral-400 text-sm">Due Date:</span>
+                  <span className="text-neutral-400 text-md">Due Date:</span>
                   <p className="text-white">
                     {new Date(task.due_date).toLocaleDateString()}
                   </p>
@@ -390,7 +390,7 @@ export default function TaskActions({ task, onTaskUpdated }: TaskActionsProps) {
           <div className="space-y-4">
             <div>
               <h4 className="text-white font-medium mb-2">Delete Task</h4>
-              <p className="text-neutral-400 text-sm mb-4">
+              <p className="text-neutral-400 text-md mb-4">
                 Once you delete a task, there is no going back. Please be
                 certain.
               </p>

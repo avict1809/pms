@@ -51,7 +51,7 @@ export default function UserDetailsPage() {
   const [user, setUser] = useState<UserDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Dialog states
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -168,7 +168,9 @@ export default function UserDetailsPage() {
             <CardContent className="p-6">
               <div className="text-center">
                 <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-red-400 mb-2">User Not Found</h2>
+                <h2 className="text-xl font-bold text-red-400 mb-2">
+                  User Not Found
+                </h2>
                 <p className="text-gray-400 mb-4">
                   {error || "The requested user could not be found."}
                 </p>
@@ -240,7 +242,9 @@ export default function UserDetailsPage() {
                   <User className="w-8 h-8 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white">{user.display_name}</h2>
+                  <h2 className="text-2xl font-bold text-white">
+                    {user.display_name}
+                  </h2>
                   <p className="text-gray-400">{user.email}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge className={getRoleColor(user.role)}>
@@ -279,13 +283,19 @@ export default function UserDetailsPage() {
                   <div className="flex items-center gap-3">
                     <Shield className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-400">Role:</span>
-                    <span className="text-white font-medium capitalize">{user.role}</span>
+                    <span className="text-white font-medium capitalize">
+                      {user.role}
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Activity className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-400">Status:</span>
-                    <span className={`font-medium ${user.is_active ? 'text-green-400' : 'text-red-400'}`}>
-                      {user.is_active ? 'Active' : 'Inactive'}
+                    <span
+                      className={`font-medium ${
+                        user.is_active ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {user.is_active ? "Active" : "Inactive"}
                     </span>
                   </div>
                 </div>
@@ -333,7 +343,7 @@ export default function UserDetailsPage() {
                   <span className="text-blue-400 font-medium">Projects</span>
                 </div>
                 <div className="text-2xl font-bold text-white">0</div>
-                <div className="text-xs text-gray-400">Assigned projects</div>
+                <div className="text-sm text-gray-400">Assigned projects</div>
               </div>
 
               <div className="p-4 bg-neutral-800 rounded-lg border border-gray-700">
@@ -342,16 +352,20 @@ export default function UserDetailsPage() {
                   <span className="text-green-400 font-medium">Tasks</span>
                 </div>
                 <div className="text-2xl font-bold text-white">0</div>
-                <div className="text-xs text-gray-400">Assigned tasks</div>
+                <div className="text-sm text-gray-400">Assigned tasks</div>
               </div>
 
               <div className="p-4 bg-neutral-800 rounded-lg border border-gray-700">
                 <div className="flex items-center gap-3 mb-2">
                   <Bell className="w-5 h-5 text-purple-400" />
-                  <span className="text-purple-400 font-medium">Notifications</span>
+                  <span className="text-purple-400 font-medium">
+                    Notifications
+                  </span>
                 </div>
                 <div className="text-2xl font-bold text-white">0</div>
-                <div className="text-xs text-gray-400">Unread notifications</div>
+                <div className="text-sm text-gray-400">
+                  Unread notifications
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -370,7 +384,9 @@ export default function UserDetailsPage() {
             <CardContent>
               <div className="text-center py-8">
                 <Settings className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                <p className="text-gray-400">Activity timeline coming soon...</p>
+                <p className="text-gray-400">
+                  Activity timeline coming soon...
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -411,4 +427,4 @@ export default function UserDetailsPage() {
       </div>
     </AuthGuard>
   );
-} 
+}

@@ -66,7 +66,7 @@ export default function ForgotPasswordForm({
       <div className="mt-4 text-center">
         <Link
           href="/login"
-          className="text-purple-400 hover:text-purple-300 text-sm transition-colors"
+          className="text-purple-400 hover:text-purple-300 text-md transition-colors"
         >
           Back to Login
         </Link>

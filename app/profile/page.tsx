@@ -209,7 +209,7 @@ export default function ProfilePage() {
               {isEditing ? (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-gray-300 mb-2 text-sm">
+                    <label className="block text-gray-300 mb-2 text-md">
                       Display Name
                     </label>
                     <div className="relative">
@@ -257,7 +257,7 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-3">
                     <User className="w-5 h-5 text-neutral-400" />
                     <div>
-                      <div className="text-sm text-neutral-400">
+                      <div className="text-md text-neutral-400">
                         Display Name
                       </div>
                       <div className="text-white font-medium">
@@ -269,7 +269,7 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-3">
                     <Mail className="w-5 h-5 text-neutral-400" />
                     <div>
-                      <div className="text-sm text-neutral-400">Email</div>
+                      <div className="text-md text-neutral-400">Email</div>
                       <div className="text-white font-medium">
                         {profile?.email}
                       </div>
@@ -279,7 +279,7 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-3">
                     <Shield className="w-5 h-5 text-neutral-400" />
                     <div>
-                      <div className="text-sm text-neutral-400">Role</div>
+                      <div className="text-md text-neutral-400">Role</div>
                       <Badge
                         variant={
                           profile?.role === "admin"
@@ -304,7 +304,7 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-3">
                     <Calendar className="w-5 h-5 text-neutral-400" />
                     <div>
-                      <div className="text-sm text-neutral-400">
+                      <div className="text-md text-neutral-400">
                         Member Since
                       </div>
                       <div className="text-white font-medium">
@@ -318,7 +318,7 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-neutral-400" />
                     <div>
-                      <div className="text-sm text-neutral-400">Status</div>
+                      <div className="text-md text-neutral-400">Status</div>
                       <Badge
                         variant={profile?.is_active ? "default" : "destructive"}
                         className={
@@ -348,7 +348,7 @@ export default function ProfilePage() {
               {isChangingPassword ? (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-gray-300 mb-2 text-sm">
+                    <label className="block text-gray-300 mb-2 text-md">
                       Current Password
                     </label>
                     <div className="relative">
@@ -385,7 +385,7 @@ export default function ProfilePage() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-300 mb-2 text-sm">
+                    <label className="block text-gray-300 mb-2 text-md">
                       New Password
                     </label>
                     <div className="relative">
@@ -422,7 +422,7 @@ export default function ProfilePage() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-300 mb-2 text-sm">
+                    <label className="block text-gray-300 mb-2 text-md">
                       Confirm New Password
                     </label>
                     <div className="relative">
@@ -489,7 +489,7 @@ export default function ProfilePage() {
                     <h3 className="text-white font-medium mb-2">
                       Password Security
                     </h3>
-                    <p className="text-neutral-400 text-sm mb-4">
+                    <p className="text-neutral-400 text-md mb-4">
                       Keep your account secure by using a strong password and
                       changing it regularly.
                     </p>
@@ -505,13 +505,13 @@ export default function ProfilePage() {
                     </h3>
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span className="text-green-400 text-sm">
+                      <span className="text-green-400 text-md">
                         Account is secure
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span className="text-green-400 text-sm">
+                      <span className="text-green-400 text-md">
                         Email verified
                       </span>
                     </div>

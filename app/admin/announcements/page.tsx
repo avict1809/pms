@@ -90,7 +90,7 @@ interface EditAnnouncementDialogProps {
 export default function AdminAnnouncements() {
   const { user, loading: authLoading } = useAuth();
 
-  // Debug: Log user state
+  //  Log user state
   console.log("User state:", { user, authLoading, userId: user?.id });
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -177,7 +177,7 @@ export default function AdminAnnouncements() {
         return;
       }
 
-      // Debug: Log what we're sending
+      //  Log what we're sending
       const requestBody = {
         ...formData,
         userId: user.id,
@@ -214,7 +214,7 @@ export default function AdminAnnouncements() {
         });
         fetchAnnouncements();
       } else {
-        // Debug: Log error response
+        //  Log error response
         const errorData = await response.json();
         console.error("Error response:", errorData);
       }
@@ -352,7 +352,7 @@ export default function AdminAnnouncements() {
                   Announcement Details
                 </span>
               </div>
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-md">
                 <div>
                   <span className="text-gray-400">Title:</span>
                   <span className="text-white ml-2 font-medium">
@@ -370,7 +370,7 @@ export default function AdminAnnouncements() {
             <div className="p-4 bg-orange-900/20 border border-orange-500/30 rounded-lg">
               <div className="flex items-start gap-3">
                 <Trash2 className="w-5 h-5 text-orange-400 mt-0.5" />
-                <div className="text-sm">
+                <div className="text-md">
                   <p className="text-orange-400 font-medium mb-1">Warning</p>
                   <p className="text-orange-300">
                     Deleting this announcement will permanently remove it. This
@@ -479,7 +479,7 @@ export default function AdminAnnouncements() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-neutral-300">
+                <label className="text-md font-medium text-neutral-300">
                   Title
                 </label>
                 <Input
@@ -493,7 +493,7 @@ export default function AdminAnnouncements() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-neutral-300">
+                <label className="text-md font-medium text-neutral-300">
                   Content
                 </label>
                 <Textarea
@@ -507,7 +507,7 @@ export default function AdminAnnouncements() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-neutral-300">
+                <label className="text-md font-medium text-neutral-300">
                   Target Type
                 </label>
                 <Select
@@ -535,7 +535,7 @@ export default function AdminAnnouncements() {
               </div>
               {formData.target_type !== "global" && (
                 <div>
-                  <label className="text-sm font-medium text-neutral-300">
+                  <label className="text-md font-medium text-neutral-300">
                     {formData.target_type === "project"
                       ? "Project"
                       : formData.target_type === "student"
@@ -663,7 +663,7 @@ export default function AdminAnnouncements() {
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium text-neutral-300">
+                    <label className="text-md font-medium text-neutral-300">
                       Title
                     </label>
                     <Input
@@ -676,7 +676,7 @@ export default function AdminAnnouncements() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-neutral-300">
+                    <label className="text-md font-medium text-neutral-300">
                       Content
                     </label>
                     <Textarea
@@ -689,7 +689,7 @@ export default function AdminAnnouncements() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-neutral-300">
+                    <label className="text-md font-medium text-neutral-300">
                       Target Type
                     </label>
                     <Select
@@ -723,7 +723,7 @@ export default function AdminAnnouncements() {
                   </div>
                   {formData.target_type !== "global" && (
                     <div>
-                      <label className="text-sm font-medium text-neutral-300">
+                      <label className="text-md font-medium text-neutral-300">
                         {formData.target_type === "project"
                           ? "Project"
                           : formData.target_type === "student"
@@ -870,21 +870,21 @@ export default function AdminAnnouncements() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <p className="text-neutral-300 text-sm line-clamp-3">
+                      <p className="text-neutral-300 text-md line-clamp-3">
                         {announcement.content}
                       </p>
 
-                      <div className="flex items-center gap-2 text-xs text-neutral-400">
+                      <div className="flex items-center gap-2 text-sm text-neutral-400">
                         <TargetIcon className="w-3 h-3" />
                         <span>{target.label}</span>
                       </div>
 
-                      <div className="flex items-center gap-2 text-xs text-neutral-400">
+                      <div className="flex items-center gap-2 text-sm text-neutral-400">
                         <User className="w-3 h-3" />
                         <span>{announcement.posted_by_user.display_name}</span>
                       </div>
 
-                      <div className="flex items-center gap-2 text-xs text-neutral-400">
+                      <div className="flex items-center gap-2 text-sm text-neutral-400">
                         <Calendar className="w-3 h-3" />
                         <span>
                           {new Date(

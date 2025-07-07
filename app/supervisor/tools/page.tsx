@@ -130,19 +130,19 @@ export default function SupervisorToolsPage() {
               <div className="text-2xl font-bold text-blue-600">
                 {teamStats.totalStudents}
               </div>
-              <p className="text-sm text-muted-foreground">Total Students</p>
+              <p className="text-md text-muted-foreground">Total Students</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <div className="text-2xl font-bold text-green-600">
                 {teamStats.activeProjects}
               </div>
-              <p className="text-sm text-muted-foreground">Active Projects</p>
+              <p className="text-md text-muted-foreground">Active Projects</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <div className="text-2xl font-bold text-purple-600">
                 {teamStats.completedProjects}
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-md text-muted-foreground">
                 Completed Projects
               </p>
             </div>
@@ -150,7 +150,7 @@ export default function SupervisorToolsPage() {
               <div className="text-2xl font-bold text-orange-600">
                 {teamStats.averageProgress}%
               </div>
-              <p className="text-sm text-muted-foreground">Average Progress</p>
+              <p className="text-md text-muted-foreground">Average Progress</p>
             </div>
           </div>
         </CardContent>
@@ -170,28 +170,28 @@ export default function SupervisorToolsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <p className="text-sm font-medium">Report Types:</p>
+              <p className="text-md font-medium">Report Types:</p>
               <div className="space-y-2">
                 <label className="flex items-center gap-2">
                   <input type="checkbox" defaultChecked />
-                  <span className="text-sm">Project Progress Report</span>
+                  <span className="text-md">Project Progress Report</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" defaultChecked />
-                  <span className="text-sm">Student Performance Report</span>
+                  <span className="text-md">Student Performance Report</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" />
-                  <span className="text-sm">Financial Summary</span>
+                  <span className="text-md">Financial Summary</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" />
-                  <span className="text-sm">Timeline Analysis</span>
+                  <span className="text-md">Timeline Analysis</span>
                 </label>
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Date Range:</label>
+              <label className="text-md font-medium">Date Range:</label>
               <select className="w-full p-2 border rounded-md">
                 <option>Last 30 days</option>
                 <option>Last 3 months</option>
@@ -232,7 +232,7 @@ export default function SupervisorToolsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Meeting Type:</label>
+              <label className="text-md font-medium">Meeting Type:</label>
               <select className="w-full p-2 border rounded-md">
                 <option>Project Review</option>
                 <option>Progress Check-in</option>
@@ -242,7 +242,7 @@ export default function SupervisorToolsPage() {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Duration:</label>
+              <label className="text-md font-medium">Duration:</label>
               <select className="w-full p-2 border rounded-md">
                 <option>30 minutes</option>
                 <option>1 hour</option>
@@ -251,19 +251,19 @@ export default function SupervisorToolsPage() {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Participants:</label>
+              <label className="text-md font-medium">Participants:</label>
               <div className="space-y-1">
                 <label className="flex items-center gap-2">
                   <input type="checkbox" defaultChecked />
-                  <span className="text-sm">All team members</span>
+                  <span className="text-md">All team members</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" />
-                  <span className="text-sm">Project leads only</span>
+                  <span className="text-md">Project leads only</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" />
-                  <span className="text-sm">Individual meetings</span>
+                  <span className="text-md">Individual meetings</span>
                 </label>
               </div>
             </div>
@@ -347,8 +347,8 @@ export default function SupervisorToolsPage() {
               >
                 {getActivityIcon(activity.type)}
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{activity.message}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-md font-medium">{activity.message}</p>
+                  <p className="text-sm text-muted-foreground">
                     {activity.time}
                   </p>
                 </div>
@@ -373,7 +373,7 @@ export default function SupervisorToolsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">92%</div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-md text-muted-foreground">
                 On-time Completion
               </p>
               <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
@@ -385,7 +385,7 @@ export default function SupervisorToolsPage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">4.2/5</div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-md text-muted-foreground">
                 Student Satisfaction
               </p>
               <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
@@ -397,7 +397,7 @@ export default function SupervisorToolsPage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">87%</div>
-              <p className="text-sm text-muted-foreground">Quality Score</p>
+              <p className="text-md text-muted-foreground">Quality Score</p>
               <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                 <div
                   className="bg-purple-600 h-2 rounded-full"

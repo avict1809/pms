@@ -71,7 +71,7 @@ export default function UserActivationManager({
                 <div className="text-2xl font-bold text-white">
                   {pendingUsers.length}
                 </div>
-                <div className="text-xs text-neutral-400">
+                <div className="text-sm text-neutral-400">
                   Pending Activation
                 </div>
               </div>
@@ -87,7 +87,7 @@ export default function UserActivationManager({
                 <div className="text-2xl font-bold text-white">
                   {activeUsers.length}
                 </div>
-                <div className="text-xs text-neutral-400">Active Users</div>
+                <div className="text-sm text-neutral-400">Active Users</div>
               </div>
             </div>
           </CardContent>
@@ -101,7 +101,7 @@ export default function UserActivationManager({
                 <div className="text-2xl font-bold text-white">
                   {users.length}
                 </div>
-                <div className="text-xs text-neutral-400">Total Users</div>
+                <div className="text-sm text-neutral-400">Total Users</div>
               </div>
             </div>
           </CardContent>
@@ -126,7 +126,7 @@ export default function UserActivationManager({
                   onChange={handleSelectAll}
                   className="w-4 h-4 text-orange-500 bg-[#18181b] border-neutral-700 rounded focus:ring-orange-400"
                 />
-                <span className="text-neutral-400 text-sm">
+                <span className="text-neutral-400 text-md">
                   Select All ({selectedUsers.length}/{pendingUsers.length})
                 </span>
               </div>
@@ -201,7 +201,7 @@ export default function UserActivationManager({
                       <div className="font-medium text-white">
                         {user.display_name}
                       </div>
-                      <div className="text-sm text-neutral-400">
+                      <div className="text-md text-neutral-400">
                         {user.email}
                       </div>
                     </div>
@@ -248,7 +248,7 @@ export default function UserActivationManager({
                   <div className="font-medium text-white">
                     {user.display_name}
                   </div>
-                  <div className="text-sm text-neutral-400">{user.email}</div>
+                  <div className="text-md text-neutral-400">{user.email}</div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge

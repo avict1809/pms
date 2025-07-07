@@ -96,7 +96,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
                     {project.status.charAt(0).toUpperCase() +
                       project.status.slice(1)}
                   </Badge>
-                  <span className="text-neutral-400 text-sm">
+                  <span className="text-neutral-400 text-md">
                     •{" "}
                     {project.user_role
                       ? project.user_role.charAt(0).toUpperCase() +
@@ -108,7 +108,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
               </div>
             </div>
 
-            <p className="text-neutral-400 text-sm line-clamp-2">
+            <p className="text-neutral-400 text-md line-clamp-2">
               {project.description}
             </p>
           </div>
@@ -143,7 +143,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
                 {project.member_count}
               </span>
             </div>
-            <span className="text-xs text-neutral-400">Members</span>
+            <span className="text-sm text-neutral-400">Members</span>
           </div>
 
           <div className="text-center">
@@ -153,7 +153,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
                 {project.task_count}
               </span>
             </div>
-            <span className="text-xs text-neutral-400">Tasks</span>
+            <span className="text-sm text-neutral-400">Tasks</span>
           </div>
 
           <div className="text-center">
@@ -163,7 +163,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
                 {project.file_count || 0}
               </span>
             </div>
-            <span className="text-xs text-neutral-400">Files</span>
+            <span className="text-sm text-neutral-400">Files</span>
           </div>
 
           <div className="text-center">
@@ -177,7 +177,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
                 %
               </span>
             </div>
-            <span className="text-xs text-neutral-400">Complete</span>
+            <span className="text-sm text-neutral-400">Complete</span>
           </div>
         </div>
       </CardContent>

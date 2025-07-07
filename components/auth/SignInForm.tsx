@@ -157,7 +157,7 @@ export default function SignInForm({ onSuccess }: { onSuccess?: () => void }) {
         />
       </div>
       {error && (
-        <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded text-red-400 text-sm">
+        <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded text-red-400 text-md">
           {error}
         </div>
       )}
@@ -172,7 +172,7 @@ export default function SignInForm({ onSuccess }: { onSuccess?: () => void }) {
       <div className="mt-4 text-center">
         <Link
           href="/forgot-password"
-          className="text-orange-400 hover:text-orange-300 text-sm transition-colors"
+          className="text-orange-400 hover:text-orange-300 text-md transition-colors"
         >
           Forgot your password?
         </Link>
@@ -182,13 +182,13 @@ export default function SignInForm({ onSuccess }: { onSuccess?: () => void }) {
       <div className="mt-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
         <div className="flex items-start gap-3">
           <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
-            <span className="text-white text-xs font-bold">i</span>
+            <span className="text-white text-sm font-bold">i</span>
           </div>
           <div>
-            <h4 className="text-blue-400 font-medium text-sm mb-1">
+            <h4 className="text-blue-400 font-medium text-md mb-1">
               First-Time Login?
             </h4>
-            <p className="text-blue-300 text-xs">
+            <p className="text-blue-300 text-sm">
               If your account was created by an administrator, you'll be
               prompted to set up your password on first login.
             </p>

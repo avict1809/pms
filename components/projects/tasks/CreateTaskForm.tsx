@@ -103,7 +103,7 @@ export default function CreateTaskForm({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Task Title */}
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-md font-medium text-white mb-2">
               Task Title *
             </label>
             <input
@@ -118,7 +118,7 @@ export default function CreateTaskForm({
 
           {/* Task Description */}
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-md font-medium text-white mb-2">
               Description
             </label>
             <textarea
@@ -133,7 +133,7 @@ export default function CreateTaskForm({
           {/* Priority and Due Date */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-md font-medium text-white mb-2">
                 <Flag className="w-4 h-4 inline mr-1" />
                 Priority
               </label>
@@ -149,7 +149,7 @@ export default function CreateTaskForm({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-md font-medium text-white mb-2">
                 <Calendar className="w-4 h-4 inline mr-1" />
                 Due Date
               </label>
@@ -164,7 +164,7 @@ export default function CreateTaskForm({
 
           {/* Assign To */}
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-md font-medium text-white mb-2">
               <User className="w-4 h-4 inline mr-1" />
               Assign To
             </label>
@@ -185,7 +185,7 @@ export default function CreateTaskForm({
           {/* Error Message */}
           {error && (
             <div className="p-3 bg-red-900/20 border border-red-500 rounded-md">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-red-400 text-md">{error}</p>
             </div>
           )}
 

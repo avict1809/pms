@@ -88,8 +88,12 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
     });
   };
 
-  const isOverdue = new Date(task.due_date) < new Date() && task.status !== "completed";
-  const daysUntilDue = Math.ceil((new Date(task.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+  const isOverdue =
+    new Date(task.due_date) < new Date() && task.status !== "completed";
+  const daysUntilDue = Math.ceil(
+    (new Date(task.due_date).getTime() - new Date().getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -127,23 +131,35 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   <div>
                     <p className="text-white font-medium">Task Created</p>
-                    <p className="text-neutral-400 text-sm">by {task.created_by.display_name}</p>
+                    <p className="text-neutral-400 text-md">
+                      by {task.created_by.display_name}
+                    </p>
                   </div>
                 </div>
-                <span className="text-neutral-400 text-sm">{formatDate(task.created_at)}</span>
+                <span className="text-neutral-400 text-md">
+                  {formatDate(task.created_at)}
+                </span>
               </div>
 
               <div className="flex items-center justify-between p-3 bg-[#18181b] rounded-lg border border-neutral-700">
                 <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${
-                    task.status === "completed" ? "bg-green-500" : "bg-blue-500"
-                  }`}></div>
+                  <div
+                    className={`w-3 h-3 rounded-full ${
+                      task.status === "completed"
+                        ? "bg-green-500"
+                        : "bg-blue-500"
+                    }`}
+                  ></div>
                   <div>
                     <p className="text-white font-medium">Status Updated</p>
-                    <p className="text-neutral-400 text-sm">Current: {task.status.replace("_", " ")}</p>
+                    <p className="text-neutral-400 text-md">
+                      Current: {task.status.replace("_", " ")}
+                    </p>
                   </div>
                 </div>
-                <span className="text-neutral-400 text-sm">{formatDate(task.updated_at)}</span>
+                <span className="text-neutral-400 text-md">
+                  {formatDate(task.updated_at)}
+                </span>
               </div>
 
               {task.status === "completed" && (
@@ -152,10 +168,14 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                     <div>
                       <p className="text-white font-medium">Task Completed</p>
-                      <p className="text-neutral-400 text-sm">Successfully finished</p>
+                      <p className="text-neutral-400 text-md">
+                        Successfully finished
+                      </p>
                     </div>
                   </div>
-                  <span className="text-neutral-400 text-sm">{formatDate(task.updated_at)}</span>
+                  <span className="text-neutral-400 text-md">
+                    {formatDate(task.updated_at)}
+                  </span>
                 </div>
               )}
             </div>
@@ -178,7 +198,7 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
                 {task.status.replace("_", " ").toUpperCase()}
               </Badge>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-neutral-400">Priority:</span>
               <Badge className={getPriorityColor(task.priority)}>
@@ -196,22 +216,25 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="text-center">
-              <div className={`text-2xl font-bold mb-2 ${
-                isOverdue ? "text-red-400" : "text-white"
-              }`}>
+              <div
+                className={`text-2xl font-bold mb-2 ${
+                  isOverdue ? "text-red-400" : "text-white"
+                }`}
+              >
                 {formatDate(task.due_date)}
               </div>
-              <div className={`text-sm ${
-                isOverdue ? "text-red-400" : "text-neutral-400"
-              }`}>
-                {isOverdue 
-                  ? "Overdue" 
-                  : daysUntilDue === 0 
-                    ? "Due today" 
-                    : daysUntilDue === 1 
-                      ? "Due tomorrow" 
-                      : `${daysUntilDue} days remaining`
-                }
+              <div
+                className={`text-md ${
+                  isOverdue ? "text-red-400" : "text-neutral-400"
+                }`}
+              >
+                {isOverdue
+                  ? "Overdue"
+                  : daysUntilDue === 0
+                  ? "Due today"
+                  : daysUntilDue === 1
+                  ? "Due tomorrow"
+                  : `${daysUntilDue} days remaining`}
               </div>
             </div>
           </CardContent>
@@ -224,7 +247,7 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <span className="text-neutral-400 text-sm">Assigned to:</span>
+              <span className="text-neutral-400 text-md">Assigned to:</span>
               <div className="flex items-center gap-2 mt-1">
                 <User className="w-4 h-4 text-orange-400" />
                 <span className="text-white font-medium">
@@ -232,19 +255,23 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
                 </span>
               </div>
               {task.assigned_to?.email && (
-                <p className="text-neutral-400 text-sm mt-1">{task.assigned_to.email}</p>
+                <p className="text-neutral-400 text-md mt-1">
+                  {task.assigned_to.email}
+                </p>
               )}
             </div>
-            
+
             <div>
-              <span className="text-neutral-400 text-sm">Created by:</span>
+              <span className="text-neutral-400 text-md">Created by:</span>
               <div className="flex items-center gap-2 mt-1">
                 <User className="w-4 h-4 text-orange-400" />
                 <span className="text-white font-medium">
                   {task.created_by.display_name}
                 </span>
               </div>
-              <p className="text-neutral-400 text-sm mt-1">{task.created_by.email}</p>
+              <p className="text-neutral-400 text-md mt-1">
+                {task.created_by.email}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -258,13 +285,20 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
             <div className="flex justify-between">
               <span className="text-neutral-400">Days Active:</span>
               <span className="text-white font-medium">
-                {Math.ceil((new Date().getTime() - new Date(task.created_at).getTime()) / (1000 * 60 * 60 * 24))}
+                {Math.ceil(
+                  (new Date().getTime() - new Date(task.created_at).getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-neutral-400">Last Updated:</span>
               <span className="text-white font-medium">
-                {Math.ceil((new Date().getTime() - new Date(task.updated_at).getTime()) / (1000 * 60 * 60 * 24))} days ago
+                {Math.ceil(
+                  (new Date().getTime() - new Date(task.updated_at).getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )}{" "}
+                days ago
               </span>
             </div>
           </CardContent>
@@ -272,4 +306,4 @@ export default function TaskDetails({ task, onTaskUpdated }: TaskDetailsProps) {
       </div>
     </div>
   );
-} 
+}

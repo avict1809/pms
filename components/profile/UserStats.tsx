@@ -83,7 +83,7 @@ export default function UserStats({ user, stats }: UserStatsProps) {
               </div>
               <div>
                 <h3 className="text-white font-medium">{user.display_name}</h3>
-                <p className="text-neutral-400 text-sm">{user.email}</p>
+                <p className="text-neutral-400 text-md">{user.email}</p>
               </div>
             </div>
             <Badge
@@ -107,7 +107,7 @@ export default function UserStats({ user, stats }: UserStatsProps) {
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-neutral-400" />
               <div>
-                <div className="text-sm text-neutral-400">Member Since</div>
+                <div className="text-md text-neutral-400">Member Since</div>
                 <div className="text-white font-medium">
                   {new Date(user.created_at).toLocaleDateString()}
                 </div>
@@ -116,7 +116,7 @@ export default function UserStats({ user, stats }: UserStatsProps) {
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-neutral-400" />
               <div>
-                <div className="text-sm text-neutral-400">Days Active</div>
+                <div className="text-md text-neutral-400">Days Active</div>
                 <div className="text-white font-medium">{daysActive}</div>
               </div>
             </div>
@@ -138,25 +138,25 @@ export default function UserStats({ user, stats }: UserStatsProps) {
               <div className="text-2xl font-bold text-white">
                 {stats?.totalProjects || 0}
               </div>
-              <div className="text-xs text-neutral-400">Total Projects</div>
+              <div className="text-sm text-neutral-400">Total Projects</div>
             </div>
             <div className="text-center p-4 bg-[#18181b] rounded border border-neutral-700">
               <div className="text-2xl font-bold text-blue-400">
                 {stats?.activeProjects || 0}
               </div>
-              <div className="text-xs text-neutral-400">Active Projects</div>
+              <div className="text-sm text-neutral-400">Active Projects</div>
             </div>
             <div className="text-center p-4 bg-[#18181b] rounded border border-neutral-700">
               <div className="text-2xl font-bold text-green-400">
                 {stats?.completedProjects || 0}
               </div>
-              <div className="text-xs text-neutral-400">Completed</div>
+              <div className="text-sm text-neutral-400">Completed</div>
             </div>
             <div className="text-center p-4 bg-[#18181b] rounded border border-neutral-700">
               <div className="text-2xl font-bold text-orange-400">
                 {stats?.totalTasks || 0}
               </div>
-              <div className="text-xs text-neutral-400">Total Tasks</div>
+              <div className="text-sm text-neutral-400">Total Tasks</div>
             </div>
           </div>
         </CardContent>
@@ -189,7 +189,7 @@ export default function UserStats({ user, stats }: UserStatsProps) {
                   }}
                 />
               </div>
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-md">
                 <span className="text-neutral-400">
                   {stats.completedTasks || 0} of {stats.totalTasks} tasks
                   completed

@@ -154,7 +154,7 @@ export default function FileGrid({
 
               {/* File Name */}
               <h3
-                className="text-white font-medium text-sm mb-2 truncate"
+                className="text-white font-medium text-md mb-2 truncate"
                 title={file.filename}
               >
                 {file.filename}
@@ -163,24 +163,24 @@ export default function FileGrid({
               {/* File Type Badge */}
               <Badge
                 variant="outline"
-                className="border-neutral-500 text-neutral-400 text-xs mb-3"
+                className="border-neutral-500 text-neutral-400 text-sm mb-3"
               >
                 {getFileType(file.file_type)}
               </Badge>
 
               {/* File Info */}
               <div className="space-y-1 mb-4">
-                <div className="flex items-center justify-center gap-1 text-neutral-400 text-xs">
+                <div className="flex items-center justify-center gap-1 text-neutral-400 text-sm">
                   <HardDrive className="w-3 h-3" />
                   <span>{formatFileSize(file.file_size)}</span>
                 </div>
 
-                <div className="flex items-center justify-center gap-1 text-neutral-400 text-xs">
+                <div className="flex items-center justify-center gap-1 text-neutral-400 text-sm">
                   <Calendar className="w-3 h-3" />
                   <span>{formatDate(file.uploaded_at)}</span>
                 </div>
 
-                <div className="flex items-center justify-center gap-1 text-neutral-400 text-xs">
+                <div className="flex items-center justify-center gap-1 text-neutral-400 text-sm">
                   <User className="w-3 h-3" />
                   <span className="truncate">
                     {file.uploaded_by.display_name}

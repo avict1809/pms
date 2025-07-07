@@ -142,7 +142,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">{stats.users}</div>
-              <div className="text-xs text-neutral-400">Active Users</div>
+              <div className="text-sm text-neutral-400">Active Users</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -155,7 +155,7 @@ export default function AdminDashboard() {
               <div className="text-3xl font-bold text-white">
                 {stats.projects}
               </div>
-              <div className="text-xs text-neutral-400">Ongoing Projects</div>
+              <div className="text-sm text-neutral-400">Ongoing Projects</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
               <div className="text-3xl font-bold text-white">
                 {stats.proposals}
               </div>
-              <div className="text-xs text-neutral-400">Pending Proposals</div>
+              <div className="text-sm text-neutral-400">Pending Proposals</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
               <div className="text-3xl font-bold text-white">
                 {formatCurrency(stats.totalBudget)}
               </div>
-              <div className="text-xs text-neutral-400">Total Budget</div>
+              <div className="text-sm text-neutral-400">Total Budget</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -194,7 +194,7 @@ export default function AdminDashboard() {
               <div className="text-3xl font-bold text-white">
                 {stats.announcements}
               </div>
-              <div className="text-xs text-neutral-400">
+              <div className="text-sm text-neutral-400">
                 Active Announcements
               </div>
             </CardContent>
@@ -209,7 +209,7 @@ export default function AdminDashboard() {
               <div className="text-3xl font-bold text-white">
                 {stats.pendingActions}
               </div>
-              <div className="text-xs text-neutral-400">Require Attention</div>
+              <div className="text-sm text-neutral-400">Require Attention</div>
             </CardContent>
           </Card>
         </div>
@@ -230,7 +230,7 @@ export default function AdminDashboard() {
                 onClick={() => router.push("/admin/proposals")}
               >
                 <FilePlus2 className="w-6 h-6 text-orange-400" />
-                <span className="text-sm">Review Proposals</span>
+                <span className="text-md">Review Proposals</span>
                 {stats.proposals > 0 && (
                   <Badge
                     variant="outline"
@@ -246,7 +246,7 @@ export default function AdminDashboard() {
                 onClick={() => router.push("/admin/projects/create")}
               >
                 <Plus className="w-6 h-6 text-orange-400" />
-                <span className="text-sm">Create Project</span>
+                <span className="text-md">Create Project</span>
               </Button>
               <Button
                 variant="outline"
@@ -254,7 +254,7 @@ export default function AdminDashboard() {
                 onClick={() => router.push("/admin/users")}
               >
                 <Users className="w-6 h-6 text-orange-400" />
-                <span className="text-sm">Manage Users</span>
+                <span className="text-md">Manage Users</span>
               </Button>
               <Button
                 variant="outline"
@@ -262,7 +262,7 @@ export default function AdminDashboard() {
                 onClick={() => router.push("/admin/projects")}
               >
                 <FolderKanban className="w-6 h-6 text-orange-400" />
-                <span className="text-sm">View All Projects</span>
+                <span className="text-md">View All Projects</span>
               </Button>
               <Button
                 variant="outline"
@@ -270,7 +270,7 @@ export default function AdminDashboard() {
                 onClick={() => router.push("/admin/announcements")}
               >
                 <Megaphone className="w-6 h-6 text-orange-400" />
-                <span className="text-sm">Post Announcement</span>
+                <span className="text-md">Post Announcement</span>
               </Button>
               <Button
                 variant="outline"
@@ -278,7 +278,7 @@ export default function AdminDashboard() {
                 onClick={() => router.push("/admin/finance")}
               >
                 <DollarSign className="w-6 h-6 text-orange-400" />
-                <span className="text-sm">Financial Overview</span>
+                <span className="text-md">Financial Overview</span>
               </Button>
             </div>
           </CardContent>
@@ -307,15 +307,15 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-3">
                       {getActivityIcon(activity.type)}
                       <div>
-                        <div className="text-white text-sm">
+                        <div className="text-white text-md">
                           {activity.title}
                         </div>
-                        <div className="text-neutral-400 text-xs">
+                        <div className="text-neutral-400 text-sm">
                           by {activity.user}
                         </div>
                       </div>
                     </div>
-                    <div className="text-neutral-400 text-xs">
+                    <div className="text-neutral-400 text-sm">
                       {formatTimeAgo(activity.timestamp)}
                     </div>
                   </div>

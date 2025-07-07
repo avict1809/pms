@@ -40,7 +40,7 @@ export default function ProfileForm({
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-300 mb-2 text-sm">
+            <label className="block text-gray-300 mb-2 text-md">
               Display Name
             </label>
             <div className="relative">
@@ -59,7 +59,7 @@ export default function ProfileForm({
           </div>
 
           <div>
-            <label className="block text-gray-300 mb-2 text-sm">Email</label>
+            <label className="block text-gray-300 mb-2 text-md">Email</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-4 h-4" />
               <input
@@ -70,7 +70,7 @@ export default function ProfileForm({
                 placeholder="Email"
               />
             </div>
-            <p className="text-xs text-neutral-500 mt-1">
+            <p className="text-sm text-neutral-500 mt-1">
               Email cannot be changed
             </p>
           </div>

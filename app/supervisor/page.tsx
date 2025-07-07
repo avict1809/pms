@@ -29,7 +29,7 @@ export default function SupervisorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">8</div>
-              <div className="text-xs text-neutral-400">Active Projects</div>
+              <div className="text-sm text-neutral-400">Active Projects</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -40,7 +40,7 @@ export default function SupervisorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">24</div>
-              <div className="text-xs text-neutral-400">
+              <div className="text-sm text-neutral-400">
                 Students Under Supervision
               </div>
             </CardContent>
@@ -53,7 +53,7 @@ export default function SupervisorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">12</div>
-              <div className="text-xs text-neutral-400">Approval Requests</div>
+              <div className="text-sm text-neutral-400">Approval Requests</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -64,7 +64,7 @@ export default function SupervisorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">5</div>
-              <div className="text-xs text-neutral-400">Project Milestones</div>
+              <div className="text-sm text-neutral-400">Project Milestones</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -75,7 +75,7 @@ export default function SupervisorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">87%</div>
-              <div className="text-xs text-neutral-400">
+              <div className="text-sm text-neutral-400">
                 Average Project Success
               </div>
             </CardContent>
@@ -88,7 +88,7 @@ export default function SupervisorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">3</div>
-              <div className="text-xs text-neutral-400">Pending Approvals</div>
+              <div className="text-sm text-neutral-400">Pending Approvals</div>
             </CardContent>
           </Card>
         </div>

@@ -184,19 +184,19 @@ export default function RequestCard({
               <div className="flex items-center gap-2 mt-1">
                 <Badge
                   variant="outline"
-                  className={`border-current ${requestType.textColor} text-xs`}
+                  className={`border-current ${requestType.textColor} text-sm`}
                 >
                   <RequestTypeIcon className="w-3 h-3 mr-1" />
                   {requestType.label}
                 </Badge>
                 <Badge
                   variant="outline"
-                  className={`border-current ${status.textColor} text-xs`}
+                  className={`border-current ${status.textColor} text-sm`}
                 >
                   <StatusIcon className="w-3 h-3 mr-1" />
                   {status.label}
                 </Badge>
-                <span className="text-xs text-neutral-400">
+                <span className="text-sm text-neutral-400">
                   {formatDate(request.created_at)}
                 </span>
               </div>
@@ -233,23 +233,23 @@ export default function RequestCard({
       <CardContent className="pt-0">
         <div className="space-y-3">
           {request.description && (
-            <p className="text-neutral-300 text-sm leading-relaxed line-clamp-3">
+            <p className="text-neutral-300 text-md leading-relaxed line-clamp-3">
               {request.description}
             </p>
           )}
 
-          <div className="flex items-center gap-2 text-xs text-neutral-400">
+          <div className="flex items-center gap-2 text-sm text-neutral-400">
             <FolderOpen className="w-3 h-3" />
             <span>{request.project.title}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-neutral-400">
+          <div className="flex items-center gap-2 text-sm text-neutral-400">
             <User className="w-3 h-3" />
             <span>{request.requested_by_user.display_name}</span>
           </div>
 
           {request.responded_by_user && (
-            <div className="flex items-center gap-2 text-xs text-neutral-400">
+            <div className="flex items-center gap-2 text-sm text-neutral-400">
               <MessageSquare className="w-3 h-3" />
               <span>Responded by {request.responded_by_user.display_name}</span>
             </div>
@@ -257,14 +257,14 @@ export default function RequestCard({
 
           {request.admin_comment && (
             <div className="mt-3 p-3 bg-[#1a1a1a] rounded border border-neutral-600">
-              <div className="text-xs text-neutral-400 mb-1">
+              <div className="text-sm text-neutral-400 mb-1">
                 Admin Response:
               </div>
-              <p className="text-white text-sm">{request.admin_comment}</p>
+              <p className="text-white text-md">{request.admin_comment}</p>
             </div>
           )}
 
-          <div className="flex items-center justify-between text-xs text-neutral-400">
+          <div className="flex items-center justify-between text-sm text-neutral-400">
             <div className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
               <span>

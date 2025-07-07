@@ -4,8 +4,8 @@ import StudentAnnouncements from "@/components/announcements/StudentAnnouncement
 
 export default function StudentAnnouncementsPage() {
   return (
-    <AuthGuard requiredRoles={["student"]}>
-      <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
+    <AuthGuard requiredRole={"student"}>
+      <div className="min-h-screen text-white p-6">
         <div className="max-w-7xl mx-auto">
           <StudentAnnouncements />
         </div>

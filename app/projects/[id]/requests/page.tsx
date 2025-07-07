@@ -237,7 +237,7 @@ export default function ProjectRequestsPage({
                   <div className="text-2xl font-bold text-white">
                     {stats.total}
                   </div>
-                  <div className="text-sm text-neutral-400">Total Requests</div>
+                  <div className="text-md text-neutral-400">Total Requests</div>
                 </div>
                 <AlertTriangle className="w-8 h-8 text-orange-400" />
               </div>
@@ -251,7 +251,7 @@ export default function ProjectRequestsPage({
                   <div className="text-2xl font-bold text-white">
                     {stats.pending}
                   </div>
-                  <div className="text-sm text-neutral-400">Pending</div>
+                  <div className="text-md text-neutral-400">Pending</div>
                 </div>
                 <Clock className="w-8 h-8 text-yellow-400" />
               </div>
@@ -265,7 +265,7 @@ export default function ProjectRequestsPage({
                   <div className="text-2xl font-bold text-white">
                     {stats.approved}
                   </div>
-                  <div className="text-sm text-neutral-400">Approved</div>
+                  <div className="text-md text-neutral-400">Approved</div>
                 </div>
                 <CheckCircle className="w-8 h-8 text-green-400" />
               </div>
@@ -279,7 +279,7 @@ export default function ProjectRequestsPage({
                   <div className="text-2xl font-bold text-white">
                     {stats.denied}
                   </div>
-                  <div className="text-sm text-neutral-400">Denied</div>
+                  <div className="text-md text-neutral-400">Denied</div>
                 </div>
                 <XCircle className="w-8 h-8 text-red-400" />
               </div>

@@ -67,7 +67,7 @@ export default function ProjectStats({ project }: ProjectStatsProps) {
       {/* Team Members */}
       <Card className="bg-[#23232a] border-orange-500 shadow-lg">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-orange-400 text-sm">
+          <CardTitle className="flex items-center gap-2 text-orange-400 text-md">
             <Users className="w-4 h-4" />
             Team Members
           </CardTitle>
@@ -76,14 +76,14 @@ export default function ProjectStats({ project }: ProjectStatsProps) {
           <div className="text-2xl font-bold text-white mb-1">
             {project.member_count}
           </div>
-          <div className="text-xs text-neutral-400">Active participants</div>
+          <div className="text-sm text-neutral-400">Active participants</div>
         </CardContent>
       </Card>
 
       {/* Total Tasks */}
       <Card className="bg-[#23232a] border-orange-500 shadow-lg">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-orange-400 text-sm">
+          <CardTitle className="flex items-center gap-2 text-orange-400 text-md">
             <ClipboardList className="w-4 h-4" />
             Total Tasks
           </CardTitle>
@@ -92,14 +92,14 @@ export default function ProjectStats({ project }: ProjectStatsProps) {
           <div className="text-2xl font-bold text-white mb-1">
             {project.task_count}
           </div>
-          <div className="text-xs text-neutral-400">{pendingTasks} pending</div>
+          <div className="text-sm text-neutral-400">{pendingTasks} pending</div>
         </CardContent>
       </Card>
 
       {/* Completion Rate */}
       <Card className="bg-[#23232a] border-orange-500 shadow-lg">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-orange-400 text-sm">
+          <CardTitle className="flex items-center gap-2 text-orange-400 text-md">
             <TrendingUp className="w-4 h-4" />
             Completion
           </CardTitle>
@@ -108,7 +108,7 @@ export default function ProjectStats({ project }: ProjectStatsProps) {
           <div className="text-2xl font-bold text-white mb-1">
             {completionRate}%
           </div>
-          <div className="text-xs text-neutral-400">
+          <div className="text-sm text-neutral-400">
             {project.completed_task_count} completed
           </div>
         </CardContent>
@@ -117,7 +117,7 @@ export default function ProjectStats({ project }: ProjectStatsProps) {
       {/* Files */}
       <Card className="bg-[#23232a] border-orange-500 shadow-lg">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-orange-400 text-sm">
+          <CardTitle className="flex items-center gap-2 text-orange-400 text-md">
             <FileText className="w-4 h-4" />
             Files
           </CardTitle>
@@ -126,14 +126,14 @@ export default function ProjectStats({ project }: ProjectStatsProps) {
           <div className="text-2xl font-bold text-white mb-1">
             {project.file_count || 0}
           </div>
-          <div className="text-xs text-neutral-400">Shared documents</div>
+          <div className="text-sm text-neutral-400">Shared documents</div>
         </CardContent>
       </Card>
 
       {/* Project Status */}
       <Card className="bg-[#23232a] border-orange-500 shadow-lg">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-orange-400 text-sm">
+          <CardTitle className="flex items-center gap-2 text-orange-400 text-md">
             <AlertTriangle className="w-4 h-4" />
             Status
           </CardTitle>
@@ -142,46 +142,46 @@ export default function ProjectStats({ project }: ProjectStatsProps) {
           <div className="text-lg font-bold text-white mb-1 capitalize">
             {project.status}
           </div>
-          <div className="text-xs text-neutral-400">Project phase</div>
+          <div className="text-sm text-neutral-400">Project phase</div>
         </CardContent>
       </Card>
 
       {/* Created Date */}
       <Card className="bg-[#23232a] border-orange-500 shadow-lg">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-orange-400 text-sm">
+          <CardTitle className="flex items-center gap-2 text-orange-400 text-md">
             <Calendar className="w-4 h-4" />
             Created
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-sm font-bold text-white mb-1">
+          <div className="text-md font-bold text-white mb-1">
             {new Date(project.created_at).toLocaleDateString()}
           </div>
-          <div className="text-xs text-neutral-400">Project start date</div>
+          <div className="text-sm text-neutral-400">Project start date</div>
         </CardContent>
       </Card>
 
       {/* Last Updated */}
       <Card className="bg-[#23232a] border-orange-500 shadow-lg">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-orange-400 text-sm">
+          <CardTitle className="flex items-center gap-2 text-orange-400 text-md">
             <Clock className="w-4 h-4" />
             Updated
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-sm font-bold text-white mb-1">
+          <div className="text-md font-bold text-white mb-1">
             {new Date(project.updated_at).toLocaleDateString()}
           </div>
-          <div className="text-xs text-neutral-400">Last activity</div>
+          <div className="text-sm text-neutral-400">Last activity</div>
         </CardContent>
       </Card>
 
       {/* User Role */}
       <Card className="bg-[#23232a] border-orange-500 shadow-lg">
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-orange-400 text-sm">
+          <CardTitle className="flex items-center gap-2 text-orange-400 text-md">
             <Users className="w-4 h-4" />
             Your Role
           </CardTitle>
@@ -190,7 +190,7 @@ export default function ProjectStats({ project }: ProjectStatsProps) {
           <div className="text-lg font-bold text-white mb-1 capitalize">
             {project.user_role}
           </div>
-          <div className="text-xs text-neutral-400">Access level</div>
+          <div className="text-sm text-neutral-400">Access level</div>
         </CardContent>
       </Card>
     </div>

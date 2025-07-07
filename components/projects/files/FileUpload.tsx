@@ -197,7 +197,7 @@ export default function FileUpload({
                     <div className="text-white font-medium mb-2">
                       Drag & drop files here, or click to select
                     </div>
-                    <div className="text-neutral-400 text-sm">
+                    <div className="text-neutral-400 text-md">
                       Max {maxFiles} files, {formatFileSize(maxSize)} each
                     </div>
                   </div>
@@ -235,7 +235,7 @@ export default function FileUpload({
                       <div className="text-white font-medium truncate">
                         {uploadingFile.file.name}
                       </div>
-                      <div className="text-neutral-400 text-sm">
+                      <div className="text-neutral-400 text-md">
                         {formatFileSize(uploadingFile.file.size)}
                       </div>
                     </div>
@@ -245,20 +245,20 @@ export default function FileUpload({
                         value={uploadingFile.progress}
                         className="flex-1 h-2"
                       />
-                      <span className="text-sm text-neutral-400 min-w-[3rem]">
+                      <span className="text-md text-neutral-400 min-w-[3rem]">
                         {Math.round(uploadingFile.progress)}%
                       </span>
                     </div>
 
                     {uploadingFile.status === "completed" && (
-                      <div className="flex items-center gap-1 text-green-400 text-sm mt-1">
+                      <div className="flex items-center gap-1 text-green-400 text-md mt-1">
                         <CheckCircle className="w-4 h-4" />
                         Upload complete
                       </div>
                     )}
 
                     {uploadingFile.status === "error" && (
-                      <div className="flex items-center gap-1 text-red-400 text-sm mt-1">
+                      <div className="flex items-center gap-1 text-red-400 text-md mt-1">
                         <AlertTriangle className="w-4 h-4" />
                         {uploadingFile.error}
                       </div>

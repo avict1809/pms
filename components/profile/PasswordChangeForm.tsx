@@ -85,11 +85,11 @@ export default function PasswordChangeForm({
             <div className="bg-red-900/20 border border-red-500 rounded p-3">
               <div className="flex items-center gap-2 mb-2">
                 <AlertTriangle className="w-4 h-4 text-red-400" />
-                <span className="text-red-400 text-sm font-medium">
+                <span className="text-red-400 text-md font-medium">
                   Please fix the following errors:
                 </span>
               </div>
-              <ul className="text-red-300 text-sm space-y-1">
+              <ul className="text-red-300 text-md space-y-1">
                 {errors.map((error, index) => (
                   <li key={index}>• {error}</li>
                 ))}
@@ -99,7 +99,7 @@ export default function PasswordChangeForm({
 
           {/* Current Password */}
           <div>
-            <label className="block text-gray-300 mb-2 text-sm">
+            <label className="block text-gray-300 mb-2 text-md">
               Current Password
             </label>
             <div className="relative">
@@ -130,7 +130,7 @@ export default function PasswordChangeForm({
 
           {/* New Password */}
           <div>
-            <label className="block text-gray-300 mb-2 text-sm">
+            <label className="block text-gray-300 mb-2 text-md">
               New Password
             </label>
             <div className="relative">
@@ -157,14 +157,14 @@ export default function PasswordChangeForm({
                 )}
               </button>
             </div>
-            <p className="text-xs text-neutral-500 mt-1">
+            <p className="text-sm text-neutral-500 mt-1">
               Password must be at least 6 characters long
             </p>
           </div>
 
           {/* Confirm New Password */}
           <div>
-            <label className="block text-gray-300 mb-2 text-sm">
+            <label className="block text-gray-300 mb-2 text-md">
               Confirm New Password
             </label>
             <div className="relative">
@@ -196,7 +196,7 @@ export default function PasswordChangeForm({
           {/* Password Strength Indicator */}
           {formData.newPassword && (
             <div className="bg-[#18181b] p-3 rounded border border-neutral-700">
-              <div className="text-sm text-neutral-400 mb-2">
+              <div className="text-md text-neutral-400 mb-2">
                 Password Strength:
               </div>
               <div className="flex gap-1">
@@ -226,7 +226,7 @@ export default function PasswordChangeForm({
                   );
                 })}
               </div>
-              <div className="text-xs text-neutral-500 mt-1">
+              <div className="text-sm text-neutral-500 mt-1">
                 {formData.newPassword.length >= 8
                   ? "Strong password"
                   : formData.newPassword.length >= 6

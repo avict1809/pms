@@ -202,7 +202,7 @@ export default function TaskComments({ projectId, taskId }: TaskCommentsProps) {
           {/* Error Message */}
           {error && (
             <div className="p-3 bg-red-900/20 border border-red-500 rounded-md mb-4">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-red-400 text-md">{error}</p>
             </div>
           )}
 
@@ -235,11 +235,11 @@ export default function TaskComments({ projectId, taskId }: TaskCommentsProps) {
                           <span className="text-white font-medium">
                             {comment.user.display_name}
                           </span>
-                          <Badge className="border-neutral-600 text-neutral-400 text-xs">
+                          <Badge className="border-neutral-600 text-neutral-400 text-sm">
                             {comment.user.role}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-neutral-400">
+                        <div className="flex items-center gap-2 text-sm text-neutral-400">
                           <Calendar className="w-3 h-3" />
                           {formatDate(comment.created_at)}
                           {comment.updated_at !== comment.created_at && (

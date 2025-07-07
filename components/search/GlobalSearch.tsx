@@ -246,17 +246,17 @@ export default function GlobalSearch({
                             {result.title}
                           </h4>
                           <Badge
-                            className={`text-xs ${getTypeColor(result.type)}`}
+                            className={`text-sm ${getTypeColor(result.type)}`}
                           >
                             {result.type}
                           </Badge>
                         </div>
                         {result.description && (
-                          <p className="text-neutral-400 text-sm line-clamp-2 mb-2">
+                          <p className="text-neutral-400 text-md line-clamp-2 mb-2">
                             {result.description}
                           </p>
                         )}
-                        <div className="flex items-center gap-4 text-xs text-neutral-500">
+                        <div className="flex items-center gap-4 text-sm text-neutral-500">
                           {result.metadata?.status && (
                             <span className="capitalize">
                               {result.metadata.status}

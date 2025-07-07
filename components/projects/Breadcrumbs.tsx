@@ -23,7 +23,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   };
 
   return (
-    <nav className="flex items-center space-x-2 text-sm text-neutral-400 mb-6">
+    <nav className="flex items-center space-x-2 text-md text-neutral-400 mb-6">
       <Button
         variant="ghost"
         size="sm"

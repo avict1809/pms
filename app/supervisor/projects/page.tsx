@@ -142,20 +142,20 @@ export default function SupervisorProjectsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="bg-[#23232a] border-orange-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-400">
+              <CardTitle className="text-md font-medium text-neutral-400">
                 Total Assigned
               </CardTitle>
               <FolderKanban className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">{stats.total}</div>
-              <p className="text-xs text-neutral-500">Active projects</p>
+              <p className="text-sm text-neutral-500">Active projects</p>
             </CardContent>
           </Card>
 
           <Card className="bg-[#23232a] border-orange-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-400">
+              <CardTitle className="text-md font-medium text-neutral-400">
                 Students
               </CardTitle>
               <Users className="h-4 w-4 text-orange-500" />
@@ -164,13 +164,13 @@ export default function SupervisorProjectsPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.students}
               </div>
-              <p className="text-xs text-neutral-500">Under supervision</p>
+              <p className="text-sm text-neutral-500">Under supervision</p>
             </CardContent>
           </Card>
 
           <Card className="bg-[#23232a] border-orange-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-400">
+              <CardTitle className="text-md font-medium text-neutral-400">
                 Due This Week
               </CardTitle>
               <Calendar className="h-4 w-4 text-orange-500" />
@@ -179,13 +179,13 @@ export default function SupervisorProjectsPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.dueThisWeek}
               </div>
-              <p className="text-xs text-neutral-500">Deadlines approaching</p>
+              <p className="text-sm text-neutral-500">Deadlines approaching</p>
             </CardContent>
           </Card>
 
           <Card className="bg-[#23232a] border-orange-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-neutral-400">
+              <CardTitle className="text-md font-medium text-neutral-400">
                 Completion Rate
               </CardTitle>
               <TrendingUp className="h-4 w-4 text-orange-500" />
@@ -194,7 +194,7 @@ export default function SupervisorProjectsPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.completionRate}%
               </div>
-              <p className="text-xs text-neutral-500">Average progress</p>
+              <p className="text-sm text-neutral-500">Average progress</p>
             </CardContent>
           </Card>
         </div>
@@ -245,15 +245,15 @@ export default function SupervisorProjectsPage() {
                               </div>
                             </Badge>
                           </div>
-                          <p className="text-sm text-neutral-400 mb-2">
+                          <p className="text-md text-neutral-400 mb-2">
                             Team: {project.member_count} students
                           </p>
-                          <p className="text-xs text-neutral-500 mb-2">
+                          <p className="text-sm text-neutral-500 mb-2">
                             Tasks: {project.completed_task_count}/
                             {project.task_count} completed
                           </p>
                           <div className="mt-2">
-                            <div className="flex items-center justify-between text-sm">
+                            <div className="flex items-center justify-between text-md">
                               <span className="text-neutral-400">Progress</span>
                               <span className="text-white">
                                 {project.progress}%
@@ -269,7 +269,7 @@ export default function SupervisorProjectsPage() {
                         </div>
                         <div className="flex flex-col items-end gap-2 ml-4">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${progressStatus.color}`}
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${progressStatus.color}`}
                           >
                             {progressStatus.text}
                           </span>

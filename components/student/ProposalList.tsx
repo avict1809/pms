@@ -3,18 +3,19 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  FileText, 
-  Clock, 
-  CheckCircle, 
-  XCircle, 
+import {
+  FileText,
+  Clock,
+  CheckCircle,
+  XCircle,
   Eye,
   Edit,
   Trash2,
   Calendar,
-  User
+  User,
 } from "lucide-react";
 import { useSupabase } from "../../supabase/context";
+import { useRouter } from "next/navigation";
 
 interface Proposal {
   id: string;
@@ -30,10 +31,13 @@ interface Proposal {
 
 export default function ProposalList() {
   const { user } = useSupabase();
+  const router = useRouter();
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
+  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
+    null
+  );
 
   useEffect(() => {
     fetchProposals();
@@ -137,7 +141,9 @@ export default function ProposalList() {
         <Card className="bg-[#23232a] border-orange-500 shadow-lg">
           <CardContent className="p-8 text-center">
             <FileText className="w-12 h-12 mx-auto mb-4 text-neutral-400" />
-            <h3 className="text-lg font-medium text-white mb-2">No Proposals Yet</h3>
+            <h3 className="text-lg font-medium text-white mb-2">
+              No Proposals Yet
+            </h3>
             <p className="text-neutral-400 mb-4">
               You haven't submitted any project proposals yet.
             </p>
@@ -150,7 +156,10 @@ export default function ProposalList() {
       ) : (
         <div className="space-y-4">
           {proposals.map((proposal) => (
-            <Card key={proposal.id} className="bg-[#23232a] border-orange-500 shadow-lg">
+            <Card
+              key={proposal.id}
+              className="bg-[#23232a] border-orange-500 shadow-lg"
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -164,16 +173,17 @@ export default function ProposalList() {
                       >
                         <div className="flex items-center gap-1">
                           {getStatusIcon(proposal.status)}
-                          {proposal.status.charAt(0).toUpperCase() + proposal.status.slice(1)}
+                          {proposal.status.charAt(0).toUpperCase() +
+                            proposal.status.slice(1)}
                         </div>
                       </Badge>
                     </div>
-                    
+
                     <p className="text-neutral-400 mb-3 line-clamp-2">
                       {proposal.description}
                     </p>
-                    
-                    <div className="flex items-center gap-4 text-sm text-neutral-500">
+
+                    <div className="flex items-center gap-4 text-md text-neutral-500">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         Submitted: {formatDate(proposal.created_at)}
@@ -191,9 +201,13 @@ export default function ProposalList() {
                       <div className="mt-3 p-3 bg-[#18181b] rounded border border-neutral-700">
                         <div className="flex items-center gap-2 mb-1">
                           <User className="w-4 h-4 text-neutral-400" />
-                          <span className="text-sm font-medium text-neutral-300">Admin Feedback:</span>
+                          <span className="text-md font-medium text-neutral-300">
+                            Admin Feedback:
+                          </span>
                         </div>
-                        <p className="text-neutral-400 text-sm">{proposal.admin_comment}</p>
+                        <p className="text-neutral-400 text-md">
+                          {proposal.admin_comment}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -211,6 +225,9 @@ export default function ProposalList() {
                       <Button
                         size="sm"
                         variant="outline"
+                        onClick={() =>
+                          router.push(`/student/propose/${proposal.id}`)
+                        }
                       >
                         <Edit className="w-4 h-4 mr-1" />
                         Edit
@@ -253,27 +270,36 @@ export default function ProposalList() {
                   >
                     <div className="flex items-center gap-1">
                       {getStatusIcon(selectedProposal.status)}
-                      {selectedProposal.status.charAt(0).toUpperCase() + selectedProposal.status.slice(1)}
+                      {selectedProposal.status.charAt(0).toUpperCase() +
+                        selectedProposal.status.slice(1)}
                     </div>
                   </Badge>
-                  <span className="text-neutral-400 text-sm">
+                  <span className="text-neutral-400 text-md">
                     Submitted: {formatDate(selectedProposal.created_at)}
                   </span>
                 </div>
               </div>
 
               <div>
-                <h4 className="text-orange-400 font-medium mb-2">Description</h4>
-                <p className="text-white whitespace-pre-wrap">{selectedProposal.description}</p>
+                <h4 className="text-orange-400 font-medium mb-2">
+                  Description
+                </h4>
+                <p className="text-white whitespace-pre-wrap">
+                  {selectedProposal.description}
+                </p>
               </div>
 
               {selectedProposal.admin_comment && (
                 <div>
-                  <h4 className="text-orange-400 font-medium mb-2">Admin Feedback</h4>
+                  <h4 className="text-orange-400 font-medium mb-2">
+                    Admin Feedback
+                  </h4>
                   <div className="p-3 bg-[#18181b] rounded border border-neutral-700">
-                    <p className="text-white">{selectedProposal.admin_comment}</p>
+                    <p className="text-white">
+                      {selectedProposal.admin_comment}
+                    </p>
                     {selectedProposal.reviewed_at && (
-                      <p className="text-neutral-400 text-sm mt-2">
+                      <p className="text-neutral-400 text-md mt-2">
                         Reviewed on: {formatDate(selectedProposal.reviewed_at)}
                       </p>
                     )}
@@ -295,4 +321,4 @@ export default function ProposalList() {
       )}
     </div>
   );
-} 
+}

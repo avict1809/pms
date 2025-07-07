@@ -54,7 +54,7 @@ export default function AddUserForm({ onClose }: AddUserFormProps) {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-gray-300 mb-2 text-sm">Email</label>
+              <label className="block text-gray-300 mb-2 text-md">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-4 h-4" />
                 <input
@@ -70,7 +70,7 @@ export default function AddUserForm({ onClose }: AddUserFormProps) {
             </div>
 
             <div>
-              <label className="block text-gray-300 mb-2 text-sm">
+              <label className="block text-gray-300 mb-2 text-md">
                 Display Name
               </label>
               <div className="relative">
@@ -88,7 +88,7 @@ export default function AddUserForm({ onClose }: AddUserFormProps) {
             </div>
 
             <div>
-              <label className="block text-gray-300 mb-2 text-sm">Role</label>
+              <label className="block text-gray-300 mb-2 text-md">Role</label>
               <div className="relative">
                 <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-4 h-4" />
                 <select
@@ -118,7 +118,7 @@ export default function AddUserForm({ onClose }: AddUserFormProps) {
                 disabled={createUserMutation.isPending}
                 className="w-4 h-4 text-orange-500 bg-[#18181b] border-neutral-700 rounded focus:ring-orange-400 disabled:opacity-50"
               />
-              <label htmlFor="isActive" className="text-gray-300 text-sm">
+              <label htmlFor="isActive" className="text-gray-300 text-md">
                 Activate user immediately
               </label>
             </div>

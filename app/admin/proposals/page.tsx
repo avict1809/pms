@@ -210,7 +210,7 @@ export default function AdminProposalsPage() {
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
             <CardContent className="p-4">
               <div className="text-2xl font-bold text-white">{stats.total}</div>
-              <div className="text-xs text-neutral-400">Total Proposals</div>
+              <div className="text-sm text-neutral-400">Total Proposals</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-yellow-500 shadow-lg">
@@ -218,7 +218,7 @@ export default function AdminProposalsPage() {
               <div className="text-2xl font-bold text-yellow-400">
                 {stats.pending}
               </div>
-              <div className="text-xs text-neutral-400">Pending Review</div>
+              <div className="text-sm text-neutral-400">Pending Review</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-green-500 shadow-lg">
@@ -226,7 +226,7 @@ export default function AdminProposalsPage() {
               <div className="text-2xl font-bold text-green-400">
                 {stats.approved}
               </div>
-              <div className="text-xs text-neutral-400">Approved</div>
+              <div className="text-sm text-neutral-400">Approved</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-red-500 shadow-lg">
@@ -234,7 +234,7 @@ export default function AdminProposalsPage() {
               <div className="text-2xl font-bold text-red-400">
                 {stats.denied}
               </div>
-              <div className="text-xs text-neutral-400">Denied</div>
+              <div className="text-sm text-neutral-400">Denied</div>
             </CardContent>
           </Card>
         </div>
@@ -343,7 +343,7 @@ export default function AdminProposalsPage() {
                         {proposal.description}
                       </p>
 
-                      <div className="flex items-center gap-4 text-sm text-neutral-500">
+                      <div className="flex items-center gap-4 text-md text-neutral-500">
                         <div className="flex items-center gap-1">
                           <User className="w-4 h-4" />
                           {proposal.user?.display_name || (
@@ -375,11 +375,11 @@ export default function AdminProposalsPage() {
                         <div className="mt-3 p-3 bg-[#18181b] rounded border border-neutral-700">
                           <div className="flex items-center gap-2 mb-1">
                             <MessageSquare className="w-4 h-4 text-neutral-400" />
-                            <span className="text-sm font-medium text-neutral-300">
+                            <span className="text-md font-medium text-neutral-300">
                               Admin Comment:
                             </span>
                           </div>
-                          <p className="text-neutral-400 text-sm">
+                          <p className="text-neutral-400 text-md">
                             {proposal.admin_comment}
                           </p>
                         </div>

@@ -213,25 +213,25 @@ export default function TaskList({ projectId, userRole }: TaskListProps) {
               <div className="text-2xl font-bold text-white">
                 {tasks.length}
               </div>
-              <div className="text-xs text-neutral-400">Total Tasks</div>
+              <div className="text-sm text-neutral-400">Total Tasks</div>
             </div>
             <div className="bg-[#18181b] border border-neutral-700 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-yellow-400">
                 {tasks.filter((t) => t.status === "todo").length}
               </div>
-              <div className="text-xs text-neutral-400">To Do</div>
+              <div className="text-sm text-neutral-400">To Do</div>
             </div>
             <div className="bg-[#18181b] border border-neutral-700 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-blue-400">
                 {tasks.filter((t) => t.status === "in_progress").length}
               </div>
-              <div className="text-xs text-neutral-400">In Progress</div>
+              <div className="text-sm text-neutral-400">In Progress</div>
             </div>
             <div className="bg-[#18181b] border border-neutral-700 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-green-400">
                 {tasks.filter((t) => t.status === "completed").length}
               </div>
-              <div className="text-xs text-neutral-400">Completed</div>
+              <div className="text-sm text-neutral-400">Completed</div>
             </div>
           </div>
         </CardContent>

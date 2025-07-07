@@ -170,7 +170,7 @@ export default function AdminUsersPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.totalUsers}
               </div>
-              <div className="text-xs text-neutral-400">Total Users</div>
+              <div className="text-sm text-neutral-400">Total Users</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -178,7 +178,7 @@ export default function AdminUsersPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.supervisors}
               </div>
-              <div className="text-xs text-neutral-400">Supervisors</div>
+              <div className="text-sm text-neutral-400">Supervisors</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -186,7 +186,7 @@ export default function AdminUsersPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.students}
               </div>
-              <div className="text-xs text-neutral-400">Students</div>
+              <div className="text-sm text-neutral-400">Students</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-orange-500 shadow-lg">
@@ -194,7 +194,7 @@ export default function AdminUsersPage() {
               <div className="text-2xl font-bold text-white">
                 {stats.pendingActivation}
               </div>
-              <div className="text-xs text-neutral-400">Pending Activation</div>
+              <div className="text-sm text-neutral-400">Pending Activation</div>
             </CardContent>
           </Card>
         </div>
@@ -251,7 +251,7 @@ export default function AdminUsersPage() {
                         {user.display_name}
                       </CardTitle>
                       <CardContent className="p-0 mt-2">
-                        <p className="text-gray-400 text-sm">{user.email}</p>
+                        <p className="text-gray-400 text-md">{user.email}</p>
                       </CardContent>
                     </div>
                     <div className="flex gap-2">
@@ -309,7 +309,7 @@ export default function AdminUsersPage() {
                       </Badge>
                     )}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-sm text-gray-500">
                     Created: {new Date(user.created_at).toLocaleDateString()}
                   </div>
                 </CardContent>

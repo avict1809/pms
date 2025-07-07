@@ -91,17 +91,17 @@ export default function HomePage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-neutral-400 text-sm">Name</label>
+                  <label className="text-neutral-400 text-md">Name</label>
                   <p className="text-white font-medium">
                     {userData.display_name}
                   </p>
                 </div>
                 <div>
-                  <label className="text-neutral-400 text-sm">Email</label>
+                  <label className="text-neutral-400 text-md">Email</label>
                   <p className="text-white font-medium">{userData.email}</p>
                 </div>
                 <div>
-                  <label className="text-neutral-400 text-sm">Role</label>
+                  <label className="text-neutral-400 text-md">Role</label>
                   <div className="flex items-center gap-2">
                     <Shield className="w-4 h-4" />
                     <Badge
@@ -125,7 +125,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-neutral-400 text-sm">Status</label>
+                  <label className="text-neutral-400 text-md">Status  </label>
                   <Badge
                     variant={userData.is_active ? "default" : "destructive"}
                     className={
@@ -154,7 +154,7 @@ export default function HomePage() {
 
         <div className="text-center">
           <p className="text-neutral-500">
-            Debug: User ID: {user?.id} | Role: {userRole || "Loading..."}
+            User ID: {user?.id} | Role: {userRole || "Loading..."}
           </p>
         </div>
       </div>

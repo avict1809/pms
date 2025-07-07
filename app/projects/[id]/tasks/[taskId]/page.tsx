@@ -181,7 +181,7 @@ export default function TaskDetailPage() {
             <CardContent>
               {/* Task Info Grid */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-md">
                   <User className="w-4 h-4 text-orange-400" />
                   <span className="text-neutral-400">Assigned to:</span>
                   <span className="text-white font-medium">
@@ -189,7 +189,7 @@ export default function TaskDetailPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-md">
                   <Calendar className="w-4 h-4 text-orange-400" />
                   <span className="text-neutral-400">Due:</span>
                   <span className="text-white font-medium">
@@ -197,7 +197,7 @@ export default function TaskDetailPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-md">
                   <Clock className="w-4 h-4 text-orange-400" />
                   <span className="text-neutral-400">Created:</span>
                   <span className="text-white font-medium">
@@ -205,7 +205,7 @@ export default function TaskDetailPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-md">
                   <CheckCircle className="w-4 h-4 text-orange-400" />
                   <span className="text-neutral-400">Updated:</span>
                   <span className="text-white font-medium">

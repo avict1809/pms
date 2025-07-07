@@ -58,7 +58,7 @@ export default function DeleteUserDialog({
               <User className="w-5 h-5 text-red-400" />
               <span className="text-red-400 font-medium">User Details</span>
             </div>
-            <div className="space-y-2 text-sm">
+            <div className="space-y-2 text-md">
               <div>
                 <span className="text-gray-400">Name:</span>
                 <span className="text-white ml-2 font-medium">
@@ -83,7 +83,7 @@ export default function DeleteUserDialog({
           <div className="p-4 bg-orange-900/20 border border-orange-500/30 rounded-lg">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-orange-400 mt-0.5" />
-              <div className="text-sm">
+              <div className="text-md">
                 <p className="text-orange-400 font-medium mb-1">Warning</p>
                 <p className="text-orange-300">
                   Deleting this user will permanently remove their account and

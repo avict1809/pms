@@ -122,12 +122,12 @@ export default function AnnouncementCard({
               <div className="flex items-center gap-2 mt-1">
                 <Badge
                   variant="outline"
-                  className={`border-current ${target.textColor} text-xs`}
+                  className={`border-current ${target.textColor} text-sm`}
                 >
                   <TargetIcon className="w-3 h-3 mr-1" />
                   {target.label}
                 </Badge>
-                <span className="text-xs text-neutral-400">
+                <span className="text-sm text-neutral-400">
                   {formatDate(announcement.created_at)}
                 </span>
               </div>
@@ -158,11 +158,11 @@ export default function AnnouncementCard({
 
       <CardContent className="pt-0">
         <div className="space-y-3">
-          <p className="text-neutral-300 text-sm leading-relaxed line-clamp-3">
+          <p className="text-neutral-300 text-md leading-relaxed line-clamp-3">
             {announcement.content}
           </p>
 
-          <div className="flex items-center justify-between text-xs text-neutral-400">
+          <div className="flex items-center justify-between text-sm text-neutral-400">
             <div className="flex items-center gap-1">
               <User className="w-3 h-3" />
               <span>{announcement.posted_by_user.display_name}</span>
