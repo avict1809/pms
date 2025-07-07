@@ -14,7 +14,7 @@ export default function AddUserForm({ onClose }: AddUserFormProps) {
   const [formData, setFormData] = useState<CreateUserData>({
     email: "",
     display_name: "",
-    role: "member",
+    role: "student",
     is_active: false,
   });
 
@@ -96,13 +96,13 @@ export default function AddUserForm({ onClose }: AddUserFormProps) {
                   onChange={(e) =>
                     handleChange(
                       "role",
-                      e.target.value as "admin" | "supervisor" | "member"
+                      e.target.value as "admin" | "supervisor" | "student"
                     )
                   }
                   disabled={createUserMutation.isPending}
                   className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-neutral-700 rounded text-white focus:border-orange-400 outline-none disabled:opacity-50"
                 >
-                  <option value="member">Student</option>
+                  <option value="student">Student</option>
                   <option value="supervisor">Supervisor</option>
                   <option value="admin">Admin</option>
                 </select>
