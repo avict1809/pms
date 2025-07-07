@@ -352,7 +352,7 @@ export default function StudentProjectsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() =>
-                              router.push(`/projects/${project.id}`)
+                              router.push(`/project/${project.id}/dashboard`)
                             }
                           >
                             <Eye className="w-4 h-4 mr-1" />

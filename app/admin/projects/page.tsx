@@ -320,7 +320,9 @@ export default function AdminProjectsPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => router.push(`/projects/${project.id}`)}
+                      onClick={() =>
+                        router.push(`/project/${project.id}/dashboard`)
+                      }
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       View
