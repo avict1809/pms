@@ -237,83 +237,85 @@ export default function AdminUsersPage() {
         </Card>
 
         {/* Users List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredUsers.map((user: User) => (
-            <Card
-              key={user.id}
-              className="bg-[#23232a] border-orange-500 shadow-lg"
-            >
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-white text-lg">
-                      {user.display_name}
-                    </CardTitle>
-                    <CardContent className="p-0 mt-2">
-                      <p className="text-gray-400 text-sm">{user.email}</p>
-                    </CardContent>
+        <div className="max-h-[500px] overflow-y-auto pr-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredUsers.map((user: User) => (
+              <Card
+                key={user.id}
+                className="bg-[#23232a] border-orange-500 shadow-lg"
+              >
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-white text-lg">
+                        {user.display_name}
+                      </CardTitle>
+                      <CardContent className="p-0 mt-2">
+                        <p className="text-gray-400 text-sm">{user.email}</p>
+                      </CardContent>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => router.push(`/admin/users/${user.id}`)}
+                        className="border-blue-600 text-blue-400 hover:text-white hover:bg-blue-600"
+                      >
+                        <User className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditDialog(user)}
+                        className="border-gray-600 text-gray-400 hover:text-white hover:bg-gray-800"
+                      >
+                        <Edit className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openDeleteDialog(user)}
+                        className="border-red-600 text-red-400 hover:text-white hover:bg-red-600"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => router.push(`/admin/users/${user.id}`)}
-                      className="border-blue-600 text-blue-400 hover:text-white hover:bg-blue-600"
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant={user.is_active ? "default" : "destructive"}
+                      className={
+                        user.is_active
+                          ? "bg-green-500 text-white"
+                          : "bg-red-500 text-white"
+                      }
                     >
-                      <User className="w-3 h-3" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openEditDialog(user)}
-                      className="border-gray-600 text-gray-400 hover:text-white hover:bg-gray-800"
-                    >
-                      <Edit className="w-3 h-3" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openDeleteDialog(user)}
-                      className="border-red-600 text-red-400 hover:text-white hover:bg-red-600"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant={user.is_active ? "default" : "destructive"}
-                    className={
-                      user.is_active
-                        ? "bg-green-500 text-white"
-                        : "bg-red-500 text-white"
-                    }
-                  >
-                    {user.is_active ? "Active" : "Inactive"}
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className="border-orange-500 text-orange-400 capitalize"
-                  >
-                    {user.role}
-                  </Badge>
-                  {user.is_first_login && (
+                      {user.is_active ? "Active" : "Inactive"}
+                    </Badge>
                     <Badge
                       variant="outline"
-                      className="border-yellow-500 text-yellow-400"
+                      className="border-orange-500 text-orange-400 capitalize"
                     >
-                      First Login
+                      {user.role}
                     </Badge>
-                  )}
-                </div>
-                <div className="text-xs text-gray-500">
-                  Created: {new Date(user.created_at).toLocaleDateString()}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                    {user.is_first_login && (
+                      <Badge
+                        variant="outline"
+                        className="border-yellow-500 text-yellow-400"
+                      >
+                        First Login
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    Created: {new Date(user.created_at).toLocaleDateString()}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* Dialogs */}

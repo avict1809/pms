@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  FolderKanban, 
-  Plus, 
-  Search, 
+import {
+  FolderKanban,
+  Plus,
+  Search,
   Filter,
   Users,
   Calendar,
@@ -17,7 +17,7 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  User
+  User,
 } from "lucide-react";
 import AuthGuard from "@/components/auth/AuthGuard";
 
@@ -42,7 +42,9 @@ export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"all" | "active" | "completed" | "archived">("all");
+  const [filter, setFilter] = useState<
+    "all" | "active" | "completed" | "archived"
+  >("all");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -104,18 +106,21 @@ export default function AdminProjectsPage() {
     });
   };
 
-  const filteredProjects = projects.filter(project => {
+  const filteredProjects = projects.filter((project) => {
     const matchesFilter = filter === "all" || project.status === filter;
-    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         project.supervisor.display_name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.supervisor.display_name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
   const stats = {
     total: projects.length,
-    active: projects.filter(p => p.status === "active").length,
-    completed: projects.filter(p => p.status === "completed").length,
-    archived: projects.filter(p => p.status === "archived").length,
+    active: projects.filter((p) => p.status === "active").length,
+    completed: projects.filter((p) => p.status === "completed").length,
+    archived: projects.filter((p) => p.status === "archived").length,
   };
 
   if (loading) {
@@ -155,19 +160,25 @@ export default function AdminProjectsPage() {
           </Card>
           <Card className="bg-[#23232a] border-green-500 shadow-lg">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-green-400">{stats.active}</div>
+              <div className="text-2xl font-bold text-green-400">
+                {stats.active}
+              </div>
               <div className="text-xs text-neutral-400">Active Projects</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-blue-500 shadow-lg">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-blue-400">{stats.completed}</div>
+              <div className="text-2xl font-bold text-blue-400">
+                {stats.completed}
+              </div>
               <div className="text-xs text-neutral-400">Completed</div>
             </CardContent>
           </Card>
           <Card className="bg-[#23232a] border-gray-500 shadow-lg">
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-gray-400">{stats.archived}</div>
+              <div className="text-2xl font-bold text-gray-400">
+                {stats.archived}
+              </div>
               <div className="text-xs text-neutral-400">Archived</div>
             </CardContent>
           </Card>
@@ -233,17 +244,18 @@ export default function AdminProjectsPage() {
         )}
 
         {/* Projects List */}
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.length === 0 ? (
             <Card className="bg-[#23232a] border-orange-500 shadow-lg">
               <CardContent className="p-8 text-center">
                 <FolderKanban className="w-12 h-12 mx-auto mb-4 text-neutral-400" />
-                <h3 className="text-lg font-medium text-white mb-2">No Projects Found</h3>
+                <h3 className="text-lg font-medium text-white mb-2">
+                  No Projects Found
+                </h3>
                 <p className="text-neutral-400 mb-4">
-                  {searchTerm || filter !== "all" 
+                  {searchTerm || filter !== "all"
                     ? "No projects match your current filters."
-                    : "No projects have been created yet."
-                  }
+                    : "No projects have been created yet."}
                 </p>
                 <Button onClick={() => router.push("/admin/projects/create")}>
                   <Plus className="w-4 h-4 mr-2" />
@@ -253,67 +265,76 @@ export default function AdminProjectsPage() {
             </Card>
           ) : (
             filteredProjects.map((project) => (
-              <Card key={project.id} className="bg-[#23232a] border-orange-500 shadow-lg">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-white">
-                          {project.title}
-                        </h3>
-                        <Badge
-                          variant="outline"
-                          className={getStatusColor(project.status)}
-                        >
-                          <div className="flex items-center gap-1">
-                            {getStatusIcon(project.status)}
-                            {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-                          </div>
-                        </Badge>
+              <Card
+                key={project.id}
+                className="bg-[#23232a] border-orange-500 shadow-lg flex flex-col h-full"
+              >
+                <CardContent className="flex flex-col h-full p-6">
+                  {/* Title and Status */}
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-white">
+                      {project.title}
+                    </h3>
+                    <Badge
+                      variant="outline"
+                      className={getStatusColor(project.status)}
+                    >
+                      <div className="flex items-center gap-1">
+                        {getStatusIcon(project.status)}
+                        {project.status.charAt(0).toUpperCase() +
+                          project.status.slice(1)}
                       </div>
-                      
-                      <p className="text-neutral-400 mb-3 line-clamp-2">
-                        {project.description}
-                      </p>
-                      
-                      <div className="flex items-center gap-4 text-sm text-neutral-500">
-                        <div className="flex items-center gap-1">
-                          <User className="w-4 h-4" />
-                          {project.supervisor.display_name}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="w-4 h-4" />
-                          {project.member_count} members
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckCircle className="w-4 h-4" />
-                          {project.completed_task_count}/{project.task_count} tasks
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {formatDate(project.created_at)}
-                        </div>
-                      </div>
-                    </div>
+                    </Badge>
+                  </div>
 
-                    <div className="flex items-center gap-2 ml-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => router.push(`/projects/${project.id}`)}
-                      >
-                        <Eye className="w-4 h-4 mr-1" />
-                        View
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => router.push(`/admin/projects/${project.id}/edit`)}
-                      >
-                        <Edit className="w-4 h-4 mr-1" />
-                        Edit
-                      </Button>
+                  {/* Description */}
+                  <p className="text-neutral-400 mb-4 line-clamp-2">
+                    {project.description}
+                  </p>
+
+                  {/* Meta Info */}
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-neutral-400 mb-4">
+                    <div className="flex items-center gap-1">
+                      <User className="w-4 h-4" />
+                      <span>{project.supervisor.display_name}</span>
                     </div>
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      <span>{project.member_count} members</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>
+                        {project.completed_task_count}/{project.task_count}{" "}
+                        tasks
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatDate(project.created_at)}</span>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-2 mt-auto justify-end">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => router.push(`/projects/${project.id}`)}
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      View
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() =>
+                        router.push(`/admin/projects/${project.id}/edit`)
+                      }
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      Edit
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -323,4 +344,4 @@ export default function AdminProjectsPage() {
       </div>
     </AuthGuard>
   );
-} 
+}

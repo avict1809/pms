@@ -13,8 +13,6 @@ import {
   Plus,
   FileText,
   Clock,
-  CheckCircle,
-  AlertTriangle,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/auth/AuthGuard";
@@ -80,7 +78,7 @@ export default function AdminDashboard() {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "TZS",
     }).format(amount);
   };
 
@@ -301,7 +299,7 @@ export default function AdminDashboard() {
                   No recent activity
                 </div>
               ) : (
-                recentActivity.map((activity) => (
+                recentActivity.slice(0, 5).map((activity) => (
                   <div
                     key={activity.id}
                     className="flex items-center justify-between p-3 bg-[#18181b] rounded border border-neutral-700"
