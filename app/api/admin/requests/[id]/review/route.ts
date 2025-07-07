@@ -8,20 +8,11 @@ export async function POST(
   try {
     const { action, comment } = await request.json();
 
-    // Get the current user (admin)
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     // Get the request to review
     const { data: requestData, error: fetchError } = await supabase
       .from("approval_requests")
       .select("*")
-      .eq("id", projectId)
+      .eq("id", params.id)
       .single();
 
     if (fetchError || !requestData) {
@@ -31,7 +22,7 @@ export async function POST(
     // Update the request with the review decision
     const updateData = {
       status: action === "approve" ? "approved" : "denied",
-      responded_by: user.id,
+      responded_by: null, // No auth, so no user
       responded_at: new Date().toISOString(),
       admin_comment: comment || null,
     };
@@ -39,7 +30,7 @@ export async function POST(
     const { error: updateError } = await supabase
       .from("approval_requests")
       .update(updateData)
-      .eq("id", projectId);
+      .eq("id", params.id);
 
     if (updateError) {
       console.error("Error updating request:", updateError);

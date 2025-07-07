@@ -6,14 +6,15 @@ import Sidebar from "./Sidebar";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // Check if we're on an auth page
-  const isAuthPage =
+  // Check if we're on an exhemted page
+  const isExhemtedPage =
     pathname?.startsWith("/login") ||
     pathname?.startsWith("/forgot-password") ||
-    pathname?.startsWith("/first-time-setup");
+    pathname?.startsWith("/first-time-setup") ||
+    pathname?.startsWith("/project/");
 
   // If it's an auth page, render without sidebar - let the auth page handle its own layout
-  if (isAuthPage) {
+  if (isExhemtedPage) {
     return <>{children}</>;
   }
 

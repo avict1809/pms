@@ -34,9 +34,16 @@ interface ProjectFile {
 interface FileListProps {
   files: ProjectFile[];
   onFileDelete?: (fileId: string) => void;
+  viewMode: "list" | "grid";
+  onViewModeChange?: (mode: "list" | "grid") => void;
 }
 
-export default function FileList({ files, onFileDelete }: FileListProps) {
+export default function FileList({
+  files,
+  onFileDelete,
+  viewMode,
+  onViewModeChange,
+}: FileListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<
     "all" | "images" | "documents" | "videos" | "audio"
@@ -162,14 +169,6 @@ export default function FileList({ files, onFileDelete }: FileListProps) {
     return matchesSearch && matchesFilter;
   });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="text-orange-400 text-lg">Loading files...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       {/* Header with Controls */}
@@ -224,15 +223,6 @@ export default function FileList({ files, onFileDelete }: FileListProps) {
           </div>
         </CardContent>
       </Card>
-
-      {/* Error Message */}
-      {error && (
-        <Card className="bg-red-900/20 border-red-500">
-          <CardContent className="p-4">
-            <div className="text-red-400">{error}</div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Files Display */}
       {filteredFiles.length === 0 ? (
