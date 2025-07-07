@@ -47,6 +47,15 @@ import {
   SystemSetting,
 } from "@/hooks/useSystemSettings";
 import { toast } from "react-hot-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 interface SystemSettingsProps {
   onClose?: () => void;
@@ -104,6 +113,11 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
       }
     });
   }, [debouncedEditingValues, settings]);
+
+  const [deleteDialog, setDeleteDialog] = useState<{
+    key: string;
+    label: string;
+  } | null>(null);
 
   const categories = [
     { key: "general", label: "General", icon: Globe },
@@ -172,14 +186,21 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
   };
 
   const handleDelete = async (key: string) => {
-    if (confirm("Are you sure you want to delete this setting?")) {
+    setDeleteDialog({ key, label: key });
+  };
+
+  const confirmDelete = async () => {
+    if (deleteDialog) {
       try {
-        await deleteMutation.mutateAsync(key);
+        await deleteMutation.mutateAsync(deleteDialog.key);
+        setDeleteDialog(null);
       } catch (error) {
         console.error("Error deleting setting:", error);
       }
     }
   };
+
+  const cancelDelete = () => setDeleteDialog(null);
 
   const handleValueChange = (settingKey: string, value: string) => {
     setEditingValues((prev) => ({
@@ -307,10 +328,6 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
-          <Button onClick={() => setShowNewForm(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Setting
-          </Button>
           {onClose && (
             <Button variant="outline" onClick={onClose}>
               Close
@@ -327,141 +344,6 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
             Auto-saving changes...
           </span>
         </div>
-      )}
-
-      {/* New Setting Form */}
-      {showNewForm && (
-        <Card className="bg-[#23232a] border-orange-500 shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-orange-400">Add New Setting</CardTitle>
-            <CardDescription>
-              Create a new system configuration setting
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-gray-300">
-                  Setting Key
-                </label>
-                <Input
-                  value={newSetting.setting_key}
-                  onChange={(e) =>
-                    setNewSetting({
-                      ...newSetting,
-                      setting_key: e.target.value,
-                    })
-                  }
-                  placeholder="e.g., max_file_size"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-300">
-                  Category
-                </label>
-                <Select
-                  value={newSetting.category}
-                  onValueChange={(value) =>
-                    setNewSetting({ ...newSetting, category: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.key} value={cat.key}>
-                        {cat.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-300">
-                  Type
-                </label>
-                <Select
-                  value={newSetting.setting_type}
-                  onValueChange={(value: any) =>
-                    setNewSetting({ ...newSetting, setting_type: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="string">String</SelectItem>
-                    <SelectItem value="number">Number</SelectItem>
-                    <SelectItem value="boolean">Boolean</SelectItem>
-                    <SelectItem value="json">JSON</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-300">
-                  Public
-                </label>
-                <Select
-                  value={newSetting.is_public.toString()}
-                  onValueChange={(value) =>
-                    setNewSetting({
-                      ...newSetting,
-                      is_public: value === "true",
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="true">Yes</SelectItem>
-                    <SelectItem value="false">No</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-300">
-                Description
-              </label>
-              <Textarea
-                value={newSetting.description}
-                onChange={(e) =>
-                  setNewSetting({ ...newSetting, description: e.target.value })
-                }
-                placeholder="Describe what this setting controls..."
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-300">Value</label>
-              <Input
-                value={newSetting.setting_value}
-                onChange={(e) =>
-                  setNewSetting({
-                    ...newSetting,
-                    setting_value: e.target.value,
-                  })
-                }
-                placeholder="Enter the setting value..."
-              />
-            </div>
-            <div className="flex gap-3">
-              <Button
-                onClick={handleCreate}
-                disabled={createOrUpdateMutation.isPending}
-              >
-                <Save className="w-4 h-4 mr-2" />
-                {createOrUpdateMutation.isPending
-                  ? "Creating..."
-                  : "Create Setting"}
-              </Button>
-              <Button variant="outline" onClick={() => setShowNewForm(false)}>
-                Cancel
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       )}
 
       {/* Settings by Category */}
@@ -523,16 +405,6 @@ export default function SystemSettings({ onClose }: SystemSettingsProps) {
                         {new Date(setting.updated_at).toLocaleDateString()}
                       </div>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDelete(setting.setting_key)}
-                      disabled={deleteMutation.isPending}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
                   </div>
                 </div>
               ))}
