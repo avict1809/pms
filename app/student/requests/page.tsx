@@ -1,7 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList, Clock, CheckCircle, XCircle, Plus } from "lucide-react";
+import {
+  ClipboardList,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Plus,
+  RefreshCw,
+  Search,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -45,6 +53,9 @@ export default function StudentRequestsPage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterProject, setFilterProject] = useState("all");
+  const [refreshing, setRefreshing] = useState(false);
 
   // Fetch all projects for dropdown
   useEffect(() => {
@@ -93,6 +104,35 @@ export default function StudentRequestsPage() {
   const approvedCount = requests.filter((r) => r.status === "approved").length;
   const rejectedCount = requests.filter((r) => r.status === "denied").length;
   const totalCount = requests.length;
+
+  // Filtered requests
+  const filteredRequests = requests.filter((req) => {
+    const matchesSearch =
+      req.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (req.description || "").toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesProject =
+      filterProject === "all" || req.project_id === filterProject;
+    return matchesSearch && matchesProject;
+  });
+
+  // Refresh handler
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    if (user) {
+      const { data, error } = await supabase
+        .from("approval_requests")
+        .select("*")
+        .eq("requested_by", user.id)
+        .order("created_at", { ascending: false });
+      if (error) {
+        console.error("Error fetching requests:", error);
+        setRequests([]);
+      } else {
+        setRequests(data || []);
+      }
+    }
+    setRefreshing(false);
+  };
 
   // Handle form submit
   async function handleCreateRequest(e: React.FormEvent) {
@@ -310,6 +350,52 @@ export default function StudentRequestsPage() {
         </Card>
       </div>
 
+      {/* Filters */}
+      <Card className="bg-[#23232a] border-orange-500 shadow-lg mb-6">
+        <CardContent className="p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-4 h-4" />
+                <Input
+                  placeholder="Search requests..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-[#1a1a1a] border-neutral-600 text-white pl-10"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Select value={filterProject} onValueChange={setFilterProject}>
+                <SelectTrigger className="bg-[#1a1a1a] border-neutral-600 text-white w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-[#23232a] border-neutral-600">
+                  <SelectItem value="all">All Projects</SelectItem>
+                  {projects.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-white"
+              >
+                <RefreshCw
+                  className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
+                />
+                Refresh
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Requests List */}
       <Card className="bg-[#23232a] border-orange-500">
         <CardHeader>
@@ -319,12 +405,12 @@ export default function StudentRequestsPage() {
           <div className="space-y-4">
             {loading ? (
               <div className="text-neutral-400">Loading...</div>
-            ) : requests.length === 0 ? (
+            ) : filteredRequests.length === 0 ? (
               <div className="text-neutral-400">No requests found.</div>
             ) : projects.length === 0 ? (
               <div className="text-neutral-400">Loading projects...</div>
             ) : (
-              requests.map((req) => (
+              filteredRequests.map((req) => (
                 <div
                   key={req.id}
                   className="p-4 bg-[#18181b] rounded-lg border border-neutral-700"
